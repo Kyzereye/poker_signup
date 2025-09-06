@@ -1,0 +1,14 @@
+# Compiled output and temporary files
+/dist
+/tmp
+.vite/
+.vscode/
+
+# Node and project-specific files
+node_modules/
+
+/backend/.env
+
+# Custom folders that should not be tracked
+/python
+/sql

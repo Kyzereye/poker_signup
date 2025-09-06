@@ -1,0 +1,117 @@
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatSnackBar, MatSnackBarModule, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { RegisterService } from '../../services/register.service';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-register',
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule,
+    MatButtonModule, MatFormFieldModule, MatInputModule,
+    MatIconModule, MatCardModule, MatSnackBarModule],
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.scss'
+})
+export class RegisterComponent {
+
+  register_form!: FormGroup;
+  hide_password: boolean = true;
+  hide_confirm_password: boolean = true;
+  allRequirementsMet: boolean = false;
+  errorMessages: string[] = [];
+
+  passwordRequirements = {
+    min_length: false,
+    has_number: false,
+    has_upper_case: false,
+    has_lower_case: false,
+    passwords_match: false,
+    has_special_character: false,
+  }
+
+  constructor(
+    private fb: FormBuilder,
+    private registerService: RegisterService,
+    private snackBar: MatSnackBar,
+    private router: Router
+  ) { }
+
+  ngOnInit() {
+    this.initForm();
+  }
+
+  onSubmit() {
+    if (this.register_form.valid) {
+      let form_data = this.register_form.value;
+      const register_data = {
+        email: form_data.email,
+        password: form_data.password,
+        screen_name: form_data.screen_name
+      };
+
+      this.registerService.registerUser(register_data).subscribe({
+        next: (results: any) => {
+          this.errorMessages = []; // Clear any previous error messages
+          this.showSuccessMessage('Registration successful!');
+          this.router.navigate(['/login']);
+        },
+        error: (error: any) => {
+          if (error.status === 409) {
+            this.errorMessages = error.error.errors; // Set the error messages
+            console.log("Registration failed:", this.errorMessages);
+          } else {
+            this.errorMessages = ['An unexpected error occurred. Please try again.'];
+            console.error("Registration error:", error);
+          }
+        }
+      });
+    }
+  }
+
+  updatePasswordRequirements() {
+    const newPassword = this.register_form.get('password')?.value || '';
+    const confirmPassword = this.register_form.get('confirm_password')?.value || '';
+    this.passwordRequirements = {
+      min_length: newPassword.length >= 5,
+      has_number: /\d/.test(newPassword),
+      has_upper_case: /[A-Z]/.test(newPassword),
+      has_lower_case: /[a-z]/.test(newPassword),
+      has_special_character: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(newPassword),
+      passwords_match: newPassword === confirmPassword && newPassword !== '',
+    };
+    this.allRequirementsMet = Object.values(this.passwordRequirements).every(req => req);
+  }
+
+  passwordMatchValidator(form: FormGroup) {
+    return form.get('password')?.value === form.get('confirm_password')?.value
+      ? null : { mismatch: true };
+  }
+
+  initForm() {
+    this.register_form = this.fb.group({
+      email: ['kyzereye@gmail.com', [Validators.required, Validators.email]],
+      password: ['1Q!azxsw2', [Validators.required, Validators.minLength(6)]],
+      confirm_password: ['1Q!azxsw2', [Validators.required]],
+      screen_name: ['jkyzer', [Validators.required]]
+    }, { validator: this.passwordMatchValidator });
+    this.register_form.valueChanges.subscribe(() => this.updatePasswordRequirements())
+  }
+
+  showSuccessMessage(message: string) {
+    const config: MatSnackBarConfig = {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['snackbar-success', 'snackbar-fade']
+    };
+    this.snackBar.open(message, '', config);
+  }
+
+}

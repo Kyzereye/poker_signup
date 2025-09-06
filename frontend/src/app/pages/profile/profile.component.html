@@ -1,0 +1,24 @@
+<h2>Profile</h2>
+<form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+  <mat-form-field appearance="fill">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" type="email" placeholder="Ex. pat@example.com">
+    <mat-error *ngIf="profileForm.get('email')?.hasError('required')">Email is required</mat-error>
+    <mat-error *ngIf="profileForm.get('email')?.hasError('email')">Please enter a valid email address</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Phone</mat-label>
+    <input matInput formControlName="phone" type="tel" placeholder="Ex. 1234567890">
+    <mat-error *ngIf="profileForm.get('phone')?.hasError('required')">Phone number is required</mat-error>
+    <mat-error *ngIf="profileForm.get('phone')?.hasError('pattern')">Please enter a valid phone number</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Screen Name</mat-label>
+    <input matInput formControlName="screenName" placeholder="Ex. cooluser123">
+    <mat-error *ngIf="profileForm.get('screenName')?.hasError('required')">Screen name is required</mat-error>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit">Submit</button>
+</form>

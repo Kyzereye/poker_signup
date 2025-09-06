@@ -1,0 +1,29 @@
+<mat-card>
+<div class="row">
+  <div class="column">
+    <form [formGroup]="signup_form" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="username-field">
+        <mat-label>{{this.screen_name}}</mat-label>
+        <input matInput formControlName="username" readonly>
+      </mat-form-field>
+
+      <br>
+      <mat-form-field appearance="outline">
+        <mat-label>Location</mat-label>
+        <mat-select formControlName="game_location" required>
+          <mat-option *ngFor="let location of locations$ | async" [value]="location.id">
+            {{ location.name }}
+          </mat-option>
+        </mat-select>
+
+      </mat-form-field>
+      <div>
+        <button mat-raised-button type="submit" [disabled]="signup_form.invalid">
+          Sign up for poker game
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+</mat-card>
