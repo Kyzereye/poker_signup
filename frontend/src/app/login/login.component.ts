@@ -1,3 +1,4 @@
+// frontend/login.component.ts
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -37,7 +38,7 @@ export class LoginComponent {
     });
   }
 
-  onSubmit() {
+onSubmit() {
     let form_data = this.login_form.value;
     const data = {
       email: form_data.email,
@@ -46,30 +47,18 @@ export class LoginComponent {
   
     this.loginService.login(data).subscribe((response: any) => {
       if (response.success === true) {
-        this.userService.getUserData(data).subscribe(
-          (user_data: any) => {
-            console.log("User data received:", user_data);
-            this.userService.setCurrentUser(user_data);
-            this.authService.login();
-            // Move navigation inside the user data subscription
-            this.router.navigate(['/signup']);
-          },
-          (error) => {
-            console.error("Error fetching user data:", error);
-          }
-        );
+        this.userService.setCurrentUser(response.user_data);
+        this.authService.login();
+        this.router.navigate(['/signup']);
       }
-    })
-  }
-
-  setUser(user_data: any) {
-    this.userService.setCurrentUser(user_data);
-  }
+    }, (error) => {
+      console.error("Login error:", error);
+    });
+}
 
   getLocations() {
     this.userService.getAllLocations().subscribe({
       next: (data: any) => {
-        console.log("data", data);
         this.locations = data
         this.userService.setLocations(this.locations)
       },

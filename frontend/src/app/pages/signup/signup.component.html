@@ -1,29 +1,41 @@
-<mat-card>
-<div class="row">
-  <div class="column">
-    <form [formGroup]="signup_form" (ngSubmit)="onSubmit()">
-      <mat-form-field appearance="outline" class="username-field">
-        <mat-label>{{this.screen_name}}</mat-label>
-        <input matInput formControlName="username" readonly>
-      </mat-form-field>
-
-      <br>
+<!-- signup component html -->
+<div>
+  <mat-card>
+    <form [formGroup]="signup_form">
       <mat-form-field appearance="outline">
-        <mat-label>Location</mat-label>
+        <mat-label>Choose a Location</mat-label>
         <mat-select formControlName="game_location" required>
           <mat-option *ngFor="let location of locations$ | async" [value]="location.id">
             {{ location.name }}
           </mat-option>
         </mat-select>
-
       </mat-form-field>
-      <div>
-        <button mat-raised-button type="submit" [disabled]="signup_form.invalid">
-          Sign up for poker game
-        </button>
-      </div>
     </form>
+  </mat-card>
+
+</div>
+<div>
+  <div class="row">
+    <div *ngFor="let venue of venue_details">
+    <div class="column">
+        <mat-card [ngClass]="{'gray-out': venue.game_day !== currentDay}">
+          <mat-card-title>
+            {{ venue.name }} Details
+          </mat-card-title>
+          <mat-card-content>
+            <p><strong>Address:</strong> {{ venue.address }}</p>
+            <p><strong>Game Day:</strong> {{ venue.game_day }}</p>
+            <p><strong>Start Time:</strong> {{ venue.start_time }}</p>
+            <p><strong>Notes:</strong> {{ venue.notes }}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="signUpForGame(venue.game_id)">
+              Sign up for this game
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+      <hr>
+    </div>
   </div>
 </div>
-
-</mat-card>

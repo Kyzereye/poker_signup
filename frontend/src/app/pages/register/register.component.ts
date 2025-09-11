@@ -53,7 +53,7 @@ export class RegisterComponent {
       const register_data = {
         email: form_data.email,
         password: form_data.password,
-        screen_name: form_data.screen_name
+        username: form_data.username
       };
 
       this.registerService.registerUser(register_data).subscribe({
@@ -99,7 +99,7 @@ export class RegisterComponent {
       email: ['kyzereye@gmail.com', [Validators.required, Validators.email]],
       password: ['1Q!azxsw2', [Validators.required, Validators.minLength(6)]],
       confirm_password: ['1Q!azxsw2', [Validators.required]],
-      screen_name: ['jkyzer', [Validators.required]]
+      username: ['jkyzer', [Validators.required]]
     }, { validator: this.passwordMatchValidator });
     this.register_form.valueChanges.subscribe(() => this.updatePasswordRequirements())
   }

@@ -15,18 +15,16 @@ router.get('/get_all_locations', async (req, res) => {
 });
 
 router.post('/get_user_data', async (req, res) => {
-  console.log("reqbody", req.body);
   const email = req.body.email
-  console.log("email", email);
   try {
-    const query = `SELECT u.screen_name, u.email, uf.first_name, uf.last_name, uf.phone 
+    const query = `SELECT u.username, u.email, uf.first_name, uf.last_name, uf.phone 
                     FROM users u
                     LEFT JOIN user_features uf ON u.id = uf.user_id
                     WHERE u.email = ?
 `;
 
     const [results] = await pool.query(query, [email]);
-    console.log("results", results);
+    console.log("get_user_data results", results);
     res.status(200).json(results);
   } catch (error) {
     console.error('Error:', error.message);

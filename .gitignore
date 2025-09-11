@@ -1,7 +1,7 @@
 # Compiled output and temporary files
 /dist
 /tmp
-.vite/
+.angular/
 .vscode/
 
 # Node and project-specific files

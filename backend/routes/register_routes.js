@@ -4,20 +4,21 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 
 router.post('/user_registration', async (req, res) => {
-  const { email, password, screen_name } = req.body;
+  const { email, password, username } = req.body;
+  console.log("reqbody", req.body);
 
   try {
-    // Check if email or screen_name already exists
-    const check_query = "SELECT email, screen_name FROM users WHERE email = ? OR screen_name = ?";
-    const [existing_users] = await pool.query(check_query, [email, screen_name]);
+    // Check if email or username already exists
+    const check_query = "SELECT email, username FROM users WHERE email = ?";
+    const [existing_users] = await pool.query(check_query, [email]);
 
     if (existing_users.length > 0) {
       let errors = [];
       if (existing_users.some(user => user.email === email)) {
         errors.push('Email already exists');
       }
-      if (existing_users.some(user => user.screen_name === screen_name)) {
-        errors.push('Screen name already exists');
+      if (existing_users.some(user => user.username === username)) {
+        errors.push('User name already exists');
       }
       if (errors.length > 0) {
         return res.status(409).json({
@@ -31,20 +32,19 @@ router.post('/user_registration', async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const password_hash = await bcrypt.hash(password, salt);
 
-    // Correct SQL syntax
+    console.log("username", username);
     const insert_query = `
       INSERT INTO users 
-        (email, crypted_password, salt, screen_name, created_at, updated_at) 
+        (email, password, username) 
       VALUES 
-        (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        (?, ?, ?)
     `;
 
     // Execute insert with correct parameters
     const [result] = await pool.query(insert_query, [
       email,
       password_hash,
-      salt,
-      screen_name
+      username
     ]);
 
     // Return appropriate response

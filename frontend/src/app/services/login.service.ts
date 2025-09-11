@@ -1,3 +1,4 @@
+// login.service.ts
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
@@ -14,7 +15,7 @@ export class LoginService {
   constructor(private httpClient: HttpClient) { }
 
   login(data: any) {
-    return this.httpClient.post(this.url + "/login", data, {
+    return this.httpClient.post(this.url + "/login_routes/login", data, {
       headers: new HttpHeaders().set("Content-Type", "application/json")
     })
   }

@@ -18,7 +18,6 @@ export class UserService {
   }
 
   setCurrentUser(data: any) {
-    console.log("setCurrentUser data", data);
     this.user_data.next(data)
   }
 

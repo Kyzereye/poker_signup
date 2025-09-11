@@ -1,7 +1,7 @@
 :host {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .username-field {
@@ -13,15 +13,36 @@
   }
 }
 
-.column {
-  float: left;
-  // width: 40%;
-  padding: 20px
+.row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
+.column {
+  flex: 1 1 300px;
+  padding: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 25px;
+}
+
+mat-form-field {
+  margin-bottom: 20px;
+}
+
+mat-card {
+  padding: 70px;
+}
+
+.gray-out {
+  opacity: 0.5;
 }

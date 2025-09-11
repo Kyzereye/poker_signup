@@ -28,7 +28,7 @@
 
         <mat-form-field>
           <mat-label>Screen Name</mat-label>
-          <input matInput id="screenName" formControlName="screen_name" type="text">
+          <input matInput id="screenName" formControlName="username" type="text">
         </mat-form-field>
         <mat-error *ngFor="let errorMessage of errorMessages">{{ errorMessage }}</mat-error>
         <button mat-raised-button color="primary" type="submit" [disabled]="!register_form.valid">Register</button>
