@@ -14,11 +14,9 @@
     <mat-card class="game-details-card">
       <mat-card-header>
         <mat-card-title>{{ game_details.location_name }}</mat-card-title>
-        <mat-card-subtitle>{{ game_details.game_day }} at {{ game_details.start_time }}</mat-card-subtitle>
+        <mat-card-subtitle>{{ getFormattedGameDate() }} at {{ game_details.start_time }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <p><strong>Address:</strong> {{ game_details.address }}</p>
-        <p><strong>Notes:</strong> {{ game_details.notes }}</p>
         <p><strong>Players Signed Up:</strong> {{ player_signups.length }}</p>
       </mat-card-content>
     </mat-card>

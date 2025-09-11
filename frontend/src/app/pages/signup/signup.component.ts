@@ -6,10 +6,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { UserService } from '../../services/user.service';
 import { VenuesService, VenueDetails } from '../../services/venues.service';
+import { SimpleDialogComponent } from '../../components/simple-dialog/simple-dialog.component';
 
 @Component({
   selector: 'app-signup',
@@ -32,7 +34,8 @@ export class SignupComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private userService: UserService,
     private venuesService: VenuesService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -86,9 +89,9 @@ export class SignupComponent implements OnInit, OnDestroy {
           error: (error) => {
             console.error('Error signing up for game:', error);
             if (error.status === 409) {
-              alert('You are already signed up for this game!');
+              this.showAlreadySignedUpDialog(selected_game.game_id);
             } else {
-              alert('Error signing up for game. Please try again.');
+              this.showErrorDialog('Error signing up for game. Please try again.');
             }
           }
         });
@@ -121,6 +124,36 @@ export class SignupComponent implements OnInit, OnDestroy {
 
   shouldGrayOut(venue: VenueDetails): boolean {
     return venue.game_day !== this.currentDay;
+  }
+
+  showAlreadySignedUpDialog(gameId: number): void {
+    const dialogRef = this.dialog.open(SimpleDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Already Signed Up',
+        message: 'You are already signed up for this game!',
+        confirmText: 'View List',
+        cancelText: 'Cancel'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.router.navigate(['/the-list', gameId]);
+      }
+    });
+  }
+
+  showErrorDialog(message: string): void {
+    this.dialog.open(SimpleDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Error',
+        message: message,
+        confirmText: 'OK',
+        cancelText: null
+      }
+    });
   }
 
   ngOnDestroy(): void {

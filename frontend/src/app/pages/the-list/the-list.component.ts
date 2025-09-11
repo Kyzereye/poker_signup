@@ -73,6 +73,24 @@ export class TheListComponent implements OnInit, OnDestroy {
     this.loadPlayerSignups();
   }
 
+  getFormattedGameDate(): string {
+    if (!this.game_details?.game_day) {
+      return '';
+    }
+    
+    const today = new Date();
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    
+    const dayName = this.game_details.game_day;
+    const month = monthNames[today.getMonth()];
+    const day = today.getDate();
+    
+    const result = `${dayName} ${month} ${day}`;
+    console.log('Formatted date:', result);
+    return result;
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
