@@ -1,22 +1,15 @@
 import { Routes } from '@angular/router';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { ProfileComponent } from './pages/profile/profile.component';
-import { StandingsComponent } from './pages/standings/standings.component';
-import { NotfoundComponent } from './pages/notfound/notfound.component';
-import { SignupComponent } from './pages/signup/signup.component';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './pages/register/register.component';
 import { AuthGuard } from './auth.guard'; // You'll need to create this guard
 
 export const routes: Routes = [
   // Non-authenticated routes
   {
     path: 'login',
-    component: LoginComponent
+    loadComponent: () => import('./login/login.component').then(m => m.LoginComponent)
   },
   {
     path: 'register',
-    component: RegisterComponent
+    loadComponent: () => import('./pages/register/register.component').then(m => m.RegisterComponent)
   },
   // Authenticated routes
   {
@@ -30,25 +23,25 @@ export const routes: Routes = [
       },
       {
         path: 'dashboard',
-        component: DashboardComponent
+        loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent)
       },
       {
         path: 'signup',
-        component: SignupComponent
+        loadComponent: () => import('./pages/signup/signup.component').then(m => m.SignupComponent)
       },
       {
         path: 'profile',
-        component: ProfileComponent
+        loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent)
       },
       {
         path: 'standings',
-        component: StandingsComponent
+        loadComponent: () => import('./pages/standings/standings.component').then(m => m.StandingsComponent)
       }
     ]
   },
   {
     path: '**',
-    component: NotfoundComponent
+    loadComponent: () => import('./pages/notfound/notfound.component').then(m => m.NotfoundComponent)
   }
 ];
 

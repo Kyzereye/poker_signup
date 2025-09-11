@@ -28,22 +28,22 @@ export class LeftSidebarComponent {
   private authenticatedItems = [
     {
       routeLink: 'dashboard',
-      icon: 'fal fa-home',
+      icon: 'home',
       label: 'Dashboard',
     },
     {
       routeLink: 'signup',
-      icon: 'fal fa-cog',
+      icon: 'how_to_reg',
       label: 'Signup for Game',
     },
     {
       routeLink: 'standings',
-      icon: 'fal fa-file',
+      icon: 'leaderboard',
       label: 'Standings',
     },
     {
       routeLink: 'profile',
-      icon: 'fal fa-box-open',
+      icon: 'person',
       label: 'Profile',
     },
   ];
@@ -51,12 +51,12 @@ export class LeftSidebarComponent {
   private nonAuthenticatedItems = [
     {
       routeLink: 'login',
-      icon: 'fal fa-sign-in',
+      icon: 'login',
       label: 'Login',
     },
     {
       routeLink: 'register',
-      icon: 'fal fa-user-plus',
+      icon: 'person_add',
       label: 'Register',
     },
   ];

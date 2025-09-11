@@ -1,0 +1,1 @@
+import{Mb as o,Qb as i,ha as t,wb as s,xb as a}from"./chunk-U3KHM5CZ.js";var p=class n{static \u0275fac=function(e){return new(e||n)};static \u0275cmp=t({type:n,selectors:[["app-standings"]],standalone:!0,features:[i],decls:2,vars:0,template:function(e,r){e&1&&(s(0,"p"),o(1,"standings works!"),a())}})};export{p as StandingsComponent};

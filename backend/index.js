@@ -1,10 +1,17 @@
 // index.js
 const express = require("express");
 const cors = require("cors");
+const compression = require("compression");
+const helmet = require("helmet");
 const pool = require("./connection");
 const app = express();
 
 app.use(cors());
+app.use(helmet());
+app.use(compression());
+// Helpful cache headers for static assets if served here in future
+app.set('etag', 'strong');
+app.disable('x-powered-by');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
