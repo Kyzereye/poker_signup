@@ -1,0 +1,1 @@
+import{Z as e}from"./chunk-U3KHM5CZ.js";var a=class t{authenticated=!1;isAuthenticated(){return this.authenticated}login(){this.authenticated=!0}logout(){this.authenticated=!1}static \u0275fac=function(i){return new(i||t)};static \u0275prov=e({token:t,factory:t.\u0275fac,providedIn:"root"})};export{a};

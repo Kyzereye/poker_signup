@@ -1,7 +1,7 @@
 <div class="sidenav" [ngClass]="isLeftSidebarCollapsed() ? 'sidenav-collapsed' : ''">
   <div class="logo-container">
     <button class="logo" (click)="toggleCollapse()">
-      <i class="fal fa-bars"></i>
+      <span class="material-icons">menu</span>
     </button>
     @if (!isLeftSidebarCollapsed()) {
     <div class="logo-text">Poker Sign-Up</div>
@@ -15,7 +15,7 @@
     <li class="sidenav-nav-item">
       <a class="sidenav-nav-link" [routerLink]="item.routeLink" routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }">
-        <i class="sidenav-link-icon" [class]="item.icon"></i>
+        <span class="material-icons sidenav-link-icon">{{ item.icon }}</span>
         @if (!isLeftSidebarCollapsed()) {
         <span class="sidenav-link-text">{{ item.label }}</span>
         }
@@ -25,7 +25,7 @@
     @if (authService.isAuthenticated()) {
     <li class="sidenav-nav-item logout-item">
       <a class="sidenav-nav-link" (click)="onLogout()" role="button">
-        <i class="sidenav-link-icon fal fa-sign-out"></i>
+        <span class="material-icons sidenav-link-icon">logout</span>
         @if (!isLeftSidebarCollapsed()) {
         <span class="sidenav-link-text">Logout</span>
         }
