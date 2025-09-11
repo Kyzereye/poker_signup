@@ -1,0 +1,53 @@
+<!-- The List Component HTML -->
+<div class="the-list-container">
+  <div class="header">
+    <button mat-icon-button (click)="goBack()" class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>The List</h1>
+    <button mat-icon-button (click)="refreshList()" class="refresh-button">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </div>
+
+  <div *ngIf="game_details" class="game-info">
+    <mat-card class="game-details-card">
+      <mat-card-header>
+        <mat-card-title>{{ game_details.location_name }}</mat-card-title>
+        <mat-card-subtitle>{{ game_details.game_day }} at {{ game_details.start_time }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p><strong>Address:</strong> {{ game_details.address }}</p>
+        <p><strong>Notes:</strong> {{ game_details.notes }}</p>
+        <p><strong>Players Signed Up:</strong> {{ player_signups.length }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="players-section">
+    <h2>Players Signed Up</h2>
+    
+    <div *ngIf="player_signups.length === 0" class="no-players">
+      <mat-card>
+        <mat-card-content>
+          <p>No players signed up yet.</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div *ngIf="player_signups.length > 0" class="players-list">
+      <mat-card *ngFor="let signup of player_signups; let i = index" class="player-card">
+        <mat-card-content>
+          <div class="player-info">
+            <span class="player-number">{{ i + 1 }}.</span>
+            <span class="player-name">{{ signup.first_name }} {{ signup.last_name }}</span>
+            <span class="player-username">({{ signup.username }})</span>
+          </div>
+          <div class="signup-time">
+            Signed up: {{ signup.signup_time | date:'short' }}
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

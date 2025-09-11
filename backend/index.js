@@ -2,6 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const pool = require("./connection");
+const errorHandler = require("./middleware/errorHandler");
 const app = express();
 
 app.use(cors());
@@ -17,5 +18,8 @@ app.use('/login_routes', login_routes);
 app.use('/register_routes', register_routes);
 app.use('/user_routes', user_routes);
 app.use('/venue_routes', venue_routes);
+
+// Error handling middleware (must be last)
+app.use(errorHandler);
 
 module.exports = app;

@@ -16,9 +16,9 @@
 </div>
 <div>
   <div class="row">
-    <div *ngFor="let venue of venue_details">
+    <div *ngFor="let venue of venue_details; trackBy: trackByVenueId">
     <div class="column">
-        <mat-card [ngClass]="{'gray-out': venue.game_day !== currentDay}">
+        <mat-card [ngClass]="{'gray-out': shouldGrayOut(venue)}">
           <mat-card-title>
             {{ venue.name }} Details
           </mat-card-title>
@@ -29,8 +29,10 @@
             <p><strong>Notes:</strong> {{ venue.notes }}</p>
           </mat-card-content>
           <mat-card-actions>
-            <button mat-raised-button color="primary" (click)="signUpForGame(venue.game_id)">
-              Sign up for this game
+            <button mat-raised-button color="primary" 
+                    [disabled]="shouldGrayOut(venue)"
+                    (click)="signUpForGame(venue.game_id)">
+              {{ shouldGrayOut(venue) ? 'Game not today' : 'Sign up for this game' }}
             </button>
           </mat-card-actions>
         </mat-card>

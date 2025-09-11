@@ -29,27 +29,19 @@ export class UserService {
   }
 
   getUserData(data: any) {
-    return this.httpClient.post(this.url + "/user_routes/get_user_data", data, {
-      headers: new HttpHeaders().set("Content-Type", "application/json")
-    });
+    return this.httpClient.post(this.url + "/user_routes/get_user_data", data);
   }
 
   getAllLocations(): Observable<any> {
-    return this.httpClient.get<Location[]>(`${this.url}/user_routes/get_all_locations`, {
-      headers: new HttpHeaders().set('Content-Type', 'application/json')
-    });
+    return this.httpClient.get<Location[]>(`${this.url}/user_routes/get_all_locations`);
   }
 
   getAllUsers(): Observable<any> {
-    return this.httpClient.get<Location[]>(`${this.url}/user_routes/get_all_users`, {
-      headers: new HttpHeaders().set('Content-Type', 'application/json')
-    });
+    return this.httpClient.get<Location[]>(`${this.url}/user_routes/get_all_users`);
   }
 
   gameSignUp(data: any): Observable<any> {
-    return this.httpClient.post<Location[]>(`${this.url}/user_routes/game_sign_up`, data, {
-      headers: new HttpHeaders().set('Content-Type', 'application/json')
-    });
+    return this.httpClient.post<Location[]>(`${this.url}/user_routes/game_sign_up`, data);
   }
 
 

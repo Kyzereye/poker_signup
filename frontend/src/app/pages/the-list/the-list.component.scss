@@ -1,0 +1,155 @@
+.the-list-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e0e0e0;
+
+  h1 {
+    margin: 0;
+    color: #333;
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+
+  .back-button, .refresh-button {
+    color: #666;
+    
+    &:hover {
+      color: #333;
+      background-color: #f5f5f5;
+    }
+  }
+}
+
+.game-info {
+  margin-bottom: 30px;
+
+  .game-details-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+
+    mat-card-title {
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    mat-card-subtitle {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.1rem;
+    }
+
+    p {
+      margin: 8px 0;
+      color: rgba(255, 255, 255, 0.9);
+    }
+  }
+}
+
+.players-section {
+  h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+  }
+
+  .no-players {
+    text-align: center;
+    margin-top: 40px;
+
+    mat-card {
+      background-color: #f9f9f9;
+      border: 2px dashed #ccc;
+    }
+
+    p {
+      color: #666;
+      font-style: italic;
+      margin: 0;
+    }
+  }
+
+  .players-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .player-card {
+      transition: all 0.3s ease;
+      border-left: 4px solid #667eea;
+
+      &:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .player-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+
+        .player-number {
+          background-color: #667eea;
+          color: white;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          font-size: 0.9rem;
+        }
+
+        .player-name {
+          font-weight: bold;
+          font-size: 1.1rem;
+          color: #333;
+        }
+
+        .player-username {
+          color: #666;
+          font-style: italic;
+        }
+      }
+
+      .signup-time {
+        color: #888;
+        font-size: 0.9rem;
+        margin-left: 42px;
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .the-list-container {
+    padding: 10px;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+  }
+
+  .player-info {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 8px !important;
+
+    .player-number {
+      align-self: flex-start;
+    }
+  }
+
+  .signup-time {
+    margin-left: 0 !important;
+  }
+}

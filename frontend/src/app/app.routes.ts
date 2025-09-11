@@ -4,9 +4,10 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { StandingsComponent } from './pages/standings/standings.component';
 import { NotfoundComponent } from './pages/notfound/notfound.component';
 import { SignupComponent } from './pages/signup/signup.component';
+import { TheListComponent } from './pages/the-list/the-list.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
-import { AuthGuard } from './auth.guard'; // You'll need to create this guard
+import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [
   // Non-authenticated routes
@@ -43,6 +44,10 @@ export const routes: Routes = [
       {
         path: 'standings',
         component: StandingsComponent
+      },
+      {
+        path: 'the-list/:gameId',
+        component: TheListComponent
       }
     ]
   },

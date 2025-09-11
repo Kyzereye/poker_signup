@@ -1,45 +1,38 @@
-// signup componenet ts
-import { Observable, Subscription } from 'rxjs';
-import { UserService } from './../../services/user.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
-import { VenuesService, VenueDetails } from '../../services/venues.service'; // Import from the service
+import { Router } from '@angular/router';
+import { Observable, Subject, takeUntil } from 'rxjs';
+import { UserService } from '../../services/user.service';
+import { VenuesService, VenueDetails } from '../../services/venues.service';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule,
-    MatCardModule, NgFor],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, MatCardModule, NgFor],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
 })
 
-export class SignupComponent implements OnInit {
+export class SignupComponent implements OnInit, OnDestroy {
   signup_form!: FormGroup;
   locations$!: Observable<any[]>;
-  username!: string;
-  email!: string;
   user_id!: number;
-  game_location_id!: number
-  private userSubscription!: Subscription;
+  game_location_id!: number;
   venue_details: VenueDetails[] | null = null;
-  game_days_array: string[] = [];
   currentDay: string = '';
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
     private venuesService: VenuesService,
-    private router: Router,
-    private cdr: ChangeDetectorRef
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -50,66 +43,88 @@ export class SignupComponent implements OnInit {
 
     this.signup_form.get('game_location')?.valueChanges.subscribe(locationId => {
       if (locationId) {
-        this.game_location_id = locationId
+        this.game_location_id = locationId;
         this.getVenueData(locationId);
       }
     });
   }
 
-  getUserData() {
-    this.userSubscription = this.userService.getCurrentUser().subscribe(data => {
-      // console.log("getUserData data", data);
-      if (data) {
-        this.email = data.email;
-        this.user_id = data.id;
-        this.cdr.detectChanges();
-      }
-    });
+  getUserData(): void {
+    this.userService.getCurrentUser()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(data => {
+        if (data) {
+          this.user_id = data.id;
+        }
+      });
   }
 
-  initializeForm() {
+  initializeForm(): void {
     this.signup_form = this.fb.group({
       username: [{ value: '', disabled: true }],
       game_location: ['', Validators.required]
     });
   }
 
-  signUpForGame(gameId: number) {
+  signUpForGame(gameId: number): void {
     const selected_game = this.venue_details?.find(game => game.game_id === gameId);
 
     if (selected_game) {
-      let form_data = {
+      const form_data = {
         user_id: this.user_id,
         selected_game: selected_game.game_id
       };
-      
-      console.log("formdata", form_data);
 
-      // Uncomment this block once you are ready to send the data
-      // this.userService.gameSignUp(form_data).subscribe(response => {
-      //   if (response) {
-      //     this.router.navigate(['/signup']);
-      //   }
-      // });
+      this.userService.gameSignUp(form_data)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            if (response.success) {
+              this.router.navigate(['/the-list', selected_game.game_id]);
+            }
+          },
+          error: (error) => {
+            console.error('Error signing up for game:', error);
+            if (error.status === 409) {
+              alert('You are already signed up for this game!');
+            } else {
+              alert('Error signing up for game. Please try again.');
+            }
+          }
+        });
     }
   }
 
-  getVenueData(locationId: string) {
-    this.locations$.subscribe(locations => {
-      const selectedLocation = locations.find(loc => loc.id === locationId);
-      console.log("selectedLocation", selectedLocation);
-      if (selectedLocation) {
-        this.venuesService.getVenueData(selectedLocation.id).subscribe((response: VenueDetails[]) => {
-          console.log("response", response);
-          this.venue_details = response;
-          this.cdr.detectChanges();
-        });
-      }
-    });
+  getVenueData(locationId: string): void {
+    this.locations$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((locations: any[]) => {
+        const selectedLocation = locations.find((loc: any) => loc.id === locationId);
+        if (selectedLocation) {
+          this.venuesService.getVenueData(selectedLocation.id)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((response: VenueDetails[]) => {
+              this.venue_details = response;
+            });
+        }
+      });
   }
 
-  getCurrentDay() {
+  getCurrentDay(): void {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     this.currentDay = days[new Date().getDay()];
+  }
+
+  trackByVenueId(index: number, venue: VenueDetails): number {
+    return venue.game_id;
+  }
+
+  shouldGrayOut(venue: VenueDetails): boolean {
+    return venue.game_day !== this.currentDay;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
