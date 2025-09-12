@@ -1,0 +1,275 @@
+.page-container {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding-left: 260px; /* Account for sidebar width (260px when expanded) */
+  overflow-y: auto;
+  transition: padding-left 0.3s ease; /* Smooth transition when sidebar collapses */
+}
+
+.content-wrapper {
+  max-width: 1400px;
+  margin: 0 auto; /* This centers the content within the padded area */
+  padding: 20px;
+}
+
+/* When sidebar is collapsed */
+.page-container.sidebar-collapsed {
+  padding-left: 70px; /* Account for collapsed sidebar width */
+}
+
+@media (max-width: 1200px) {
+  .page-container {
+    padding-left: 0; /* Remove sidebar padding on smaller screens */
+  }
+}
+
+.page-header {
+  margin-bottom: 24px;
+  
+  h1 {
+    margin: 0 0 8px 0;
+    font-size: 2rem;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  p {
+    margin: 0;
+    color: #666;
+    font-size: 1rem;
+  }
+}
+
+.management-card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  
+  mat-card-header {
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 0;
+    
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #333;
+      
+      mat-icon {
+        color: #1976d2;
+      }
+    }
+    
+    mat-card-subtitle {
+      color: #666;
+      margin-top: 4px;
+    }
+  }
+}
+
+.tab-content {
+  padding: 24px 0;
+}
+
+.tab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  
+  h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .tab-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+}
+
+.table-container {
+  min-height: 400px;
+  position: relative;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  gap: 16px;
+  
+  p {
+    margin: 0;
+    color: #666;
+    font-size: 1rem;
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  gap: 16px;
+  text-align: center;
+  
+  mat-icon {
+    font-size: 4rem;
+    width: 4rem;
+    height: 4rem;
+    color: #ccc;
+  }
+  
+  h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #666;
+  }
+  
+  p {
+    margin: 0;
+    color: #999;
+    font-size: 1rem;
+  }
+}
+
+.venues-table,
+.games-table {
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+    padding: 16px;
+  }
+  
+  td {
+    padding: 16px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .mat-column-actions {
+    width: 120px;
+    text-align: center;
+  }
+}
+
+/* Action buttons */
+button[mat-icon-button] {
+  margin: 0 4px;
+  
+  &[color="warn"] {
+    color: #f44336;
+    
+    &:hover {
+      background-color: rgba(244, 67, 54, 0.1);
+    }
+  }
+  
+  &:not([color="warn"]) {
+    color: #1976d2;
+    
+    &:hover {
+      background-color: rgba(25, 118, 210, 0.1);
+    }
+  }
+}
+
+button[mat-raised-button] {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  mat-icon {
+    font-size: 1.2rem;
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+}
+
+/* Search container styles */
+.search-container {
+  margin: 16px 0 24px 0;
+  display: flex;
+  justify-content: center;
+  
+  .search-field {
+    width: 100%;
+    max-width: 400px;
+    
+    .mat-mdc-form-field {
+      width: 100%;
+    }
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .content-wrapper {
+    padding: 16px;
+  }
+  
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .tab-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  
+  .tab-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .venues-table,
+  .games-table {
+    font-size: 0.9rem;
+    
+    th,
+    td {
+      padding: 12px 8px;
+    }
+  }
+  
+  .mat-column-actions {
+    width: 100px;
+  }
+  
+  .search-container {
+    margin: 12px 0 20px 0;
+    
+    .search-field {
+      max-width: 100%;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .venues-table,
+  .games-table {
+    .mat-column-notes {
+      display: none;
+    }
+  }
+}

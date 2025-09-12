@@ -11,6 +11,9 @@ A full-stack web application for managing poker game signups with real-time play
 - **Duplicate Prevention** - Prevents multiple signups for the same game
 - **Day-of-Game Only** - Users can only sign up on the actual game day
 - **Role-Based Access** - Player, Dealer, and Admin roles with different permissions
+- **Venue Management** - Add, edit, and delete poker venues
+- **Game Management** - Create and manage recurring poker games
+- **Admin Dashboard** - Comprehensive admin panel with user and system management
 
 ### User Experience
 - **Responsive Design** - Works on desktop and mobile devices
@@ -18,6 +21,9 @@ A full-stack web application for managing poker game signups with real-time play
 - **Smart Gray-out Logic** - Only shows games available for today
 - **Interactive Dialogs** - User-friendly error messages and confirmations
 - **Date Display** - Shows formatted dates (e.g., "Thursday Sept 11 at 7:00 PM")
+- **Real-time Search** - Instant filtering of venues and games as you type
+- **Smart Sorting** - Sortable tables with intuitive toggle behavior
+- **Confirmation Dialogs** - Safe delete operations with user confirmation
 
 ### Technical Features
 - **RESTful API** - Clean backend architecture with Express.js
@@ -182,6 +188,18 @@ poker_signup/
 - `GET /user_routes/get_game_details/:gameId` - Get specific game details
 - `GET /user_routes/get_player_signups/:gameId` - Get players signed up for a game
 
+### Venue Management (Admin)
+- `GET /venue_routes/locations` - Get all venues
+- `POST /venue_routes/locations` - Create new venue
+- `PUT /venue_routes/locations/:id` - Update venue
+- `DELETE /venue_routes/locations/:id` - Delete venue (with safety checks)
+
+### Game Management (Admin)
+- `GET /venue_routes/games` - Get all games with venue details
+- `POST /venue_routes/games` - Create new game
+- `PUT /venue_routes/games/:id` - Update game
+- `DELETE /venue_routes/games/:id` - Delete game (with safety checks)
+
 ### User Actions
 - `POST /user_routes/get_user_data` - Get current user data
 - `POST /user_routes/game_sign_up` - Sign up for a game
@@ -202,10 +220,28 @@ poker_signup/
 5. **View List** - See who else is signed up
 
 ### For Administrators
-1. **Manage Venues** - Add new poker locations
-2. **Schedule Games** - Set up weekly game schedules
-3. **Monitor Signups** - Track player participation
-4. **Database Management** - Use SQL scripts for data management
+1. **Admin Dashboard** - Access comprehensive admin panel
+2. **Manage Venues** - Add, edit, and delete poker locations with real-time search
+3. **Schedule Games** - Create and manage recurring poker games
+4. **User Management** - View user statistics and manage roles
+5. **Search & Sort** - Advanced filtering and sorting capabilities
+6. **Safety Features** - Confirmation dialogs and data integrity checks
+
+## 🎛️ Admin Features
+
+### Venue & Game Management
+- **Real-time Search** - Filter venues and games as you type
+- **Smart Sorting** - Sort by venue name, game day, or start time
+- **CRUD Operations** - Full create, read, update, delete functionality
+- **Data Validation** - Form validation with user-friendly error messages
+- **Safety Checks** - Prevents deletion of venues with associated games
+- **Confirmation Dialogs** - Safe delete operations with user confirmation
+
+### Admin Dashboard
+- **User Statistics** - View total users and system information
+- **Role Management** - Manage user roles (Player, Dealer, Admin)
+- **Quick Actions** - Easy access to venue and game management
+- **Responsive Design** - Works on all screen sizes
 
 ## 🚨 Error Handling
 
@@ -214,6 +250,7 @@ The application includes comprehensive error handling:
 - **404 Not Found** - Game or location not found
 - **500 Server Error** - Database or server issues
 - **User-friendly dialogs** - Clear error messages with actions
+- **Data Integrity** - Prevents orphaned data with foreign key constraints
 
 ## 🔒 Security Features
 

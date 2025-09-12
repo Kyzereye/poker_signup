@@ -108,8 +108,7 @@ export class LeftSidebarComponent implements OnInit, OnDestroy {
     {
       routeLink: 'admin',
       icon: 'fal fa-cog',
-      label: 'Admin Panel',
-      isAdmin: true
+      label: 'Admin Panel'
     }
   ];
 

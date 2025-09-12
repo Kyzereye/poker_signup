@@ -1,0 +1,113 @@
+<div class="page-container">
+  <div class="content-wrapper">
+    <div class="page-header">
+      <h1>Admin Dashboard</h1>
+      <p>Manage users, roles, and system settings</p>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Loading admin data...</p>
+    </div>
+
+    <div *ngIf="!isLoading" class="admin-content">
+      <mat-card class="admin-card">
+        <mat-card-header>
+          <mat-card-title>User Management</mat-card-title>
+          <mat-card-subtitle>View and manage user accounts and roles</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="admin-stats">
+            <div class="stat-item">
+              <mat-icon>people</mat-icon>
+              <div class="stat-content">
+                <span class="stat-label">Total Users</span>
+                <span class="stat-value">{{ userStats.totalUsers }}</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <mat-icon>admin_panel_settings</mat-icon>
+              <div class="stat-content">
+                <span class="stat-label">Admin Users</span>
+                <span class="stat-value">{{ userStats.adminUsers }}</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <mat-icon>casino</mat-icon>
+              <div class="stat-content">
+                <span class="stat-label">Dealers</span>
+                <span class="stat-value">{{ userStats.dealerUsers }}</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <mat-icon>sports_esports</mat-icon>
+              <div class="stat-content">
+                <span class="stat-label">Players</span>
+                <span class="stat-value">{{ userStats.playerUsers }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="admin-card">
+        <mat-card-header>
+          <mat-card-title>System Information</mat-card-title>
+          <mat-card-subtitle>Current system status and configuration</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="system-info">
+            <div class="info-item">
+              <mat-icon>security</mat-icon>
+              <span>Role-based access control is active</span>
+            </div>
+            <div class="info-item">
+              <mat-icon>check_circle</mat-icon>
+              <span>Database status: {{ systemInfo.databaseStatus || 'Unknown' }}</span>
+            </div>
+            <div class="info-item">
+              <mat-icon>casino</mat-icon>
+              <span>Total games: {{ systemInfo.totalGames || 0 }}</span>
+            </div>
+            <div class="info-item">
+              <mat-icon>people</mat-icon>
+              <span>Active signups: {{ systemInfo.activeSignups || 0 }}</span>
+            </div>
+            <div class="info-item">
+              <mat-icon>schedule</mat-icon>
+              <span>Last updated: {{ lastUpdated | date:'short' }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="admin-card">
+        <mat-card-header>
+          <mat-card-title>Quick Actions</mat-card-title>
+          <mat-card-subtitle>Common administrative tasks</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="action-buttons">
+            <button mat-raised-button color="primary" (click)="refreshData()">
+              <mat-icon>refresh</mat-icon>
+              Refresh Data
+            </button>
+            <button mat-raised-button color="accent" (click)="viewUsers()">
+              <mat-icon>people</mat-icon>
+              View All Users
+            </button>
+            <button mat-raised-button color="warn" (click)="systemSettings()">
+              <mat-icon>settings</mat-icon>
+              System Settings
+            </button>
+            <button mat-raised-button color="accent" (click)="manageLocationsGames()">
+              <mat-icon>location_on</mat-icon>
+              Location & Game Management
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+  </div>
+</div>

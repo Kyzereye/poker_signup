@@ -12,7 +12,7 @@
   <!-- Navigation Section -->
   <div class="sidenav-nav">
     @for (item of items; track $index) {
-      <li class="sidenav-nav-item" [ngClass]="{'admin-item': item.isAdmin}">
+      <li class="sidenav-nav-item">
         <a class="sidenav-nav-link" 
            [routerLink]="item.routeLink" 
            routerLinkActive="active"
@@ -21,9 +21,6 @@
           <i class="sidenav-link-icon" [class]="item.icon"></i>
           @if (!isLeftSidebarCollapsed()) {
             <span class="sidenav-link-text">{{ item.label }}</span>
-            @if (item.isAdmin) {
-              <span class="admin-badge">ADMIN</span>
-            }
           }
         </a>
       </li>
