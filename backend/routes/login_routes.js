@@ -18,14 +18,27 @@ router.post('/login', async (req, res) => {
   }
 
   try {
-    const query = "SELECT * FROM users WHERE email = ?";
+    const query = `
+      SELECT u.*, uf.first_name, uf.last_name, uf.phone, uf.role 
+      FROM users u 
+      LEFT JOIN user_features uf ON u.id = uf.user_id 
+      WHERE u.email = ?
+    `;
     const [results] = await pool.query(query, [email]);
 
    if (results.length === 0) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    const user_data = {"id": results[0].id, "username": results[0].username, "email": email}
+    const user_data = {
+      "id": results[0].id, 
+      "username": results[0].username, 
+      "email": email,
+      "role": results[0].role,
+      "first_name": results[0].first_name,
+      "last_name": results[0].last_name,
+      "phone": results[0].phone
+    }
     const is_valid_password = await bcrypt.compare(password, results[0].password);
 
     if (!is_valid_password) {

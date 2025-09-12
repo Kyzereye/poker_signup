@@ -53,7 +53,9 @@ export class RegisterComponent {
       const register_data = {
         email: form_data.email,
         password: form_data.password,
-        username: form_data.username
+        username: form_data.username,
+        firstName: form_data.firstName,
+        lastName: form_data.lastName
       };
 
       this.registerService.registerUser(register_data).subscribe({
@@ -64,7 +66,15 @@ export class RegisterComponent {
         },
         error: (error: any) => {
           if (error.status === 409) {
-            this.errorMessages = error.error.errors; // Set the error messages
+            // Transform backend error messages to be more user-friendly
+            this.errorMessages = error.error.errors.map((msg: string) => {
+              if (msg.includes('User name already exists')) {
+                return 'Screen name is already taken. Please choose a different one.';
+              } else if (msg.includes('Email already exists')) {
+                return 'Email address is already registered. Please use a different email or try logging in.';
+              }
+              return msg;
+            });
             console.log("Registration failed:", this.errorMessages);
           } else {
             this.errorMessages = ['An unexpected error occurred. Please try again.'];
@@ -99,7 +109,9 @@ export class RegisterComponent {
       email: ['kyzereye@gmail.com', [Validators.required, Validators.email]],
       password: ['1Q!azxsw2', [Validators.required, Validators.minLength(6)]],
       confirm_password: ['1Q!azxsw2', [Validators.required]],
-      username: ['jkyzer', [Validators.required]]
+      username: ['jkyzer', [Validators.required, Validators.minLength(3), Validators.maxLength(25)]],
+      firstName: ['Jeff', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+      lastName: ['Kyser', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]]
     }, { validator: this.passwordMatchValidator });
     this.register_form.valueChanges.subscribe(() => this.updatePasswordRequirements())
   }
@@ -112,6 +124,10 @@ export class RegisterComponent {
       panelClass: ['snackbar-success', 'snackbar-fade']
     };
     this.snackBar.open(message, '', config);
+  }
+
+  goToLogin() {
+    this.router.navigate(['/login']);
   }
 
 }

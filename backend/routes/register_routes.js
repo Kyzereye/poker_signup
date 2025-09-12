@@ -4,13 +4,13 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 
 router.post('/user_registration', async (req, res) => {
-  const { email, password, username } = req.body;
+  const { email, password, username, firstName, lastName } = req.body;
   console.log("reqbody", req.body);
 
   try {
     // Check if email or username already exists
-    const check_query = "SELECT email, username FROM users WHERE email = ?";
-    const [existing_users] = await pool.query(check_query, [email]);
+    const check_query = "SELECT email, username FROM users WHERE email = ? OR username = ?";
+    const [existing_users] = await pool.query(check_query, [email, username]);
 
     if (existing_users.length > 0) {
       let errors = [];
@@ -33,7 +33,7 @@ router.post('/user_registration', async (req, res) => {
     const password_hash = await bcrypt.hash(password, salt);
 
     console.log("username", username);
-    const insert_query = `
+    const insert_user_query = `
       INSERT INTO users 
         (email, password, username) 
       VALUES 
@@ -41,21 +41,54 @@ router.post('/user_registration', async (req, res) => {
     `;
 
     // Execute insert with correct parameters
-    const [result] = await pool.query(insert_query, [
+    const [user_result] = await pool.query(insert_user_query, [
       email,
       password_hash,
       username
+    ]);
+
+    const user_id = user_result.insertId;
+
+    // Insert into user_features table
+    const insert_features_query = `
+      INSERT INTO user_features 
+        (user_id, first_name, last_name, role) 
+      VALUES 
+        (?, ?, ?, ?)
+    `;
+
+    await pool.query(insert_features_query, [
+      user_id,
+      firstName,
+      lastName,
+      'player' // Default role for new users
     ]);
 
     // Return appropriate response
     res.status(201).json({
       success: true,
       message: 'User registered successfully',
-      user_id: result.insertId
+      user_id: user_id
     });
 
   } catch (error) {
     console.error('Registration error:', error);
+    
+    // Handle specific database constraint violations
+    if (error.code === 'ER_DUP_ENTRY') {
+      if (error.sqlMessage.includes('email')) {
+        return res.status(409).json({
+          success: false,
+          errors: ['Email already exists']
+        });
+      } else if (error.sqlMessage.includes('username')) {
+        return res.status(409).json({
+          success: false,
+          errors: ['User name already exists']
+        });
+      }
+    }
+    
     res.status(500).json({
       success: false,
       error: 'Internal server error'

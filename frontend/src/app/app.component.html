@@ -1,4 +1,17 @@
-<app-left-sidebar [isLeftSidebarCollapsed]="isLeftSidebarCollapsed()"
-(changeIsLeftSidebarCollapsed)="changeIsLeftSidebarCollapsed($event)"
-></app-left-sidebar>
-<app-main [isLeftSideCollapsed]="isLeftSidebarCollapsed()" [screenWidth]="screenWidth()"></app-main>
+<!-- Show full layout for authenticated pages -->
+<div *ngIf="showLayout()" class="app-container">
+  <app-left-sidebar 
+    [isLeftSidebarCollapsed]="isLeftSidebarCollapsed()"
+    (changeIsLeftSidebarCollapsed)="changeIsLeftSidebarCollapsed($event)">
+  </app-left-sidebar>
+  
+  <app-main 
+    [isLeftSideCollapsed]="isLeftSidebarCollapsed()" 
+    [screenWidth]="screenWidth()">
+  </app-main>
+</div>
+
+<!-- Show only router outlet for login/register pages -->
+<div *ngIf="!showLayout()">
+  <router-outlet></router-outlet>
+</div>

@@ -1,48 +1,289 @@
-:host {
+.page-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
+  background: var(--background-secondary);
+  z-index: 1000;
+  padding: 2rem;
+  overflow-y: auto;
 }
 
-.username-field {
-  .mat-mdc-input-element:disabled {
-    background-color: #f0f0f0;
-    color: #333;
-    font-weight: bold;
-    cursor: not-allowed;
+.content-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  
+  h1 {
+    color: var(--text-primary);
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin: 0;
+    max-width: 600px;
+    margin: 0 auto;
   }
 }
 
-.row {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-  gap: 20px;
+.filters-section {
+  margin-bottom: 2rem;
+
+  .filters-card {
+    background: var(--background-primary);
+    box-shadow: var(--shadow-light);
+    border: 1px solid var(--border-light);
+
+    mat-card-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+
+      mat-card-title {
+        color: var(--text-primary);
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
+
+      mat-card-subtitle {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+      }
+    }
+
+    .filters-form {
+      .filter-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        align-items: start;
+
+        .day-field,
+        .location-field {
+          width: 100%;
+          margin-bottom: 0;
+        }
+
+        .today-indicator {
+          color: var(--primary-color);
+          font-weight: 500;
+          font-style: italic;
+        }
+      }
+    }
+  }
 }
 
-.column {
-  flex: 1 1 300px;
-  padding: 20px;
+// Responsive design for filters
+@media (max-width: 768px) {
+  .filters-section {
+    .filters-card {
+      .filters-form {
+        .filter-row {
+          grid-template-columns: 1fr;
+          gap: 15px;
+        }
+      }
+    }
+  }
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  max-width: 300px;
-  margin: 0 auto;
-  padding: 25px;
+.games-section {
+  h2 {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .game-card {
+    background: var(--background-primary);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-light);
+    transition: all 0.3s ease;
+    border-radius: var(--border-radius);
+
+    &:hover:not(.gray-out) {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-medium);
+    }
+
+    mat-card-header {
+      margin-bottom: 1rem;
+
+      mat-card-title {
+        color: var(--text-primary);
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+
+      mat-card-subtitle {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+      }
+    }
+
+    .game-details {
+      .detail-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.75rem;
+        color: var(--text-secondary);
+
+        mat-icon {
+          margin-right: 0.75rem;
+          color: var(--text-disabled);
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+        }
+
+        span {
+          flex: 1;
+          font-size: 0.875rem;
+        }
+      }
+    }
+
+    .signup-button {
+      width: 100%;
+      margin-top: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+      }
+
+      mat-icon {
+        margin-right: 0.5rem;
+      }
+    }
+
+    .disabled-signup {
+      width: 100%;
+      margin-top: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--background-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      color: var(--text-disabled);
+
+      .disabled-icon {
+        margin-right: 0.5rem;
+        color: var(--text-disabled);
+      }
+
+      .disabled-text {
+        font-size: 0.875rem;
+        font-style: italic;
+      }
+    }
+
+    &.gray-out {
+      opacity: 0.6;
+      background: var(--background-tertiary);
+    }
+  }
 }
 
-mat-form-field {
-  margin-bottom: 20px;
+.no-games {
+  margin-top: 2rem;
+
+  .no-games-card {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+    background: var(--background-primary);
+    box-shadow: var(--shadow-light);
+    border: 1px solid var(--border-light);
+
+    .no-games-content {
+      padding: 2rem;
+
+      .no-games-icon {
+        font-size: 3rem;
+        width: 3rem;
+        height: 3rem;
+        color: var(--text-disabled);
+        margin-bottom: 1rem;
+      }
+
+      h3 {
+        color: var(--text-secondary);
+        margin: 0 0 0.75rem 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+
+      p {
+        color: var(--text-disabled);
+        margin: 0;
+        font-size: 0.875rem;
+      }
+    }
+  }
 }
 
-mat-card {
-  padding: 70px;
-}
-
-.gray-out {
-  opacity: 0.5;
+// Responsive design
+@media (max-width: 768px) {
+  .page-container {
+    padding: 1rem;
+  }
+  
+  .content-wrapper {
+    max-width: 100%;
+  }
+  
+  .page-header {
+    h1 {
+      font-size: 2rem;
+    }
+    
+    p {
+      font-size: 1rem;
+    }
+  }
+  
+  .filters-section {
+    .filters-card {
+      .filters-form {
+        .filter-row {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+      }
+    }
+  }
 }

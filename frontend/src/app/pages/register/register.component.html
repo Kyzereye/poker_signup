@@ -1,57 +1,161 @@
-<mat-card>
-  <div class="row">
-    <div class="column">
-      <form [formGroup]="register_form" (ngSubmit)="onSubmit()">
-        <mat-form-field>
-          <mat-label>Email</mat-label>
-          <input matInput id="email" formControlName="email" type="email">
+<div class="register-container">
+  <div class="register-card">
+    <div class="register-header">
+      <h1>Create Account</h1>
+      <p>Join the poker community and start playing today</p>
+    </div>
+    
+    <form [formGroup]="register_form" (ngSubmit)="onSubmit()" class="register-form">
+      <div class="form-layout">
+        <div class="form-fields">
+      <div class="form-group">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email Address</mat-label>
+          <input matInput 
+                 id="email" 
+                 formControlName="email" 
+                 type="email"
+                 placeholder="Enter your email address" />
         </mat-form-field>
+      </div>
 
-        <mat-form-field>
-          <mat-label>Password</mat-label>
-          <input matInput id="password" formControlName="password" [type]="hide_password ? 'password' : 'text'">
-          <button mat-icon-button matSuffix (click)="hide_password = !hide_password" [attr.aria-label]="'Hide password'"
-            [attr.aria-pressed]="hide_password">
+      <div class="form-group">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Screen Name</mat-label>
+          <input matInput 
+                 id="screenName" 
+                 formControlName="username" 
+                 type="text"
+                 placeholder="Choose a unique screen name" />
+          <mat-hint>The Screen Name will be your display name and must be unique</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>First Name</mat-label>
+          <input matInput 
+                 id="firstName" 
+                 formControlName="firstName" 
+                 type="text"
+                 placeholder="Enter your first name" />
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Last Name</mat-label>
+          <input matInput 
+                 id="lastName" 
+                 formControlName="lastName" 
+                 type="text"
+                 placeholder="Enter your last name" />
+        </mat-form-field>
+      </div>
+
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Password</mat-label>
+              <input matInput 
+                     id="password" 
+                     formControlName="password" 
+                     [type]="hide_password ? 'password' : 'text'"
+                     placeholder="Create a strong password" />
+          <button mat-icon-button 
+                  matSuffix 
+                  type="button"
+                  (click)="hide_password = !hide_password" 
+                  [attr.aria-label]="'Hide password'"
+                  [attr.aria-pressed]="hide_password">
             <mat-icon>{{hide_password ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
-        </mat-form-field>
+            </mat-form-field>
+          </div>
 
-        <mat-form-field>
-          <mat-label>Confirm Password</mat-label>
-          <input matInput id="confirmPassword" formControlName="confirm_password"
-            [type]="hide_confirm_password ? 'password' : 'text'">
-          <button mat-icon-button matSuffix (click)="hide_confirm_password = !hide_confirm_password"
-            [attr.aria-label]="'Hide confirm password'" [attr.aria-pressed]="hide_confirm_password">
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Confirm Password</mat-label>
+              <input matInput 
+                     id="confirmPassword" 
+                     formControlName="confirm_password"
+                     [type]="hide_confirm_password ? 'password' : 'text'"
+                     placeholder="Confirm your password" />
+          <button mat-icon-button 
+                  matSuffix 
+                  type="button"
+                  (click)="hide_confirm_password = !hide_confirm_password"
+                  [attr.aria-label]="'Hide confirm password'" 
+                  [attr.aria-pressed]="hide_confirm_password">
             <mat-icon>{{hide_confirm_password ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
-        </mat-form-field>
+            </mat-form-field>
+          </div>
 
-        <mat-form-field>
-          <mat-label>Screen Name</mat-label>
-          <input matInput id="screenName" formControlName="username" type="text">
-        </mat-form-field>
-        <mat-error *ngFor="let errorMessage of errorMessages">{{ errorMessage }}</mat-error>
-        <button mat-raised-button color="primary" type="submit" [disabled]="!register_form.valid">Register</button>
-      </form>
-    </div>
-    <div class="column">
-      <div>
-        Your password needs to have the following:
-        <ul>
-          <li [ngStyle]="{'color': passwordRequirements.min_length ? 'green' : 'red'}">At least 8 characters</li>
-          <li [ngStyle]="{'color': passwordRequirements.has_number ? 'green' : 'red'}">At least 1 number (0-9)</li>
-          <li [ngStyle]="{'color': passwordRequirements.has_upper_case ? 'green' : 'red'}">At least 1 uppercase letter
-          </li>
-          <li [ngStyle]="{'color': passwordRequirements.has_special_character ? 'green' : 'red'}">At least 1 special
-            character
-          </li>
-          <li [ngStyle]="{'color': passwordRequirements.has_lower_case ? 'green' : 'red'}">At least 1 lowercase letter
-          </li>
-          <li [ngStyle]="{'color': passwordRequirements.passwords_match ? 'green' : 'red'}">Passwords match</li>
-        </ul>
+          <!-- Error Messages -->
+          <div *ngIf="errorMessages.length > 0" class="error-messages">
+            <div *ngFor="let errorMessage of errorMessages" class="error-message">
+              <mat-icon>error</mat-icon>
+              {{ errorMessage }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Password Requirements - Right Side -->
+        <div class="password-requirements">
+          <h4>Password Requirements</h4>
+          <div class="requirements-list">
+            <div class="requirement-item" [ngClass]="{'met': passwordRequirements.min_length}">
+              <mat-icon>{{ passwordRequirements.min_length ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+              <span>8+ characters</span>
+            </div>
+            <div class="requirement-item" [ngClass]="{'met': passwordRequirements.has_number}">
+              <mat-icon>{{ passwordRequirements.has_number ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+              <span>1 number</span>
+            </div>
+            <div class="requirement-item" [ngClass]="{'met': passwordRequirements.has_upper_case}">
+              <mat-icon>{{ passwordRequirements.has_upper_case ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+              <span>1 uppercase</span>
+            </div>
+            <div class="requirement-item" [ngClass]="{'met': passwordRequirements.has_lower_case}">
+              <mat-icon>{{ passwordRequirements.has_lower_case ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+              <span>1 lowercase</span>
+            </div>
+            <div class="requirement-item" [ngClass]="{'met': passwordRequirements.has_special_character}">
+              <mat-icon>{{ passwordRequirements.has_special_character ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+              <span>1 special char</span>
+            </div>
+            <div class="requirement-item" [ngClass]="{'met': passwordRequirements.passwords_match}">
+              <mat-icon>{{ passwordRequirements.passwords_match ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+              <span>Passwords match</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
+      
+      <div class="form-actions">
+        <button mat-raised-button 
+                color="primary" 
+                type="submit" 
+                class="register-button"
+                [disabled]="!register_form.valid || !allRequirementsMet">
+          <mat-icon>person_add</mat-icon>
+          Create Account
+        </button>
       </div>
-    </div>
+      
+      <div class="login-section">
+        <div class="divider">
+          <span>Already have an account?</span>
+        </div>
+        
+        <button mat-stroked-button 
+                type="button" 
+                class="login-button"
+                (click)="goToLogin()">
+          <mat-icon>login</mat-icon>
+          Sign In
+        </button>
+      </div>
+    </form>
   </div>
-</mat-card>
+</div>

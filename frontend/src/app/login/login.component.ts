@@ -9,12 +9,15 @@ import { Router } from '@angular/router';
 import { LoginService } from '../services/login.service';
 import { UserService } from '../services/user.service';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../services/auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SimpleDialogComponent } from '../components/simple-dialog/simple-dialog.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatCardModule],
+  imports: [ReactiveFormsModule, CommonModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatCardModule, MatIconModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -22,13 +25,15 @@ export class LoginComponent {
   login_form!: FormGroup;
   locations: any[] = [];
   users: any[] = [];
+  hide_password: boolean = true;
 
   constructor(
     private fb: FormBuilder,
     private loginService: LoginService,
     private userService: UserService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -48,12 +53,28 @@ onSubmit() {
     this.loginService.login(data).subscribe((response: any) => {
       if (response.success === true) {
         this.userService.setCurrentUser(response.user_data);
-        this.authService.login();
+        this.authService.login(response.user_data);
         this.router.navigate(['/signup']);
       }
     }, (error) => {
       console.error("Login error:", error);
+      this.showLoginError(error);
     });
+}
+
+private showLoginError(error: any): void {
+  // Generic error message for security - don't reveal if email exists or password is wrong
+  const errorMessage = 'Login credentials are incorrect. Please check your email and password and try again.';
+
+  this.dialog.open(SimpleDialogComponent, {
+    width: '400px',
+    data: {
+      title: 'Login Failed',
+      message: errorMessage,
+      confirmText: 'OK',
+      cancelText: null
+    }
+  });
 }
 
   getLocations() {
@@ -80,6 +101,10 @@ onSubmit() {
 
   onLoginHelp() {
     console.log("onLoginHelp")
+  }
+
+  goToRegister() {
+    this.router.navigate(['/register']);
   }
 
 

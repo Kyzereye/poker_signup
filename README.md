@@ -10,6 +10,7 @@ A full-stack web application for managing poker game signups with real-time play
 - **Real-time Updates** - Refresh player lists instantly
 - **Duplicate Prevention** - Prevents multiple signups for the same game
 - **Day-of-Game Only** - Users can only sign up on the actual game day
+- **Role-Based Access** - Player, Dealer, and Admin roles with different permissions
 
 ### User Experience
 - **Responsive Design** - Works on desktop and mobile devices
@@ -154,12 +155,20 @@ poker_signup/
 - **locations** - Poker game venues
 - **games** - Recurring poker games (weekly schedule)
 - **user_game_signups** - Player signups for specific games
-- **user_features** - Additional user profile information
+- **user_features** - Additional user profile information including roles
 
 ### Key Relationships
 - Games belong to locations
 - Signups link users to games
 - Composite primary key on user_game_signups (user_id, game_id)
+- User roles stored in user_features table
+
+### Role System
+- **Player** (default) - Can sign up for games and view player lists
+- **Dealer** - Additional permissions for game management (future feature)
+- **Admin** - Full system access including admin panel
+- Roles are stored as ENUM in user_features.role column
+- New users automatically get 'player' role upon registration
 
 ## 🔧 API Endpoints
 
@@ -176,6 +185,12 @@ poker_signup/
 ### User Actions
 - `POST /user_routes/get_user_data` - Get current user data
 - `POST /user_routes/game_sign_up` - Sign up for a game
+- `PUT /user_routes/update_profile` - Update user profile information
+
+### Role Management
+- `GET /user_routes/get_user_role/:userId` - Get user's role
+- `GET /user_routes/get_all_roles` - Get all available roles
+- `PUT /user_routes/update_user_role` - Update user role (admin only)
 
 ## 🎮 Usage
 

@@ -7,7 +7,9 @@ import { SignupComponent } from './pages/signup/signup.component';
 import { TheListComponent } from './pages/the-list/the-list.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
+import { AdminComponent } from './pages/admin/admin.component';
 import { AuthGuard } from './auth.guard';
+import { AdminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   // Non-authenticated routes
@@ -46,8 +48,13 @@ export const routes: Routes = [
         component: StandingsComponent
       },
       {
-        path: 'the-list/:gameId',
+        path: 'the-list',
         component: TheListComponent
+      },
+      {
+        path: 'admin',
+        component: AdminComponent,
+        canActivate: [AdminGuard]
       }
     ]
   },

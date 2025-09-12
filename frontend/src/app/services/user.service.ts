@@ -44,5 +44,40 @@ export class UserService {
     return this.httpClient.post<Location[]>(`${this.url}/user_routes/game_sign_up`, data);
   }
 
+  deleteGameSignup(data: any): Observable<any> {
+    return this.httpClient.delete(`${this.url}/user_routes/delete_game_signup`, { body: data });
+  }
+
+  getAllPlayerSignups(): Observable<any> {
+    return this.httpClient.get(`${this.url}/user_routes/get_all_player_signups`);
+  }
+
+  getUserCurrentGame(userId: number): Observable<any> {
+    return this.httpClient.get(`${this.url}/user_routes/get_user_current_game/${userId}`);
+  }
+
+  getPlayerSignups(gameId: number): Observable<any> {
+    return this.httpClient.get(`${this.url}/user_routes/get_player_signups/${gameId}`);
+  }
+
+  getLocationsWithGames(day: string): Observable<any> {
+    return this.httpClient.get(`${this.url}/user_routes/get_locations_with_games/${day}`);
+  }
+
+  updateProfile(data: any): Observable<any> {
+    return this.httpClient.put(`${this.url}/user_routes/update_profile`, data);
+  }
+
+  getUserRole(userId: number): Observable<any> {
+    return this.httpClient.get(`${this.url}/user_routes/get_user_role/${userId}`);
+  }
+
+  getAllRoles(): Observable<any> {
+    return this.httpClient.get(`${this.url}/user_routes/get_all_roles`);
+  }
+
+  updateUserRole(data: any): Observable<any> {
+    return this.httpClient.put(`${this.url}/user_routes/update_user_role`, data);
+  }
 
 }

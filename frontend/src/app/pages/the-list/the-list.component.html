@@ -1,51 +1,151 @@
 <!-- The List Component HTML -->
-<div class="the-list-container">
-  <div class="header">
-    <button mat-icon-button (click)="goBack()" class="back-button">
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-    <h1>The List</h1>
-    <button mat-icon-button (click)="refreshList()" class="refresh-button">
-      <mat-icon>refresh</mat-icon>
-    </button>
+<div class="page-container">
+  <div class="content-wrapper">
+    <div class="page-header">
+    <div class="header-content">
+      <button mat-icon-button (click)="goBack()" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="header-title">
+        <h1>The List</h1>
+        <p class="header-subtitle">View game signups and player information</p>
+      </div>
+      <button mat-icon-button (click)="refreshList()" class="refresh-button">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
   </div>
 
-  <div *ngIf="game_details" class="game-info">
-    <mat-card class="game-details-card">
-      <mat-card-header>
-        <mat-card-title>{{ game_details.location_name }}</mat-card-title>
-        <mat-card-subtitle>{{ getFormattedGameDate() }} at {{ game_details.start_time }}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <p><strong>Players Signed Up:</strong> {{ player_signups.length }}</p>
-      </mat-card-content>
-    </mat-card>
+  <!-- User is signed up for a game -->
+  <div *ngIf="has_signup && user_game" class="signed-up-view">
+    <div class="content-section">
+      <mat-card class="game-details-card">
+        <mat-card-header>
+          <div class="game-header-icon">
+            <mat-icon>sports_esports</mat-icon>
+          </div>
+          <div class="game-header-content">
+            <mat-card-title>{{ user_game.location_name }}</mat-card-title>
+            <mat-card-subtitle>{{ getFormattedGameDate() }} at {{ user_game.start_time }}</mat-card-subtitle>
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="game-stats">
+            <div class="stat-item">
+              <mat-icon>group</mat-icon>
+              <span class="stat-label">Players Signed Up</span>
+              <span class="stat-value">{{ player_signups.length }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="players-section">
+      <div class="section-header">
+        <h2>Players Signed Up</h2>
+        <div class="player-count">{{ player_signups.length }} player{{ player_signups.length !== 1 ? 's' : '' }}</div>
+      </div>
+      
+      <div *ngIf="player_signups.length === 0" class="no-players">
+        <mat-card class="empty-state-card">
+          <mat-card-content>
+            <div class="empty-state-content">
+              <mat-icon class="empty-icon">person_add</mat-icon>
+              <h3>No other players yet</h3>
+              <p>You're the first one signed up for this game!</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div *ngIf="player_signups.length > 0" class="players-list">
+        <mat-card *ngFor="let signup of player_signups; let i = index" class="player-card">
+          <mat-card-content>
+            <div class="player-info">
+              <div class="player-number">{{ i + 1 }}</div>
+              <div class="player-details">
+                <div class="player-name">{{ signup.first_name }} {{ signup.last_name }}</div>
+                <div class="player-username">{{ signup.username | titlecase }}</div>
+              </div>
+              <button *ngIf="signup.user_id === current_user_id" 
+                      mat-icon-button 
+                      color="warn" 
+                      class="delete-button"
+                      (click)="deleteSignup()"
+                      title="Remove my signup">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+            <div class="signup-time">
+              <mat-icon>schedule</mat-icon>
+              <span>Signed up {{ signup.signup_time | date:'short' }}</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
   </div>
 
-  <div class="players-section">
-    <h2>Players Signed Up</h2>
+  <!-- User is NOT signed up for any game - show today's games -->
+  <div *ngIf="!has_signup" class="todays-games-view">
+    <div class="content-section">
+      <mat-card class="welcome-card">
+        <mat-card-header>
+          <div class="welcome-icon">
+            <mat-icon>event_available</mat-icon>
+          </div>
+          <div class="welcome-content">
+            <mat-card-title>Games Today ({{ current_day }})</mat-card-title>
+            <mat-card-subtitle>You're not signed up for any games. Here are today's available games:</mat-card-subtitle>
+          </div>
+        </mat-card-header>
+      </mat-card>
+    </div>
     
-    <div *ngIf="player_signups.length === 0" class="no-players">
-      <mat-card>
+    <div *ngIf="todays_games.length === 0" class="no-games-today">
+      <mat-card class="empty-state-card">
         <mat-card-content>
-          <p>No players signed up yet.</p>
+          <div class="empty-state-content">
+            <mat-icon class="empty-icon">event_busy</mat-icon>
+            <h3>No games today</h3>
+            <p>There are no poker games scheduled for {{ current_day }}.</p>
+            <button mat-raised-button color="primary" (click)="goToSignup()">
+              <mat-icon>add</mat-icon>
+              View All Games
+            </button>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>
 
-    <div *ngIf="player_signups.length > 0" class="players-list">
-      <mat-card *ngFor="let signup of player_signups; let i = index" class="player-card">
-        <mat-card-content>
-          <div class="player-info">
-            <span class="player-number">{{ i + 1 }}.</span>
-            <span class="player-name">{{ signup.first_name }} {{ signup.last_name }}</span>
-            <span class="player-username">({{ signup.username }})</span>
-          </div>
-          <div class="signup-time">
-            Signed up: {{ signup.signup_time | date:'short' }}
-          </div>
-        </mat-card-content>
-      </mat-card>
+    <div *ngIf="todays_games.length > 0" class="games-grid">
+      <div *ngFor="let location of todays_games" class="location-group">
+        <div class="location-header">
+          <h3 class="location-name">{{ location.name }}</h3>
+          <div class="location-address">{{ location.address }}</div>
+        </div>
+        <div class="games-list">
+          <mat-card *ngFor="let game of location.games" class="game-card">
+            <mat-card-header>
+              <div class="game-time-icon">
+                <mat-icon>schedule</mat-icon>
+              </div>
+              <div class="game-header-content">
+                <mat-card-title>{{ game.game_day }} at {{ game.start_time }}</mat-card-title>
+                <mat-card-subtitle *ngIf="game.notes">{{ game.notes }}</mat-card-subtitle>
+              </div>
+            </mat-card-header>
+            <mat-card-actions>
+              <button mat-raised-button color="primary" (click)="goToSignup()">
+                <mat-icon>person_add</mat-icon>
+                Sign Up for This Game
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
     </div>
+  </div>
   </div>
 </div>

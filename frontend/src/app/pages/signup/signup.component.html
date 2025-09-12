@@ -1,43 +1,101 @@
-<!-- signup component html -->
-<div>
-  <mat-card>
-    <form [formGroup]="signup_form">
-      <mat-form-field appearance="outline">
-        <mat-label>Choose a Location</mat-label>
-        <mat-select formControlName="game_location" required>
-          <mat-option *ngFor="let location of locations$ | async" [value]="location.id">
-            {{ location.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </form>
-  </mat-card>
-
-</div>
-<div>
-  <div class="row">
-    <div *ngFor="let venue of venue_details; trackBy: trackByVenueId">
-    <div class="column">
-        <mat-card [ngClass]="{'gray-out': shouldGrayOut(venue)}">
-          <mat-card-title>
-            {{ venue.name }} Details
-          </mat-card-title>
-          <mat-card-content>
-            <p><strong>Address:</strong> {{ venue.address }}</p>
-            <p><strong>Game Day:</strong> {{ venue.game_day }}</p>
-            <p><strong>Start Time:</strong> {{ venue.start_time }}</p>
-            <p><strong>Notes:</strong> {{ venue.notes }}</p>
-          </mat-card-content>
-          <mat-card-actions>
-            <button mat-raised-button color="primary" 
-                    [disabled]="shouldGrayOut(venue)"
-                    (click)="signUpForGame(venue.game_id)">
-              {{ shouldGrayOut(venue) ? 'Game not today' : 'Sign up for this game' }}
-            </button>
-          </mat-card-actions>
-        </mat-card>
-      </div>
-      <hr>
+<!-- Signup Component HTML -->
+<div class="page-container">
+  <div class="content-wrapper">
+    <div class="page-header">
+      <h1>Game Signup</h1>
+      <p>View available games for any day, or filter by location. You can only sign up for games happening today.</p>
     </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <mat-card class="filters-card">
+      <mat-card-header>
+        <mat-card-title>Filter Games</mat-card-title>
+        <mat-card-subtitle>Select a day and optionally filter by location</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="signup_form" class="filters-form">
+          <div class="filter-row">
+            <mat-form-field appearance="outline" class="day-field">
+              <mat-label>Select Day</mat-label>
+              <mat-select formControlName="selected_day">
+                <mat-option *ngFor="let day of days_of_week" [value]="day">
+                  {{ day }}
+                  <span *ngIf="day === currentDay" class="today-indicator"> (Today)</span>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline" class="location-field">
+              <mat-label>All Locations (or select to filter)</mat-label>
+              <mat-select formControlName="game_location">
+                <mat-option [value]="''">Show All Locations</mat-option>
+                <mat-option *ngFor="let location of locations$ | async" [value]="location.id">
+                  {{ location.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Games Grid -->
+  <div *ngIf="getCurrentGamesList().length > 0" class="games-section">
+    <h2>{{ show_all_games ? 'All Available Games for ' + selectedDay : 'Available Games for ' + selectedDay }}</h2>
+    <div class="cards-grid">
+      <mat-card *ngFor="let game of getCurrentGamesList(); trackBy: trackByGameId" 
+                class="game-card" 
+                [ngClass]="{'gray-out': shouldGrayOutGame(game)}">
+        <mat-card-header>
+          <mat-card-title>{{ game.location_name || game.name }}</mat-card-title>
+          <mat-card-subtitle>{{ game.game_day }} at {{ game.start_time }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="game-details">
+            <div class="detail-item">
+              <mat-icon>location_on</mat-icon>
+              <span>{{ game.address }}</span>
+            </div>
+            <div class="detail-item" *ngIf="game.notes">
+              <mat-icon>info</mat-icon>
+              <span>{{ game.notes }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button *ngIf="canSignUpForGame(game)" 
+                  mat-raised-button 
+                  color="primary" 
+                  class="signup-button"
+                  (click)="signUpForGame(game.game_id)">
+            <mat-icon>person_add</mat-icon>
+            Sign up for this game
+          </button>
+          
+          <div *ngIf="!canSignUpForGame(game)" class="disabled-signup">
+            <mat-icon class="disabled-icon">event_busy</mat-icon>
+            <span class="disabled-text">
+              {{ game.game_day === currentDay ? 'Game not available' : 'Signup only available on ' + game.game_day }}
+            </span>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- No Games Message -->
+  <div *ngIf="getCurrentGamesList().length === 0" class="no-games">
+    <mat-card class="no-games-card">
+      <mat-card-content>
+        <div class="no-games-content">
+          <mat-icon class="no-games-icon">event_busy</mat-icon>
+          <h3>No games available</h3>
+          <p>Please select a location to view available games.</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
   </div>
 </div>
