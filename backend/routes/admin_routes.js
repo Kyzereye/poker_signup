@@ -143,6 +143,33 @@ router.get('/users', async (req, res) => {
   }
 });
 
+// Get all users (for user management)
+router.get('/all_users', async (req, res) => {
+  try {
+    const query = `
+      SELECT 
+        u.id,
+        u.username,
+        u.email,
+        uf.first_name,
+        uf.last_name,
+        uf.role
+      FROM users u
+      LEFT JOIN user_features uf ON u.id = uf.user_id
+      ORDER BY u.username ASC
+    `;
+    const [users] = await pool.query(query);
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.error('Get all users error:', error);
+    res.status(500).json({ 
+      error: 'Internal server error', 
+      details: error.message 
+    });
+  }
+});
+
 // Get user by ID
 router.get('/users/:userId', async (req, res) => {
   const { userId } = req.params;
@@ -220,6 +247,78 @@ router.put('/users/:userId/role', async (req, res) => {
   }
 });
 
+// Create new user
+router.post('/create_user', async (req, res) => {
+  const { username, email, password, first_name, last_name, role = 'player' } = req.body;
+
+  // Validate required fields
+  if (!username || !email || !password || !first_name || !last_name) {
+    return res.status(400).json({ 
+      error: 'Missing required fields: username, email, password, first_name, last_name' 
+    });
+  }
+
+  // Validate role
+  if (!['player', 'dealer', 'admin'].includes(role)) {
+    return res.status(400).json({ 
+      error: 'Invalid role. Must be player, dealer, or admin' 
+    });
+  }
+
+  try {
+    // Check if username or email already exists
+    const checkQuery = 'SELECT id FROM users WHERE username = ? OR email = ?';
+    const [existing] = await pool.query(checkQuery, [username, email]);
+    
+    if (existing.length > 0) {
+      return res.status(409).json({ 
+        error: 'Username or email already exists' 
+      });
+    }
+
+    // Start transaction
+    await pool.query('START TRANSACTION');
+
+    try {
+      // Hash password
+      const bcrypt = require('bcrypt');
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+      // Insert into users table
+      const insertUserQuery = `
+        INSERT INTO users (username, email, password) 
+        VALUES (?, ?, ?)
+      `;
+      const [userResult] = await pool.query(insertUserQuery, [username, email, hashedPassword]);
+      const userId = userResult.insertId;
+
+      // Insert into user_features table
+      const insertFeaturesQuery = `
+        INSERT INTO user_features (user_id, first_name, last_name, role) 
+        VALUES (?, ?, ?, ?)
+      `;
+      await pool.query(insertFeaturesQuery, [userId, first_name, last_name, role]);
+
+      await pool.query('COMMIT');
+      res.status(201).json({ 
+        success: true, 
+        message: 'User created successfully',
+        user_id: userId
+      });
+    } catch (error) {
+      await pool.query('ROLLBACK');
+      throw error;
+    }
+  } catch (error) {
+    console.error('Create user error:', error);
+    res.status(500).json({ 
+      error: 'Internal server error', 
+      details: error.message 
+    });
+  }
+});
+
 // Update user information
 router.put('/users/:userId', async (req, res) => {
   const { userId } = req.params;
@@ -282,6 +381,157 @@ router.put('/users/:userId', async (req, res) => {
     }
   } catch (error) {
     console.error('Update user error:', error);
+    res.status(500).json({ 
+      error: 'Internal server error', 
+      details: error.message 
+    });
+  }
+});
+
+// Update user (for user management)
+router.put('/update_user/:userId', async (req, res) => {
+  const { userId } = req.params;
+  const { username, email, password, first_name, last_name, role } = req.body;
+
+  try {
+    // Check if user exists
+    const checkQuery = 'SELECT id FROM users WHERE id = ?';
+    const [existing] = await pool.query(checkQuery, [userId]);
+    
+    if (existing.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Validate role if provided
+    if (role && !['player', 'dealer', 'admin'].includes(role)) {
+      return res.status(400).json({ 
+        error: 'Invalid role. Must be player, dealer, or admin' 
+      });
+    }
+
+    // Start transaction
+    await pool.query('START TRANSACTION');
+
+    try {
+      // Update users table
+      if (username || email || password) {
+        let updateUsersQuery = 'UPDATE users SET ';
+        const updateParams = [];
+        
+        if (username) {
+          updateUsersQuery += 'username = ?';
+          updateParams.push(username);
+        }
+        if (email) {
+          if (updateParams.length > 0) updateUsersQuery += ', ';
+          updateUsersQuery += 'email = ?';
+          updateParams.push(email);
+        }
+        if (password) {
+          if (updateParams.length > 0) updateUsersQuery += ', ';
+          updateUsersQuery += 'password = ?';
+          const bcrypt = require('bcrypt');
+          const saltRounds = 10;
+          const hashedPassword = await bcrypt.hash(password, saltRounds);
+          updateParams.push(hashedPassword);
+        }
+        
+        updateUsersQuery += ' WHERE id = ?';
+        updateParams.push(userId);
+        
+        await pool.query(updateUsersQuery, updateParams);
+      }
+
+      // Update user_features table
+      if (first_name || last_name || role) {
+        let updateFeaturesQuery = 'UPDATE user_features SET ';
+        const updateFeaturesParams = [];
+        
+        if (first_name) {
+          updateFeaturesQuery += 'first_name = ?';
+          updateFeaturesParams.push(first_name);
+        }
+        if (last_name) {
+          if (updateFeaturesParams.length > 0) updateFeaturesQuery += ', ';
+          updateFeaturesQuery += 'last_name = ?';
+          updateFeaturesParams.push(last_name);
+        }
+        if (role) {
+          if (updateFeaturesParams.length > 0) updateFeaturesQuery += ', ';
+          updateFeaturesQuery += 'role = ?';
+          updateFeaturesParams.push(role);
+        }
+        
+        updateFeaturesQuery += ' WHERE user_id = ?';
+        updateFeaturesParams.push(userId);
+        
+        await pool.query(updateFeaturesQuery, updateFeaturesParams);
+      }
+
+      await pool.query('COMMIT');
+      res.status(200).json({ 
+        success: true, 
+        message: 'User updated successfully' 
+      });
+    } catch (error) {
+      await pool.query('ROLLBACK');
+      throw error;
+    }
+  } catch (error) {
+    console.error('Update user error:', error);
+    res.status(500).json({ 
+      error: 'Internal server error', 
+      details: error.message 
+    });
+  }
+});
+
+// Delete user
+router.delete('/delete_user/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Check if user exists
+    const checkQuery = 'SELECT id FROM users WHERE id = ?';
+    const [existing] = await pool.query(checkQuery, [userId]);
+    
+    if (existing.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Check if user has any signups (optional safety check)
+    const signupsQuery = 'SELECT COUNT(*) as count FROM user_game_signups WHERE user_id = ?';
+    const [signups] = await pool.query(signupsQuery, [userId]);
+    
+    if (parseInt(signups[0].count) > 0) {
+      return res.status(400).json({ 
+        error: 'Cannot delete user with active game signups. Please remove signups first.' 
+      });
+    }
+
+    // Start transaction
+    await pool.query('START TRANSACTION');
+
+    try {
+      // Delete from user_features first (due to foreign key)
+      const deleteFeaturesQuery = 'DELETE FROM user_features WHERE user_id = ?';
+      await pool.query(deleteFeaturesQuery, [userId]);
+
+      // Delete from users table
+      const deleteUserQuery = 'DELETE FROM users WHERE id = ?';
+      await pool.query(deleteUserQuery, [userId]);
+
+      await pool.query('COMMIT');
+      res.status(200).json({ 
+        success: true, 
+        message: 'User deleted successfully' 
+      });
+    } catch (error) {
+      await pool.query('ROLLBACK');
+      throw error;
+    }
+  } catch (error) {
+    console.error('Delete user error:', error);
     res.status(500).json({ 
       error: 'Internal server error', 
       details: error.message 

@@ -33563,7 +33563,7 @@ var MatSnackBarModule = class _MatSnackBarModule {
   }], null, null);
 })();
 
-// src/app/environments/environment.ts
+// src/environments/environment.ts
 var environment = {
   production: false,
   apiUrl: "http://localhost:3333"
@@ -37507,6 +37507,17 @@ function AdminComponent_div_8_Template(rf, ctx) {
     \u0275\u0275text(97, "location_on");
     \u0275\u0275elementEnd();
     \u0275\u0275text(98, " Location & Game Management ");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(99, "button", 17);
+    \u0275\u0275listener("click", function AdminComponent_div_8_Template_button_click_99_listener() {
+      \u0275\u0275restoreView(_r1);
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.manageUsers());
+    });
+    \u0275\u0275elementStart(100, "mat-icon");
+    \u0275\u0275text(101, "person_add");
+    \u0275\u0275elementEnd();
+    \u0275\u0275text(102, " User Management ");
     \u0275\u0275elementEnd()()()()();
   }
   if (rf & 2) {
@@ -37591,6 +37602,9 @@ var AdminComponent = class _AdminComponent {
   manageLocationsGames() {
     this.router.navigate(["/admin/venue-game-management"]);
   }
+  manageUsers() {
+    this.router.navigate(["/admin/user-management"]);
+  }
   static \u0275fac = function AdminComponent_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _AdminComponent)(\u0275\u0275directiveInject(RoleService), \u0275\u0275directiveInject(AdminService), \u0275\u0275directiveInject(MatSnackBar), \u0275\u0275directiveInject(Router));
   };
@@ -37602,7 +37616,7 @@ var AdminComponent = class _AdminComponent {
       \u0275\u0275elementStart(5, "p");
       \u0275\u0275text(6, "Manage users, roles, and system settings");
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(7, AdminComponent_div_7_Template, 4, 0, "div", 3)(8, AdminComponent_div_8_Template, 99, 11, "div", 4);
+      \u0275\u0275template(7, AdminComponent_div_7_Template, 4, 0, "div", 3)(8, AdminComponent_div_8_Template, 103, 11, "div", 4);
       \u0275\u0275elementEnd()();
     }
     if (rf & 2) {
@@ -45739,10 +45753,930 @@ var VenueGameManagementComponent = class _VenueGameManagementComponent {
     MatSortModule,
     MatSort,
     MatSortHeader
-  ], styles: ["\n\n.page-container[_ngcontent-%COMP%] {\n  min-height: 100vh;\n  background: #f5f5f5;\n  padding-left: 260px;\n  overflow-y: auto;\n  transition: padding-left 0.3s ease;\n}\n.content-wrapper[_ngcontent-%COMP%] {\n  max-width: 1400px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.page-container.sidebar-collapsed[_ngcontent-%COMP%] {\n  padding-left: 70px;\n}\n@media (max-width: 1200px) {\n  .page-container[_ngcontent-%COMP%] {\n    padding-left: 0;\n  }\n}\n.page-header[_ngcontent-%COMP%] {\n  margin-bottom: 24px;\n}\n.page-header[_ngcontent-%COMP%]   h1[_ngcontent-%COMP%] {\n  margin: 0 0 8px 0;\n  font-size: 2rem;\n  font-weight: 500;\n  color: #333;\n}\n.page-header[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  margin: 0;\n  color: #666;\n  font-size: 1rem;\n}\n.management-card[_ngcontent-%COMP%] {\n  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);\n  border-radius: 8px;\n}\n.management-card[_ngcontent-%COMP%]   mat-card-header[_ngcontent-%COMP%] {\n  border-bottom: 1px solid #e0e0e0;\n  margin-bottom: 0;\n}\n.management-card[_ngcontent-%COMP%]   mat-card-header[_ngcontent-%COMP%]   mat-card-title[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  font-size: 1.5rem;\n  font-weight: 500;\n  color: #333;\n}\n.management-card[_ngcontent-%COMP%]   mat-card-header[_ngcontent-%COMP%]   mat-card-title[_ngcontent-%COMP%]   mat-icon[_ngcontent-%COMP%] {\n  color: #1976d2;\n}\n.management-card[_ngcontent-%COMP%]   mat-card-header[_ngcontent-%COMP%]   mat-card-subtitle[_ngcontent-%COMP%] {\n  color: #666;\n  margin-top: 4px;\n}\n.tab-content[_ngcontent-%COMP%] {\n  padding: 24px 0;\n}\n.tab-header[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  margin-bottom: 24px;\n}\n.tab-header[_ngcontent-%COMP%]   h3[_ngcontent-%COMP%] {\n  margin: 0;\n  font-size: 1.25rem;\n  font-weight: 500;\n  color: #333;\n}\n.tab-header[_ngcontent-%COMP%]   .tab-actions[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.table-container[_ngcontent-%COMP%] {\n  min-height: 400px;\n  position: relative;\n}\n.loading-container[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  height: 400px;\n  gap: 16px;\n}\n.loading-container[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  margin: 0;\n  color: #666;\n  font-size: 1rem;\n}\n.empty-state[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  height: 400px;\n  gap: 16px;\n  text-align: center;\n}\n.empty-state[_ngcontent-%COMP%]   mat-icon[_ngcontent-%COMP%] {\n  font-size: 4rem;\n  width: 4rem;\n  height: 4rem;\n  color: #ccc;\n}\n.empty-state[_ngcontent-%COMP%]   h3[_ngcontent-%COMP%] {\n  margin: 0;\n  font-size: 1.5rem;\n  font-weight: 500;\n  color: #666;\n}\n.empty-state[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  margin: 0;\n  color: #999;\n  font-size: 1rem;\n}\n.venues-table[_ngcontent-%COMP%], \n.games-table[_ngcontent-%COMP%] {\n  width: 100%;\n  background: white;\n  border-radius: 8px;\n  overflow: hidden;\n  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n}\n.venues-table[_ngcontent-%COMP%]   th[_ngcontent-%COMP%], \n.games-table[_ngcontent-%COMP%]   th[_ngcontent-%COMP%] {\n  background: #f8f9fa;\n  font-weight: 600;\n  color: #333;\n  padding: 16px;\n}\n.venues-table[_ngcontent-%COMP%]   td[_ngcontent-%COMP%], \n.games-table[_ngcontent-%COMP%]   td[_ngcontent-%COMP%] {\n  padding: 16px;\n  border-bottom: 1px solid #e0e0e0;\n}\n.venues-table[_ngcontent-%COMP%]   tr[_ngcontent-%COMP%]:last-child   td[_ngcontent-%COMP%], \n.games-table[_ngcontent-%COMP%]   tr[_ngcontent-%COMP%]:last-child   td[_ngcontent-%COMP%] {\n  border-bottom: none;\n}\n.venues-table[_ngcontent-%COMP%]   .mat-column-actions[_ngcontent-%COMP%], \n.games-table[_ngcontent-%COMP%]   .mat-column-actions[_ngcontent-%COMP%] {\n  width: 120px;\n  text-align: center;\n}\nbutton[mat-icon-button][_ngcontent-%COMP%] {\n  margin: 0 4px;\n}\nbutton[mat-icon-button][color=warn][_ngcontent-%COMP%] {\n  color: #f44336;\n}\nbutton[mat-icon-button][color=warn][_ngcontent-%COMP%]:hover {\n  background-color: rgba(244, 67, 54, 0.1);\n}\nbutton[mat-icon-button][_ngcontent-%COMP%]:not([color=warn]) {\n  color: #1976d2;\n}\nbutton[mat-icon-button][_ngcontent-%COMP%]:not([color=warn]):hover {\n  background-color: rgba(25, 118, 210, 0.1);\n}\nbutton[mat-raised-button][_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\nbutton[mat-raised-button][_ngcontent-%COMP%]   mat-icon[_ngcontent-%COMP%] {\n  font-size: 1.2rem;\n  width: 1.2rem;\n  height: 1.2rem;\n}\n.search-container[_ngcontent-%COMP%] {\n  margin: 16px 0 24px 0;\n  display: flex;\n  justify-content: center;\n}\n.search-container[_ngcontent-%COMP%]   .search-field[_ngcontent-%COMP%] {\n  width: 100%;\n  max-width: 400px;\n}\n.search-container[_ngcontent-%COMP%]   .search-field[_ngcontent-%COMP%]   .mat-mdc-form-field[_ngcontent-%COMP%] {\n  width: 100%;\n}\n@media (max-width: 768px) {\n  .content-wrapper[_ngcontent-%COMP%] {\n    padding: 16px;\n  }\n  .page-header[_ngcontent-%COMP%]   h1[_ngcontent-%COMP%] {\n    font-size: 1.5rem;\n  }\n  .tab-header[_ngcontent-%COMP%] {\n    flex-direction: column;\n    gap: 16px;\n    align-items: flex-start;\n  }\n  .tab-actions[_ngcontent-%COMP%] {\n    width: 100%;\n    justify-content: flex-end;\n  }\n  .venues-table[_ngcontent-%COMP%], \n   .games-table[_ngcontent-%COMP%] {\n    font-size: 0.9rem;\n  }\n  .venues-table[_ngcontent-%COMP%]   th[_ngcontent-%COMP%], \n   .venues-table[_ngcontent-%COMP%]   td[_ngcontent-%COMP%], \n   .games-table[_ngcontent-%COMP%]   th[_ngcontent-%COMP%], \n   .games-table[_ngcontent-%COMP%]   td[_ngcontent-%COMP%] {\n    padding: 12px 8px;\n  }\n  .mat-column-actions[_ngcontent-%COMP%] {\n    width: 100px;\n  }\n  .search-container[_ngcontent-%COMP%] {\n    margin: 12px 0 20px 0;\n  }\n  .search-container[_ngcontent-%COMP%]   .search-field[_ngcontent-%COMP%] {\n    max-width: 100%;\n  }\n}\n@media (max-width: 480px) {\n  .venues-table[_ngcontent-%COMP%]   .mat-column-notes[_ngcontent-%COMP%], \n   .games-table[_ngcontent-%COMP%]   .mat-column-notes[_ngcontent-%COMP%] {\n    display: none;\n  }\n}\n/*# sourceMappingURL=venue-game-management.component.css.map */"] });
+  ], styles: ["\n\n.page-container[_ngcontent-%COMP%] {\n  min-height: 100vh;\n  background: #f5f5f5;\n  padding-left: 260px;\n  overflow-y: auto;\n  transition: padding-left 0.3s ease;\n}\n.content-wrapper[_ngcontent-%COMP%] {\n  max-width: 1400px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.page-container.sidebar-collapsed[_ngcontent-%COMP%] {\n  padding-left: 70px;\n}\n@media (max-width: 1200px) {\n  .page-container[_ngcontent-%COMP%] {\n    padding-left: 0;\n  }\n}\n.page-header[_ngcontent-%COMP%] {\n  margin-bottom: 24px;\n}\n.page-header[_ngcontent-%COMP%]   h1[_ngcontent-%COMP%] {\n  margin: 0 0 8px 0;\n  font-size: 2rem;\n  font-weight: 500;\n  color: #333;\n}\n.page-header[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  margin: 0;\n  color: #666;\n  font-size: 1rem;\n}\n.management-card[_ngcontent-%COMP%] {\n  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);\n  border-radius: 8px;\n  width: 100%;\n}\n.management-card[_ngcontent-%COMP%]   mat-card-header[_ngcontent-%COMP%] {\n  border-bottom: 1px solid #e0e0e0;\n  margin-bottom: 0;\n}\n.management-card[_ngcontent-%COMP%]   mat-card-header[_ngcontent-%COMP%]   mat-card-title[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  font-size: 1.5rem;\n  font-weight: 500;\n  color: #333;\n}\n.management-card[_ngcontent-%COMP%]   mat-card-header[_ngcontent-%COMP%]   mat-card-title[_ngcontent-%COMP%]   mat-icon[_ngcontent-%COMP%] {\n  color: #1976d2;\n}\n.management-card[_ngcontent-%COMP%]   mat-card-header[_ngcontent-%COMP%]   mat-card-subtitle[_ngcontent-%COMP%] {\n  color: #666;\n  margin-top: 4px;\n}\n.tab-content[_ngcontent-%COMP%] {\n  padding: 24px 0;\n}\n.tab-header[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  margin-bottom: 24px;\n}\n.tab-header[_ngcontent-%COMP%]   h3[_ngcontent-%COMP%] {\n  margin: 0;\n  font-size: 1.25rem;\n  font-weight: 500;\n  color: #333;\n}\n.tab-header[_ngcontent-%COMP%]   .tab-actions[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.table-container[_ngcontent-%COMP%] {\n  min-height: 400px;\n  position: relative;\n}\n.loading-container[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  height: 400px;\n  gap: 16px;\n}\n.loading-container[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  margin: 0;\n  color: #666;\n  font-size: 1rem;\n}\n.empty-state[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  height: 400px;\n  gap: 16px;\n  text-align: center;\n}\n.empty-state[_ngcontent-%COMP%]   mat-icon[_ngcontent-%COMP%] {\n  font-size: 4rem;\n  width: 4rem;\n  height: 4rem;\n  color: #ccc;\n}\n.empty-state[_ngcontent-%COMP%]   h3[_ngcontent-%COMP%] {\n  margin: 0;\n  font-size: 1.5rem;\n  font-weight: 500;\n  color: #666;\n}\n.empty-state[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  margin: 0;\n  color: #999;\n  font-size: 1rem;\n}\n.venues-table[_ngcontent-%COMP%], \n.games-table[_ngcontent-%COMP%] {\n  width: 100%;\n  background: white;\n  border-radius: 8px;\n  overflow: hidden;\n  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n}\n.venues-table[_ngcontent-%COMP%]   th[_ngcontent-%COMP%], \n.games-table[_ngcontent-%COMP%]   th[_ngcontent-%COMP%] {\n  background: #f8f9fa;\n  font-weight: 600;\n  color: #333;\n  padding: 16px;\n}\n.venues-table[_ngcontent-%COMP%]   td[_ngcontent-%COMP%], \n.games-table[_ngcontent-%COMP%]   td[_ngcontent-%COMP%] {\n  padding: 16px;\n  border-bottom: 1px solid #e0e0e0;\n}\n.venues-table[_ngcontent-%COMP%]   tr[_ngcontent-%COMP%]:last-child   td[_ngcontent-%COMP%], \n.games-table[_ngcontent-%COMP%]   tr[_ngcontent-%COMP%]:last-child   td[_ngcontent-%COMP%] {\n  border-bottom: none;\n}\n.venues-table[_ngcontent-%COMP%]   .mat-column-actions[_ngcontent-%COMP%], \n.games-table[_ngcontent-%COMP%]   .mat-column-actions[_ngcontent-%COMP%] {\n  width: 120px;\n  text-align: center;\n}\nbutton[mat-icon-button][_ngcontent-%COMP%] {\n  margin: 0 4px;\n}\nbutton[mat-icon-button][color=warn][_ngcontent-%COMP%] {\n  color: #f44336;\n}\nbutton[mat-icon-button][color=warn][_ngcontent-%COMP%]:hover {\n  background-color: rgba(244, 67, 54, 0.1);\n}\nbutton[mat-icon-button][_ngcontent-%COMP%]:not([color=warn]) {\n  color: #1976d2;\n}\nbutton[mat-icon-button][_ngcontent-%COMP%]:not([color=warn]):hover {\n  background-color: rgba(25, 118, 210, 0.1);\n}\nbutton[mat-raised-button][_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\nbutton[mat-raised-button][_ngcontent-%COMP%]   mat-icon[_ngcontent-%COMP%] {\n  font-size: 1.2rem;\n  width: 1.2rem;\n  height: 1.2rem;\n}\n.search-container[_ngcontent-%COMP%] {\n  margin: 16px 0 24px 0;\n  display: flex;\n  justify-content: center;\n}\n.search-container[_ngcontent-%COMP%]   .search-field[_ngcontent-%COMP%] {\n  width: 100%;\n  max-width: 400px;\n}\n.search-container[_ngcontent-%COMP%]   .search-field[_ngcontent-%COMP%]   .mat-mdc-form-field[_ngcontent-%COMP%] {\n  width: 100%;\n}\n@media (max-width: 768px) {\n  .content-wrapper[_ngcontent-%COMP%] {\n    padding: 16px;\n  }\n  .page-header[_ngcontent-%COMP%]   h1[_ngcontent-%COMP%] {\n    font-size: 1.5rem;\n  }\n  .tab-header[_ngcontent-%COMP%] {\n    flex-direction: column;\n    gap: 16px;\n    align-items: flex-start;\n  }\n  .tab-actions[_ngcontent-%COMP%] {\n    width: 100%;\n    justify-content: flex-end;\n  }\n  .venues-table[_ngcontent-%COMP%], \n   .games-table[_ngcontent-%COMP%] {\n    font-size: 0.9rem;\n  }\n  .venues-table[_ngcontent-%COMP%]   th[_ngcontent-%COMP%], \n   .venues-table[_ngcontent-%COMP%]   td[_ngcontent-%COMP%], \n   .games-table[_ngcontent-%COMP%]   th[_ngcontent-%COMP%], \n   .games-table[_ngcontent-%COMP%]   td[_ngcontent-%COMP%] {\n    padding: 12px 8px;\n  }\n  .mat-column-actions[_ngcontent-%COMP%] {\n    width: 100px;\n  }\n  .search-container[_ngcontent-%COMP%] {\n    margin: 12px 0 20px 0;\n  }\n  .search-container[_ngcontent-%COMP%]   .search-field[_ngcontent-%COMP%] {\n    max-width: 100%;\n  }\n}\n@media (max-width: 480px) {\n  .venues-table[_ngcontent-%COMP%]   .mat-column-notes[_ngcontent-%COMP%], \n   .games-table[_ngcontent-%COMP%]   .mat-column-notes[_ngcontent-%COMP%] {\n    display: none;\n  }\n}\n/*# sourceMappingURL=venue-game-management.component.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(VenueGameManagementComponent, { className: "VenueGameManagementComponent", filePath: "src/app/pages/admin/venue-game-management/venue-game-management.component.ts", lineNumber: 62 });
+})();
+
+// src/app/pages/admin/user-management/user-dialog/user-dialog.component.ts
+function UserDialogComponent_mat_error_13_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "mat-error");
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r0 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(ctx_r0.getFieldError("username"));
+  }
+}
+function UserDialogComponent_mat_error_18_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "mat-error");
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r0 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(ctx_r0.getFieldError("email"));
+  }
+}
+function UserDialogComponent_mat_error_24_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "mat-error");
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r0 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(ctx_r0.getFieldError("first_name"));
+  }
+}
+function UserDialogComponent_mat_error_29_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "mat-error");
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r0 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(ctx_r0.getFieldError("last_name"));
+  }
+}
+function UserDialogComponent_mat_error_35_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "mat-error");
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r0 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(ctx_r0.getFieldError("password"));
+  }
+}
+function UserDialogComponent_mat_hint_36_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "mat-hint");
+    \u0275\u0275text(1, "Leave blank to keep current password");
+    \u0275\u0275elementEnd();
+  }
+}
+function UserDialogComponent_mat_option_41_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "mat-option", 19);
+    \u0275\u0275text(1);
+    \u0275\u0275pipe(2, "titlecase");
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const role_r2 = ctx.$implicit;
+    \u0275\u0275property("value", role_r2);
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" ", \u0275\u0275pipeBind1(2, 2, role_r2), " ");
+  }
+}
+function UserDialogComponent_mat_error_42_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "mat-error");
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r0 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(ctx_r0.getFieldError("role"));
+  }
+}
+function UserDialogComponent_mat_spinner_47_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275element(0, "mat-spinner", 20);
+  }
+}
+function UserDialogComponent_span_48_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "span");
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r0 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(ctx_r0.data.mode === "add" ? "Create User" : "Update User");
+  }
+}
+var UserDialogComponent = class _UserDialogComponent {
+  fb;
+  http;
+  snackBar;
+  dialogRef;
+  data;
+  userForm;
+  isLoading = false;
+  roles = ["player", "dealer", "admin"];
+  constructor(fb, http, snackBar, dialogRef, data) {
+    this.fb = fb;
+    this.http = http;
+    this.snackBar = snackBar;
+    this.dialogRef = dialogRef;
+    this.data = data;
+    this.userForm = this.fb.group({
+      username: ["", [Validators.required, Validators.minLength(3)]],
+      email: ["", [Validators.required, Validators.email]],
+      first_name: ["", [Validators.required, Validators.minLength(2)]],
+      last_name: ["", [Validators.required, Validators.minLength(2)]],
+      password: ["", this.data.mode === "add" ? [Validators.required, Validators.minLength(6)] : []],
+      role: ["player", [Validators.required]]
+    });
+  }
+  ngOnInit() {
+    if (this.data.mode === "edit" && this.data.user) {
+      this.userForm.patchValue(this.data.user);
+      this.userForm.get("password")?.setValue("");
+    }
+  }
+  onSubmit() {
+    if (this.userForm.valid && !this.isLoading) {
+      this.isLoading = true;
+      const formData = this.userForm.value;
+      if (this.data.mode === "edit" && !formData.password) {
+        delete formData.password;
+      }
+      if (this.data.mode === "add") {
+        this.addUser(formData);
+      } else {
+        this.editUser(formData);
+      }
+    }
+  }
+  addUser(userData) {
+    const url = `${environment.apiUrl}/admin_routes/create_user`;
+    const headers = new HttpHeaders().set("Content-Type", "application/json");
+    this.http.post(url, userData, { headers }).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        this.snackBar.open("User created successfully!", "Close", {
+          duration: 3e3,
+          horizontalPosition: "center",
+          verticalPosition: "top"
+        });
+        this.dialogRef.close({ success: true, data: response });
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error("Error creating user:", error);
+        this.snackBar.open(error.error?.error || "Failed to create user. Please try again.", "Close", {
+          duration: 5e3,
+          horizontalPosition: "center",
+          verticalPosition: "top"
+        });
+      }
+    });
+  }
+  editUser(userData) {
+    if (!this.data.user?.id)
+      return;
+    const url = `${environment.apiUrl}/admin_routes/update_user/${this.data.user.id}`;
+    const headers = new HttpHeaders().set("Content-Type", "application/json");
+    this.http.put(url, userData, { headers }).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        this.snackBar.open("User updated successfully!", "Close", {
+          duration: 3e3,
+          horizontalPosition: "center",
+          verticalPosition: "top"
+        });
+        this.dialogRef.close({ success: true, data: response });
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error("Error updating user:", error);
+        this.snackBar.open(error.error?.error || "Failed to update user. Please try again.", "Close", {
+          duration: 5e3,
+          horizontalPosition: "center",
+          verticalPosition: "top"
+        });
+      }
+    });
+  }
+  onCancel() {
+    this.dialogRef.close({ success: false });
+  }
+  getFieldError(fieldName) {
+    const field = this.userForm.get(fieldName);
+    if (field?.errors && field.touched) {
+      if (field.errors["required"]) {
+        return `${fieldName.replace("_", " ")} is required`;
+      }
+      if (field.errors["email"]) {
+        return "Please enter a valid email address";
+      }
+      if (field.errors["minlength"]) {
+        const requiredLength = field.errors["minlength"].requiredLength;
+        return `${fieldName.replace("_", " ")} must be at least ${requiredLength} characters`;
+      }
+    }
+    return "";
+  }
+  static \u0275fac = function UserDialogComponent_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _UserDialogComponent)(\u0275\u0275directiveInject(FormBuilder), \u0275\u0275directiveInject(HttpClient), \u0275\u0275directiveInject(MatSnackBar), \u0275\u0275directiveInject(MatDialogRef), \u0275\u0275directiveInject(MAT_DIALOG_DATA));
+  };
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _UserDialogComponent, selectors: [["app-user-dialog"]], standalone: true, features: [\u0275\u0275StandaloneFeature], decls: 49, vars: 15, consts: [[1, "dialog-header"], ["mat-dialog-title", ""], ["mat-icon-button", "", 1, "close-button", 3, "click"], [1, "dialog-content"], [1, "user-form", 3, "ngSubmit", "formGroup"], [1, "form-row"], ["appearance", "outline", 1, "form-field"], ["matInput", "", "formControlName", "username", "placeholder", "Enter username"], [4, "ngIf"], ["matInput", "", "formControlName", "email", "type", "email", "placeholder", "Enter email address"], ["matInput", "", "formControlName", "first_name", "placeholder", "Enter first name"], ["matInput", "", "formControlName", "last_name", "placeholder", "Enter last name"], ["matInput", "", "formControlName", "password", "type", "password", 3, "placeholder"], ["formControlName", "role"], [3, "value", 4, "ngFor", "ngForOf"], [1, "dialog-actions"], ["mat-button", "", 3, "click", "disabled"], ["mat-raised-button", "", "color", "primary", 3, "click", "disabled"], ["diameter", "20", "class", "button-spinner", 4, "ngIf"], [3, "value"], ["diameter", "20", 1, "button-spinner"]], template: function UserDialogComponent_Template(rf, ctx) {
+    if (rf & 1) {
+      \u0275\u0275elementStart(0, "div", 0)(1, "h2", 1);
+      \u0275\u0275text(2);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(3, "button", 2);
+      \u0275\u0275listener("click", function UserDialogComponent_Template_button_click_3_listener() {
+        return ctx.onCancel();
+      });
+      \u0275\u0275elementStart(4, "mat-icon");
+      \u0275\u0275text(5, "close");
+      \u0275\u0275elementEnd()()();
+      \u0275\u0275elementStart(6, "mat-dialog-content", 3)(7, "form", 4);
+      \u0275\u0275listener("ngSubmit", function UserDialogComponent_Template_form_ngSubmit_7_listener() {
+        return ctx.onSubmit();
+      });
+      \u0275\u0275elementStart(8, "div", 5)(9, "mat-form-field", 6)(10, "mat-label");
+      \u0275\u0275text(11, "Username");
+      \u0275\u0275elementEnd();
+      \u0275\u0275element(12, "input", 7);
+      \u0275\u0275template(13, UserDialogComponent_mat_error_13_Template, 2, 1, "mat-error", 8);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(14, "mat-form-field", 6)(15, "mat-label");
+      \u0275\u0275text(16, "Email");
+      \u0275\u0275elementEnd();
+      \u0275\u0275element(17, "input", 9);
+      \u0275\u0275template(18, UserDialogComponent_mat_error_18_Template, 2, 1, "mat-error", 8);
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(19, "div", 5)(20, "mat-form-field", 6)(21, "mat-label");
+      \u0275\u0275text(22, "First Name");
+      \u0275\u0275elementEnd();
+      \u0275\u0275element(23, "input", 10);
+      \u0275\u0275template(24, UserDialogComponent_mat_error_24_Template, 2, 1, "mat-error", 8);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(25, "mat-form-field", 6)(26, "mat-label");
+      \u0275\u0275text(27, "Last Name");
+      \u0275\u0275elementEnd();
+      \u0275\u0275element(28, "input", 11);
+      \u0275\u0275template(29, UserDialogComponent_mat_error_29_Template, 2, 1, "mat-error", 8);
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(30, "div", 5)(31, "mat-form-field", 6)(32, "mat-label");
+      \u0275\u0275text(33, "Password");
+      \u0275\u0275elementEnd();
+      \u0275\u0275element(34, "input", 12);
+      \u0275\u0275template(35, UserDialogComponent_mat_error_35_Template, 2, 1, "mat-error", 8)(36, UserDialogComponent_mat_hint_36_Template, 2, 0, "mat-hint", 8);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(37, "mat-form-field", 6)(38, "mat-label");
+      \u0275\u0275text(39, "Role");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(40, "mat-select", 13);
+      \u0275\u0275template(41, UserDialogComponent_mat_option_41_Template, 3, 4, "mat-option", 14);
+      \u0275\u0275elementEnd();
+      \u0275\u0275template(42, UserDialogComponent_mat_error_42_Template, 2, 1, "mat-error", 8);
+      \u0275\u0275elementEnd()()()();
+      \u0275\u0275elementStart(43, "mat-dialog-actions", 15)(44, "button", 16);
+      \u0275\u0275listener("click", function UserDialogComponent_Template_button_click_44_listener() {
+        return ctx.onCancel();
+      });
+      \u0275\u0275text(45, " Cancel ");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(46, "button", 17);
+      \u0275\u0275listener("click", function UserDialogComponent_Template_button_click_46_listener() {
+        return ctx.onSubmit();
+      });
+      \u0275\u0275template(47, UserDialogComponent_mat_spinner_47_Template, 1, 0, "mat-spinner", 18)(48, UserDialogComponent_span_48_Template, 2, 1, "span", 8);
+      \u0275\u0275elementEnd()();
+    }
+    if (rf & 2) {
+      \u0275\u0275advance(2);
+      \u0275\u0275textInterpolate1(" ", ctx.data.mode === "add" ? "Add New User" : "Edit User", " ");
+      \u0275\u0275advance(5);
+      \u0275\u0275property("formGroup", ctx.userForm);
+      \u0275\u0275advance(6);
+      \u0275\u0275property("ngIf", ctx.getFieldError("username"));
+      \u0275\u0275advance(5);
+      \u0275\u0275property("ngIf", ctx.getFieldError("email"));
+      \u0275\u0275advance(6);
+      \u0275\u0275property("ngIf", ctx.getFieldError("first_name"));
+      \u0275\u0275advance(5);
+      \u0275\u0275property("ngIf", ctx.getFieldError("last_name"));
+      \u0275\u0275advance(5);
+      \u0275\u0275property("placeholder", ctx.data.mode === "add" ? "Enter password" : "Leave blank to keep current password");
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.getFieldError("password"));
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.data.mode === "edit");
+      \u0275\u0275advance(5);
+      \u0275\u0275property("ngForOf", ctx.roles);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.getFieldError("role"));
+      \u0275\u0275advance(2);
+      \u0275\u0275property("disabled", ctx.isLoading);
+      \u0275\u0275advance(2);
+      \u0275\u0275property("disabled", ctx.userForm.invalid || ctx.isLoading);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.isLoading);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", !ctx.isLoading);
+    }
+  }, dependencies: [CommonModule, NgForOf, NgIf, TitleCasePipe, ReactiveFormsModule, \u0275NgNoValidate, DefaultValueAccessor, NgControlStatus, NgControlStatusGroup, FormGroupDirective, FormControlName, MatDialogModule, MatDialogTitle, MatDialogActions, MatDialogContent, MatButtonModule, MatButton, MatIconButton, MatFormFieldModule, MatFormField, MatLabel, MatHint, MatError, MatInputModule, MatInput, MatSelectModule, MatSelect, MatOption, MatIconModule, MatIcon, MatProgressSpinnerModule, MatProgressSpinner, MatSnackBarModule], styles: ["\n\n.dialog-header[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 24px 24px 0 24px;\n  border-bottom: 1px solid #e0e0e0;\n  margin-bottom: 24px;\n}\n.dialog-header[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {\n  margin: 0;\n  color: #333;\n  font-size: 1.5rem;\n  font-weight: 500;\n}\n.dialog-header[_ngcontent-%COMP%]   .close-button[_ngcontent-%COMP%] {\n  color: #666;\n}\n.dialog-header[_ngcontent-%COMP%]   .close-button[_ngcontent-%COMP%]:hover {\n  color: #333;\n}\n.dialog-content[_ngcontent-%COMP%] {\n  padding: 0 24px;\n  max-height: 70vh;\n  overflow-y: auto;\n}\n.user-form[_ngcontent-%COMP%]   .form-row[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.user-form[_ngcontent-%COMP%]   .form-row[_ngcontent-%COMP%]   .form-field[_ngcontent-%COMP%] {\n  flex: 1;\n}\n.user-form[_ngcontent-%COMP%]   .form-field[_ngcontent-%COMP%] {\n  width: 100%;\n}\n.user-form[_ngcontent-%COMP%]   .form-field[_ngcontent-%COMP%]   mat-label[_ngcontent-%COMP%] {\n  color: #666;\n}\n.user-form[_ngcontent-%COMP%]   .form-field[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.user-form[_ngcontent-%COMP%]   .form-field[_ngcontent-%COMP%]   mat-select[_ngcontent-%COMP%] {\n  font-size: 1rem;\n}\n.user-form[_ngcontent-%COMP%]   .form-field[_ngcontent-%COMP%]   mat-error[_ngcontent-%COMP%] {\n  font-size: 0.75rem;\n  margin-top: 4px;\n}\n.user-form[_ngcontent-%COMP%]   .form-field[_ngcontent-%COMP%]   mat-hint[_ngcontent-%COMP%] {\n  font-size: 0.75rem;\n  color: #666;\n}\n.dialog-actions[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: flex-end;\n  gap: 12px;\n  padding: 24px;\n  border-top: 1px solid #e0e0e0;\n  margin-top: 24px;\n}\n.dialog-actions[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  min-width: 100px;\n  height: 40px;\n}\n.dialog-actions[_ngcontent-%COMP%]   button[mat-raised-button][_ngcontent-%COMP%] {\n  position: relative;\n}\n.dialog-actions[_ngcontent-%COMP%]   button[mat-raised-button][_ngcontent-%COMP%]   .button-spinner[_ngcontent-%COMP%] {\n  position: absolute;\n  left: 50%;\n  top: 50%;\n  transform: translate(-50%, -50%);\n}\n@media (max-width: 768px) {\n  .dialog-header[_ngcontent-%COMP%] {\n    padding: 16px 16px 0 16px;\n    margin-bottom: 16px;\n  }\n  .dialog-header[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {\n    font-size: 1.25rem;\n  }\n  .dialog-content[_ngcontent-%COMP%] {\n    padding: 0 16px;\n  }\n  .user-form[_ngcontent-%COMP%]   .form-row[_ngcontent-%COMP%] {\n    flex-direction: column;\n    gap: 0;\n    margin-bottom: 0;\n  }\n  .user-form[_ngcontent-%COMP%]   .form-row[_ngcontent-%COMP%]   .form-field[_ngcontent-%COMP%] {\n    margin-bottom: 16px;\n  }\n  .dialog-actions[_ngcontent-%COMP%] {\n    padding: 16px;\n    margin-top: 16px;\n    flex-direction: column-reverse;\n  }\n  .dialog-actions[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n    width: 100%;\n  }\n}\n@media (max-width: 480px) {\n  .dialog-header[_ngcontent-%COMP%] {\n    padding: 12px 12px 0 12px;\n  }\n  .dialog-header[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {\n    font-size: 1.1rem;\n  }\n  .dialog-content[_ngcontent-%COMP%] {\n    padding: 0 12px;\n  }\n  .dialog-actions[_ngcontent-%COMP%] {\n    padding: 12px;\n  }\n}\n/*# sourceMappingURL=user-dialog.component.css.map */"] });
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(UserDialogComponent, { className: "UserDialogComponent", filePath: "src/app/pages/admin/user-management/user-dialog/user-dialog.component.ts", lineNumber: 45 });
+})();
+
+// src/app/pages/admin/user-management/delete-confirmation-dialog/delete-confirmation-dialog.component.ts
+var DeleteConfirmationDialogComponent2 = class _DeleteConfirmationDialogComponent {
+  dialogRef;
+  data;
+  constructor(dialogRef, data) {
+    this.dialogRef = dialogRef;
+    this.data = data;
+  }
+  onCancel() {
+    this.dialogRef.close({ confirmed: false });
+  }
+  onConfirm() {
+    this.dialogRef.close({ confirmed: true });
+  }
+  static \u0275fac = function DeleteConfirmationDialogComponent_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _DeleteConfirmationDialogComponent)(\u0275\u0275directiveInject(MatDialogRef), \u0275\u0275directiveInject(MAT_DIALOG_DATA));
+  };
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _DeleteConfirmationDialogComponent, selectors: [["app-delete-confirmation-dialog"]], standalone: true, features: [\u0275\u0275StandaloneFeature], decls: 20, vars: 7, consts: [[1, "dialog-header"], [1, "warning-icon"], ["mat-dialog-title", ""], [1, "dialog-content"], [1, "confirmation-message"], [1, "item-details"], [1, "dialog-actions"], ["mat-button", "", 3, "click", "disabled"], ["mat-raised-button", "", "color", "warn", 3, "click", "disabled"]], template: function DeleteConfirmationDialogComponent_Template(rf, ctx) {
+    if (rf & 1) {
+      \u0275\u0275elementStart(0, "div", 0)(1, "div", 1)(2, "mat-icon");
+      \u0275\u0275text(3, "warning");
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(4, "h2", 2);
+      \u0275\u0275text(5);
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(6, "mat-dialog-content", 3)(7, "p", 4);
+      \u0275\u0275text(8);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(9, "div", 5)(10, "strong");
+      \u0275\u0275text(11);
+      \u0275\u0275elementEnd();
+      \u0275\u0275text(12);
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(13, "mat-dialog-actions", 6)(14, "button", 7);
+      \u0275\u0275listener("click", function DeleteConfirmationDialogComponent_Template_button_click_14_listener() {
+        return ctx.onCancel();
+      });
+      \u0275\u0275text(15, " Cancel ");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(16, "button", 8);
+      \u0275\u0275listener("click", function DeleteConfirmationDialogComponent_Template_button_click_16_listener() {
+        return ctx.onConfirm();
+      });
+      \u0275\u0275elementStart(17, "mat-icon");
+      \u0275\u0275text(18, "delete");
+      \u0275\u0275elementEnd();
+      \u0275\u0275text(19);
+      \u0275\u0275elementEnd()();
+    }
+    if (rf & 2) {
+      \u0275\u0275advance(5);
+      \u0275\u0275textInterpolate(ctx.data.title);
+      \u0275\u0275advance(3);
+      \u0275\u0275textInterpolate(ctx.data.message);
+      \u0275\u0275advance(3);
+      \u0275\u0275textInterpolate1("", ctx.data.itemType, ":");
+      \u0275\u0275advance();
+      \u0275\u0275textInterpolate1(" ", ctx.data.itemName, " ");
+      \u0275\u0275advance(2);
+      \u0275\u0275property("disabled", ctx.data.isDeleting);
+      \u0275\u0275advance(2);
+      \u0275\u0275property("disabled", ctx.data.isDeleting);
+      \u0275\u0275advance(3);
+      \u0275\u0275textInterpolate1(" Delete ", ctx.data.itemType, " ");
+    }
+  }, dependencies: [
+    CommonModule,
+    MatDialogModule,
+    MatDialogTitle,
+    MatDialogActions,
+    MatDialogContent,
+    MatButtonModule,
+    MatButton,
+    MatIconModule,
+    MatIcon
+  ], styles: ["\n\n.dialog-header[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  padding: 24px 24px 0 24px;\n  margin-bottom: 16px;\n}\n.dialog-header[_ngcontent-%COMP%]   .warning-icon[_ngcontent-%COMP%] {\n  margin-right: 16px;\n}\n.dialog-header[_ngcontent-%COMP%]   .warning-icon[_ngcontent-%COMP%]   mat-icon[_ngcontent-%COMP%] {\n  font-size: 2rem;\n  width: 2rem;\n  height: 2rem;\n  color: #f44336;\n}\n.dialog-header[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {\n  margin: 0;\n  color: #333;\n  font-size: 1.5rem;\n  font-weight: 500;\n}\n.dialog-content[_ngcontent-%COMP%] {\n  padding: 0 24px;\n}\n.dialog-content[_ngcontent-%COMP%]   .confirmation-message[_ngcontent-%COMP%] {\n  margin: 0 0 16px 0;\n  color: #666;\n  font-size: 1rem;\n  line-height: 1.5;\n}\n.dialog-content[_ngcontent-%COMP%]   .item-details[_ngcontent-%COMP%] {\n  background: #f8f9fa;\n  padding: 12px 16px;\n  border-radius: 4px;\n  border-left: 4px solid #f44336;\n}\n.dialog-content[_ngcontent-%COMP%]   .item-details[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%] {\n  color: #333;\n}\n.dialog-actions[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: flex-end;\n  gap: 12px;\n  padding: 24px;\n  border-top: 1px solid #e0e0e0;\n  margin-top: 24px;\n}\n.dialog-actions[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  min-width: 100px;\n  height: 40px;\n}\n.dialog-actions[_ngcontent-%COMP%]   button[mat-raised-button][_ngcontent-%COMP%]   mat-icon[_ngcontent-%COMP%] {\n  margin-right: 8px;\n  font-size: 1.2rem;\n  width: 1.2rem;\n  height: 1.2rem;\n}\n@media (max-width: 768px) {\n  .dialog-header[_ngcontent-%COMP%] {\n    padding: 16px 16px 0 16px;\n  }\n  .dialog-header[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {\n    font-size: 1.25rem;\n  }\n  .dialog-content[_ngcontent-%COMP%] {\n    padding: 0 16px;\n  }\n  .dialog-actions[_ngcontent-%COMP%] {\n    padding: 16px;\n    margin-top: 16px;\n    flex-direction: column-reverse;\n  }\n  .dialog-actions[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n    width: 100%;\n  }\n}\n@media (max-width: 480px) {\n  .dialog-header[_ngcontent-%COMP%] {\n    padding: 12px 12px 0 12px;\n  }\n  .dialog-header[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {\n    font-size: 1.1rem;\n  }\n  .dialog-content[_ngcontent-%COMP%] {\n    padding: 0 12px;\n  }\n  .dialog-actions[_ngcontent-%COMP%] {\n    padding: 12px;\n  }\n}\n/*# sourceMappingURL=delete-confirmation-dialog.component.css.map */"] });
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(DeleteConfirmationDialogComponent2, { className: "DeleteConfirmationDialogComponent", filePath: "src/app/pages/admin/user-management/delete-confirmation-dialog/delete-confirmation-dialog.component.ts", lineNumber: 27 });
+})();
+
+// src/app/pages/admin/user-management/user-management.component.ts
+function UserManagementComponent_th_28_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "th", 24);
+    \u0275\u0275text(1, "Username");
+    \u0275\u0275elementEnd();
+  }
+}
+function UserManagementComponent_td_29_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "td", 25);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const user_r1 = ctx.$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(user_r1.username);
+  }
+}
+function UserManagementComponent_th_31_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "th", 24);
+    \u0275\u0275text(1, "Email");
+    \u0275\u0275elementEnd();
+  }
+}
+function UserManagementComponent_td_32_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "td", 25);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const user_r2 = ctx.$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(user_r2.email);
+  }
+}
+function UserManagementComponent_th_34_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "th", 24);
+    \u0275\u0275text(1, "First Name");
+    \u0275\u0275elementEnd();
+  }
+}
+function UserManagementComponent_td_35_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "td", 25);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const user_r3 = ctx.$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(user_r3.first_name);
+  }
+}
+function UserManagementComponent_th_37_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "th", 24);
+    \u0275\u0275text(1, "Last Name");
+    \u0275\u0275elementEnd();
+  }
+}
+function UserManagementComponent_td_38_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "td", 25);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const user_r4 = ctx.$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(user_r4.last_name);
+  }
+}
+function UserManagementComponent_th_40_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "th", 24);
+    \u0275\u0275text(1, "Role");
+    \u0275\u0275elementEnd();
+  }
+}
+function UserManagementComponent_td_41_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "td", 25)(1, "span", 26);
+    \u0275\u0275text(2);
+    \u0275\u0275elementEnd()();
+  }
+  if (rf & 2) {
+    const user_r5 = ctx.$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275property("ngClass", "role-" + user_r5.role.toLowerCase());
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" ", user_r5.role, " ");
+  }
+}
+function UserManagementComponent_th_43_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "th", 27);
+    \u0275\u0275text(1, "Actions");
+    \u0275\u0275elementEnd();
+  }
+}
+function UserManagementComponent_td_44_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r6 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "td", 25)(1, "button", 28);
+    \u0275\u0275listener("click", function UserManagementComponent_td_44_Template_button_click_1_listener() {
+      const user_r7 = \u0275\u0275restoreView(_r6).$implicit;
+      const ctx_r7 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r7.editUser(user_r7));
+    });
+    \u0275\u0275elementStart(2, "mat-icon");
+    \u0275\u0275text(3, "edit");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(4, "button", 29);
+    \u0275\u0275listener("click", function UserManagementComponent_td_44_Template_button_click_4_listener() {
+      const user_r7 = \u0275\u0275restoreView(_r6).$implicit;
+      const ctx_r7 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r7.deleteUser(user_r7));
+    });
+    \u0275\u0275elementStart(5, "mat-icon");
+    \u0275\u0275text(6, "delete");
+    \u0275\u0275elementEnd()()();
+  }
+}
+function UserManagementComponent_tr_45_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275element(0, "tr", 30);
+  }
+}
+function UserManagementComponent_tr_46_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275element(0, "tr", 31);
+  }
+}
+function UserManagementComponent_div_47_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 32);
+    \u0275\u0275element(1, "mat-spinner", 33);
+    \u0275\u0275elementStart(2, "p");
+    \u0275\u0275text(3, "Loading users...");
+    \u0275\u0275elementEnd()();
+  }
+}
+function UserManagementComponent_div_48_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r9 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 34)(1, "mat-icon");
+    \u0275\u0275text(2, "people");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(3, "h3");
+    \u0275\u0275text(4, "No Users Found");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(5, "p");
+    \u0275\u0275text(6, "No users have been created yet.");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(7, "button", 8);
+    \u0275\u0275listener("click", function UserManagementComponent_div_48_Template_button_click_7_listener() {
+      \u0275\u0275restoreView(_r9);
+      const ctx_r7 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r7.addUser());
+    });
+    \u0275\u0275elementStart(8, "mat-icon");
+    \u0275\u0275text(9, "add");
+    \u0275\u0275elementEnd();
+    \u0275\u0275text(10, " Add First User ");
+    \u0275\u0275elementEnd()();
+  }
+}
+function UserManagementComponent_div_49_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r10 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 34)(1, "mat-icon");
+    \u0275\u0275text(2, "search_off");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(3, "h3");
+    \u0275\u0275text(4, "No Users Match Search");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(5, "p");
+    \u0275\u0275text(6, "No users match your search criteria. Try adjusting your search terms.");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(7, "button", 35);
+    \u0275\u0275listener("click", function UserManagementComponent_div_49_Template_button_click_7_listener() {
+      \u0275\u0275restoreView(_r10);
+      const ctx_r7 = \u0275\u0275nextContext();
+      ctx_r7.userSearchTerm = "";
+      return \u0275\u0275resetView(ctx_r7.applyUserFilters());
+    });
+    \u0275\u0275text(8, " Clear Search ");
+    \u0275\u0275elementEnd()();
+  }
+}
+var UserManagementComponent = class _UserManagementComponent {
+  http;
+  snackBar;
+  dialog;
+  destroy$ = new Subject();
+  users = [];
+  filteredUsers = [];
+  usersLoading = false;
+  userSearchTerm = "";
+  userSort = { active: "username", direction: "asc" };
+  userColumns = ["username", "email", "first_name", "last_name", "role", "actions"];
+  constructor(http, snackBar, dialog) {
+    this.http = http;
+    this.snackBar = snackBar;
+    this.dialog = dialog;
+  }
+  ngOnInit() {
+    this.loadUsers();
+  }
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+  loadUsers() {
+    this.usersLoading = true;
+    const url = `${environment.apiUrl}/admin_routes/all_users`;
+    this.http.get(url).pipe(takeUntil(this.destroy$)).subscribe({
+      next: (users) => {
+        this.users = users;
+        this.filteredUsers = [...users];
+        this.applyUserFilters();
+        this.usersLoading = false;
+      },
+      error: (error) => {
+        console.error("Error loading users:", error);
+        this.snackBar.open("Error loading users", "Close", { duration: 3e3 });
+        this.usersLoading = false;
+      }
+    });
+  }
+  addUser() {
+    const dialogData = {
+      mode: "add"
+    };
+    const dialogRef = this.dialog.open(UserDialogComponent, {
+      data: dialogData,
+      width: "600px",
+      maxWidth: "90vw",
+      disableClose: false
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.success) {
+        this.loadUsers();
+      }
+    });
+  }
+  editUser(user) {
+    const dialogData = {
+      mode: "edit",
+      user
+    };
+    const dialogRef = this.dialog.open(UserDialogComponent, {
+      data: dialogData,
+      width: "600px",
+      maxWidth: "90vw",
+      disableClose: false
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.success) {
+        this.loadUsers();
+      }
+    });
+  }
+  deleteUser(user) {
+    const dialogData = {
+      title: "Delete User",
+      message: "Are you sure you want to delete this user? This action cannot be undone.",
+      itemName: user.username,
+      itemType: "User",
+      isDeleting: false
+    };
+    const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent2, {
+      data: dialogData,
+      width: "450px",
+      maxWidth: "90vw",
+      disableClose: true
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.confirmed) {
+        this.performDeleteUser(user);
+      }
+    });
+  }
+  performDeleteUser(user) {
+    const url = `${environment.apiUrl}/admin_routes/delete_user/${user.id}`;
+    this.http.delete(url).subscribe({
+      next: (response) => {
+        this.snackBar.open("User deleted successfully!", "Close", {
+          duration: 3e3,
+          horizontalPosition: "center",
+          verticalPosition: "top"
+        });
+        this.loadUsers();
+      },
+      error: (error) => {
+        console.error("Error deleting user:", error);
+        let errorMessage = "Failed to delete user. Please try again.";
+        if (error.error?.error) {
+          errorMessage = error.error.error;
+        }
+        this.snackBar.open(errorMessage, "Close", {
+          duration: 5e3,
+          horizontalPosition: "center",
+          verticalPosition: "top"
+        });
+      }
+    });
+  }
+  // Search and filter methods
+  onUserSearchChange(searchTerm) {
+    this.userSearchTerm = searchTerm;
+    this.applyUserFilters();
+  }
+  onUserSortChange(sort) {
+    if (this.userSort.active === sort.active) {
+      if (this.userSort.direction === "asc") {
+        this.userSort = { active: sort.active, direction: "desc" };
+      } else {
+        this.userSort = { active: sort.active, direction: "asc" };
+      }
+    } else {
+      this.userSort = { active: sort.active, direction: "asc" };
+    }
+    this.applyUserFilters();
+  }
+  applyUserFilters() {
+    let filtered = [...this.users];
+    if (this.userSearchTerm.trim()) {
+      const searchLower = this.userSearchTerm.toLowerCase();
+      filtered = filtered.filter((user) => user.username.toLowerCase().includes(searchLower) || user.email.toLowerCase().includes(searchLower) || user.first_name.toLowerCase().includes(searchLower) || user.last_name.toLowerCase().includes(searchLower) || user.role.toLowerCase().includes(searchLower));
+    }
+    filtered.sort((a, b) => {
+      const isAsc = this.userSort.direction === "asc";
+      let valueA, valueB;
+      switch (this.userSort.active) {
+        case "username":
+          valueA = a.username;
+          valueB = b.username;
+          break;
+        case "email":
+          valueA = a.email;
+          valueB = b.email;
+          break;
+        case "first_name":
+          valueA = a.first_name;
+          valueB = b.first_name;
+          break;
+        case "last_name":
+          valueA = a.last_name;
+          valueB = b.last_name;
+          break;
+        case "role":
+          valueA = a.role;
+          valueB = b.role;
+          break;
+        default:
+          return 0;
+      }
+      if (valueA < valueB) {
+        return isAsc ? -1 : 1;
+      }
+      if (valueA > valueB) {
+        return isAsc ? 1 : -1;
+      }
+      return 0;
+    });
+    this.filteredUsers = filtered;
+  }
+  static \u0275fac = function UserManagementComponent_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _UserManagementComponent)(\u0275\u0275directiveInject(HttpClient), \u0275\u0275directiveInject(MatSnackBar), \u0275\u0275directiveInject(MatDialog));
+  };
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _UserManagementComponent, selectors: [["app-user-management"]], standalone: true, features: [\u0275\u0275StandaloneFeature], decls: 50, vars: 7, consts: [[1, "page-container"], [1, "content-wrapper"], [1, "page-header"], [1, "management-card"], [1, "search-container"], ["appearance", "outline", 1, "search-field"], ["matInput", "", "placeholder", "Search by username, email, name, or role...", 3, "ngModelChange", "input", "ngModel"], ["matSuffix", ""], ["mat-raised-button", "", "color", "primary", 3, "click"], [1, "table-container"], ["mat-table", "", "matSort", "", 1, "users-table", 3, "matSortChange", "dataSource"], ["matColumnDef", "username"], ["mat-header-cell", "", "mat-sort-header", "", 4, "matHeaderCellDef"], ["mat-cell", "", 4, "matCellDef"], ["matColumnDef", "email"], ["matColumnDef", "first_name"], ["matColumnDef", "last_name"], ["matColumnDef", "role"], ["matColumnDef", "actions"], ["mat-header-cell", "", 4, "matHeaderCellDef"], ["mat-header-row", "", 4, "matHeaderRowDef"], ["mat-row", "", 4, "matRowDef", "matRowDefColumns"], ["class", "loading-container", 4, "ngIf"], ["class", "empty-state", 4, "ngIf"], ["mat-header-cell", "", "mat-sort-header", ""], ["mat-cell", ""], [1, "role-badge", 3, "ngClass"], ["mat-header-cell", ""], ["mat-icon-button", "", "matTooltip", "Edit User", 3, "click"], ["mat-icon-button", "", "matTooltip", "Delete User", "color", "warn", 3, "click"], ["mat-header-row", ""], ["mat-row", ""], [1, "loading-container"], ["diameter", "50"], [1, "empty-state"], ["mat-button", "", 3, "click"]], template: function UserManagementComponent_Template(rf, ctx) {
+    if (rf & 1) {
+      \u0275\u0275elementStart(0, "div", 0)(1, "div", 1)(2, "div", 2)(3, "h1");
+      \u0275\u0275text(4, "User Management");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(5, "p");
+      \u0275\u0275text(6, "Manage users, roles, and permissions");
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(7, "mat-card", 3)(8, "mat-card-header")(9, "mat-card-title");
+      \u0275\u0275text(10, "Users");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(11, "mat-card-subtitle");
+      \u0275\u0275text(12, "Add, edit, and manage user accounts");
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(13, "mat-card-content")(14, "div", 4)(15, "mat-form-field", 5)(16, "mat-label");
+      \u0275\u0275text(17, "Search users");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(18, "input", 6);
+      \u0275\u0275twoWayListener("ngModelChange", function UserManagementComponent_Template_input_ngModelChange_18_listener($event) {
+        \u0275\u0275twoWayBindingSet(ctx.userSearchTerm, $event) || (ctx.userSearchTerm = $event);
+        return $event;
+      });
+      \u0275\u0275listener("input", function UserManagementComponent_Template_input_input_18_listener($event) {
+        return ctx.onUserSearchChange($event.target.value);
+      });
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(19, "mat-icon", 7);
+      \u0275\u0275text(20, "search");
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(21, "button", 8);
+      \u0275\u0275listener("click", function UserManagementComponent_Template_button_click_21_listener() {
+        return ctx.addUser();
+      });
+      \u0275\u0275elementStart(22, "mat-icon");
+      \u0275\u0275text(23, "add");
+      \u0275\u0275elementEnd();
+      \u0275\u0275text(24, " Add User ");
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(25, "div", 9)(26, "table", 10);
+      \u0275\u0275listener("matSortChange", function UserManagementComponent_Template_table_matSortChange_26_listener($event) {
+        return ctx.onUserSortChange($event);
+      });
+      \u0275\u0275elementContainerStart(27, 11);
+      \u0275\u0275template(28, UserManagementComponent_th_28_Template, 2, 0, "th", 12)(29, UserManagementComponent_td_29_Template, 2, 1, "td", 13);
+      \u0275\u0275elementContainerEnd();
+      \u0275\u0275elementContainerStart(30, 14);
+      \u0275\u0275template(31, UserManagementComponent_th_31_Template, 2, 0, "th", 12)(32, UserManagementComponent_td_32_Template, 2, 1, "td", 13);
+      \u0275\u0275elementContainerEnd();
+      \u0275\u0275elementContainerStart(33, 15);
+      \u0275\u0275template(34, UserManagementComponent_th_34_Template, 2, 0, "th", 12)(35, UserManagementComponent_td_35_Template, 2, 1, "td", 13);
+      \u0275\u0275elementContainerEnd();
+      \u0275\u0275elementContainerStart(36, 16);
+      \u0275\u0275template(37, UserManagementComponent_th_37_Template, 2, 0, "th", 12)(38, UserManagementComponent_td_38_Template, 2, 1, "td", 13);
+      \u0275\u0275elementContainerEnd();
+      \u0275\u0275elementContainerStart(39, 17);
+      \u0275\u0275template(40, UserManagementComponent_th_40_Template, 2, 0, "th", 12)(41, UserManagementComponent_td_41_Template, 3, 2, "td", 13);
+      \u0275\u0275elementContainerEnd();
+      \u0275\u0275elementContainerStart(42, 18);
+      \u0275\u0275template(43, UserManagementComponent_th_43_Template, 2, 0, "th", 19)(44, UserManagementComponent_td_44_Template, 7, 0, "td", 13);
+      \u0275\u0275elementContainerEnd();
+      \u0275\u0275template(45, UserManagementComponent_tr_45_Template, 1, 0, "tr", 20)(46, UserManagementComponent_tr_46_Template, 1, 0, "tr", 21);
+      \u0275\u0275elementEnd();
+      \u0275\u0275template(47, UserManagementComponent_div_47_Template, 4, 0, "div", 22)(48, UserManagementComponent_div_48_Template, 11, 0, "div", 23)(49, UserManagementComponent_div_49_Template, 9, 0, "div", 23);
+      \u0275\u0275elementEnd()()()()();
+    }
+    if (rf & 2) {
+      \u0275\u0275advance(18);
+      \u0275\u0275twoWayProperty("ngModel", ctx.userSearchTerm);
+      \u0275\u0275advance(8);
+      \u0275\u0275property("dataSource", ctx.filteredUsers);
+      \u0275\u0275advance(19);
+      \u0275\u0275property("matHeaderRowDef", ctx.userColumns);
+      \u0275\u0275advance();
+      \u0275\u0275property("matRowDefColumns", ctx.userColumns);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.usersLoading);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", !ctx.usersLoading && ctx.filteredUsers.length === 0 && ctx.users.length === 0);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", !ctx.usersLoading && ctx.filteredUsers.length === 0 && ctx.users.length > 0);
+    }
+  }, dependencies: [
+    CommonModule,
+    NgClass,
+    NgIf,
+    FormsModule,
+    DefaultValueAccessor,
+    NgControlStatus,
+    NgModel,
+    MatCardModule,
+    MatCard,
+    MatCardContent,
+    MatCardHeader,
+    MatCardSubtitle,
+    MatCardTitle,
+    MatButtonModule,
+    MatButton,
+    MatIconButton,
+    MatIconModule,
+    MatIcon,
+    MatTabsModule,
+    MatTableModule,
+    MatTable,
+    MatHeaderCellDef,
+    MatHeaderRowDef,
+    MatColumnDef,
+    MatCellDef,
+    MatRowDef,
+    MatHeaderCell,
+    MatCell,
+    MatHeaderRow,
+    MatRow,
+    MatDialogModule,
+    MatProgressSpinnerModule,
+    MatProgressSpinner,
+    MatFormFieldModule,
+    MatFormField,
+    MatLabel,
+    MatSuffix,
+    MatInputModule,
+    MatInput,
+    MatSelectModule,
+    MatSortModule,
+    MatSort,
+    MatSortHeader
+  ], styles: ["\n\n.page-container[_ngcontent-%COMP%] {\n  min-height: 100vh;\n  background: #f5f5f5;\n  padding-left: 260px;\n  overflow-y: auto;\n  transition: padding-left 0.3s ease;\n}\n.content-wrapper[_ngcontent-%COMP%] {\n  max-width: 1400px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.page-container.sidebar-collapsed[_ngcontent-%COMP%] {\n  padding-left: 70px;\n}\n@media (max-width: 1200px) {\n  .page-container[_ngcontent-%COMP%] {\n    padding-left: 0;\n  }\n}\n.page-header[_ngcontent-%COMP%] {\n  margin-bottom: 30px;\n}\n.page-header[_ngcontent-%COMP%]   h1[_ngcontent-%COMP%] {\n  margin: 0 0 8px 0;\n  color: #333;\n  font-size: 2.5rem;\n  font-weight: 300;\n}\n.page-header[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  margin: 0;\n  color: #666;\n  font-size: 1.1rem;\n}\n.management-card[_ngcontent-%COMP%] {\n  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);\n  border-radius: 8px;\n  overflow: hidden;\n  width: 100%;\n}\n.management-card[_ngcontent-%COMP%]   mat-card-header[_ngcontent-%COMP%] {\n  background: #f8f9fa;\n  border-bottom: 1px solid #e9ecef;\n  margin: 0;\n  padding: 20px 24px;\n}\n.management-card[_ngcontent-%COMP%]   mat-card-header[_ngcontent-%COMP%]   mat-card-title[_ngcontent-%COMP%] {\n  margin: 0;\n  color: #333;\n  font-size: 1.5rem;\n  font-weight: 500;\n}\n.management-card[_ngcontent-%COMP%]   mat-card-header[_ngcontent-%COMP%]   mat-card-subtitle[_ngcontent-%COMP%] {\n  margin: 4px 0 0 0;\n  color: #666;\n  font-size: 0.95rem;\n}\n.management-card[_ngcontent-%COMP%]   mat-card-content[_ngcontent-%COMP%] {\n  padding: 24px;\n}\n.search-container[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 16px;\n  align-items: center;\n  margin-bottom: 24px;\n  flex-wrap: wrap;\n}\n.search-container[_ngcontent-%COMP%]   .search-field[_ngcontent-%COMP%] {\n  flex: 1;\n  min-width: 300px;\n}\n.search-container[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  height: 56px;\n  min-width: 120px;\n}\n.table-container[_ngcontent-%COMP%] {\n  position: relative;\n  min-height: 200px;\n}\n.users-table[_ngcontent-%COMP%] {\n  width: 100%;\n  background: white;\n  border-radius: 4px;\n  overflow: hidden;\n}\n.users-table[_ngcontent-%COMP%]   th[_ngcontent-%COMP%] {\n  background: #f8f9fa;\n  color: #333;\n  font-weight: 600;\n  font-size: 0.875rem;\n  text-transform: uppercase;\n  letter-spacing: 0.5px;\n  padding: 16px 12px;\n  border-bottom: 2px solid #e9ecef;\n}\n.users-table[_ngcontent-%COMP%]   td[_ngcontent-%COMP%] {\n  padding: 16px 12px;\n  border-bottom: 1px solid #f0f0f0;\n  font-size: 0.875rem;\n}\n.users-table[_ngcontent-%COMP%]   tr[_ngcontent-%COMP%]:hover {\n  background: #f8f9fa;\n}\n.users-table[_ngcontent-%COMP%]   .role-badge[_ngcontent-%COMP%] {\n  display: inline-block;\n  padding: 4px 8px;\n  border-radius: 12px;\n  font-size: 0.75rem;\n  font-weight: 600;\n  text-transform: uppercase;\n  letter-spacing: 0.5px;\n}\n.users-table[_ngcontent-%COMP%]   .role-badge.role-admin[_ngcontent-%COMP%] {\n  background: #e3f2fd;\n  color: #1976d2;\n}\n.users-table[_ngcontent-%COMP%]   .role-badge.role-dealer[_ngcontent-%COMP%] {\n  background: #f3e5f5;\n  color: #7b1fa2;\n}\n.users-table[_ngcontent-%COMP%]   .role-badge.role-player[_ngcontent-%COMP%] {\n  background: #e8f5e8;\n  color: #388e3c;\n}\n.loading-container[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  padding: 60px 20px;\n  color: #666;\n}\n.loading-container[_ngcontent-%COMP%]   mat-spinner[_ngcontent-%COMP%] {\n  margin-bottom: 16px;\n}\n.loading-container[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  margin: 0;\n  font-size: 1rem;\n}\n.empty-state[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  padding: 60px 20px;\n  text-align: center;\n  color: #666;\n}\n.empty-state[_ngcontent-%COMP%]   mat-icon[_ngcontent-%COMP%] {\n  font-size: 4rem;\n  width: 4rem;\n  height: 4rem;\n  margin-bottom: 16px;\n  color: #ccc;\n}\n.empty-state[_ngcontent-%COMP%]   h3[_ngcontent-%COMP%] {\n  margin: 0 0 8px 0;\n  color: #333;\n  font-size: 1.5rem;\n  font-weight: 400;\n}\n.empty-state[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  margin: 0 0 24px 0;\n  font-size: 1rem;\n  max-width: 400px;\n}\n.empty-state[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  min-width: 160px;\n}\n@media (max-width: 768px) {\n  .content-wrapper[_ngcontent-%COMP%] {\n    padding: 16px;\n  }\n  .page-header[_ngcontent-%COMP%]   h1[_ngcontent-%COMP%] {\n    font-size: 2rem;\n  }\n  .search-container[_ngcontent-%COMP%] {\n    flex-direction: column;\n    align-items: stretch;\n  }\n  .search-container[_ngcontent-%COMP%]   .search-field[_ngcontent-%COMP%] {\n    min-width: auto;\n  }\n  .search-container[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n    width: 100%;\n  }\n  .users-table[_ngcontent-%COMP%] {\n    font-size: 0.8rem;\n  }\n  .users-table[_ngcontent-%COMP%]   th[_ngcontent-%COMP%], \n   .users-table[_ngcontent-%COMP%]   td[_ngcontent-%COMP%] {\n    padding: 12px 8px;\n  }\n  .role-badge[_ngcontent-%COMP%] {\n    font-size: 0.7rem;\n    padding: 3px 6px;\n  }\n}\n@media (max-width: 480px) {\n  .users-table[_ngcontent-%COMP%]   th[_ngcontent-%COMP%], \n   .users-table[_ngcontent-%COMP%]   td[_ngcontent-%COMP%] {\n    padding: 8px 4px;\n  }\n  .empty-state[_ngcontent-%COMP%] {\n    padding: 40px 16px;\n  }\n  .empty-state[_ngcontent-%COMP%]   mat-icon[_ngcontent-%COMP%] {\n    font-size: 3rem;\n    width: 3rem;\n    height: 3rem;\n  }\n  .empty-state[_ngcontent-%COMP%]   h3[_ngcontent-%COMP%] {\n    font-size: 1.25rem;\n  }\n}\n/*# sourceMappingURL=user-management.component.css.map */"] });
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(UserManagementComponent, { className: "UserManagementComponent", filePath: "src/app/pages/admin/user-management/user-management.component.ts", lineNumber: 54 });
 })();
 
 // src/app/auth.guard.ts
@@ -45841,6 +46775,11 @@ var routes = [
       {
         path: "admin/venue-game-management",
         component: VenueGameManagementComponent,
+        canActivate: [AdminGuard]
+      },
+      {
+        path: "admin/user-management",
+        component: UserManagementComponent,
         canActivate: [AdminGuard]
       }
     ]

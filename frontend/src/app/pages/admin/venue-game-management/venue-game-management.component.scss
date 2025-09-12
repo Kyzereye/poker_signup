@@ -1,15 +1,16 @@
 .page-container {
   min-height: 100vh;
-  background: #f5f5f5;
   padding-left: 260px; /* Account for sidebar width (260px when expanded) */
   overflow-y: auto;
   transition: padding-left 0.3s ease; /* Smooth transition when sidebar collapses */
 }
 
 .content-wrapper {
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto; /* This centers the content within the padded area */
-  padding: 20px;
+  padding: 20px 100px 20px 100px;
+  background: #f5f5f5;
+  min-height: 100vh;
 }
 
 /* When sidebar is collapsed */
@@ -43,6 +44,7 @@
 .management-card {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  width: 100%;
   
   mat-card-header {
     border-bottom: 1px solid #e0e0e0;

@@ -2,7 +2,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, switchMap } from 'rxjs';
-import { environment } from '../environments/environment';
+import { environment } from '@environments/environment';
 import { UserService } from './user.service';
 import { RoleService } from './role.service';
 

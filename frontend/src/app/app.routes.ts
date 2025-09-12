@@ -9,6 +9,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { VenueGameManagementComponent } from './pages/admin/venue-game-management/venue-game-management.component';
+import { UserManagementComponent } from './pages/admin/user-management/user-management.component';
 import { AuthGuard } from './auth.guard';
 import { AdminGuard } from './guards/admin.guard';
 
@@ -60,6 +61,11 @@ export const routes: Routes = [
       {
         path: 'admin/venue-game-management',
         component: VenueGameManagementComponent,
+        canActivate: [AdminGuard]
+      },
+      {
+        path: 'admin/user-management',
+        component: UserManagementComponent,
         canActivate: [AdminGuard]
       }
     ]

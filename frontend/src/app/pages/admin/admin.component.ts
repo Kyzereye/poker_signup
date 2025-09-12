@@ -7,8 +7,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { AdminService, UserStats, AdminDashboardData } from '../../services/admin.service';
-import { RoleService } from '../../services/role.service';
+import { AdminService, UserStats, AdminDashboardData } from '@services/admin.service';
+import { RoleService } from '@services/role.service';
 
 @Component({
   selector: 'app-admin',
@@ -95,6 +95,10 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   manageLocationsGames() {
     this.router.navigate(['/admin/venue-game-management']);
+  }
+
+  manageUsers() {
+    this.router.navigate(['/admin/user-management']);
   }
 
 }

@@ -15,7 +15,7 @@ import { MatSortModule, Sort } from '@angular/material/sort';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environments/environment';
 // Note: Using direct HttpClient calls instead of VenueGameService due to import issues
 // import { VenueGameService, Venue, Game } from '../../../services';
 
