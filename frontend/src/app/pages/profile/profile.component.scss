@@ -1,16 +1,9 @@
 .profile-content {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
-  background: var(--background-secondary);
-  z-index: 1000;
-  padding: 2rem;
-  overflow-y: auto;
+  align-items: flex-start;
+  padding: 2rem 2rem 4rem 2rem;
+  min-height: calc(100vh - 200px);
 }
 
 .profile-card {
@@ -20,7 +13,7 @@
   border: 1px solid var(--border-light);
   overflow: hidden;
   width: 100%;
-  max-width: 600px;
+  max-width: 880px;
 }
 
 .profile-header {
@@ -34,31 +27,21 @@
   .profile-avatar {
     width: 80px;
     height: 80px;
-    background: rgba(255, 255, 255, 0.2);
     border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(10px);
+    font-size: 2rem;
+    font-weight: 600;
     flex-shrink: 0;
-    overflow: hidden;
-    
-    mat-icon {
-      font-size: 2.5rem;
-      color: white;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
   }
   
   .profile-info {
     flex: 1;
     
     h2 {
-      margin: 0 0 0.5rem 0;
+      margin: 0;
       font-size: 1.75rem;
       font-weight: 600;
     }
@@ -71,137 +54,75 @@
   }
 }
 
-.profile-content {
-  padding: 2rem;
+// Info grid styles for the Material card content
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.info-item {
+  padding: 1rem;
+  background: var(--background-secondary);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   
-  .profile-card {
-    max-width: 600px;
-    margin: 0 auto;
-    box-shadow: var(--shadow-large);
-    border-radius: var(--border-radius-large);
-    overflow: hidden;
-    
-    mat-card-header {
-      background: var(--background-tertiary);
-      padding: 1.5rem;
-      border-bottom: 1px solid var(--border-light);
-      
-      mat-card-title {
-        color: var(--text-primary);
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin: 0;
-      }
-      
-      mat-card-subtitle {
-        color: var(--text-secondary);
-        font-size: 1rem;
-        margin: 0.5rem 0 0 0;
-      }
-    }
-    
-    mat-card-content {
-      padding: 2rem;
-    }
-    
-    mat-card-actions {
-      padding: 1.5rem 2rem;
-      background: var(--background-tertiary);
-      border-top: 1px solid var(--border-light);
-      margin: 0;
-    }
+  .info-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    min-width: 120px;
   }
   
-  .info-grid {
-    display: grid;
-    gap: 1.5rem;
-    
-    .info-item {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      
-      .info-label {
-        color: var(--text-secondary);
-        font-size: 0.875rem;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-      
-      .info-value {
-        color: var(--text-primary);
-        font-size: 1rem;
-        font-weight: 500;
-        padding: 0.75rem 1rem;
-        background: var(--background-secondary);
-        border: 1px solid var(--border-light);
-        border-radius: var(--border-radius);
-        min-height: 48px;
-        display: flex;
-        align-items: center;
-      }
-    }
+  .info-value {
+    font-size: 1rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    flex: 1;
   }
+}
+
+.profile-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding: 1rem 0;
   
-  .profile-actions {
-    display: flex;
-    justify-content: center;
+  button {
+    height: 48px;
+    font-size: 1rem;
+    font-weight: 500;
+    min-width: 150px;
     
-    .edit-button {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: var(--border-radius);
-      padding: 0.75rem 2rem;
-      font-size: 1rem;
-      font-weight: 500;
-      transition: all 0.2s ease;
-      
-      &:hover {
-        background: var(--primary-dark);
-        transform: translateY(-1px);
-        box-shadow: var(--shadow-medium);
-      }
-      
-      mat-icon {
-        margin-right: 0.5rem;
-      }
+    mat-icon {
+      margin-right: 0.5rem;
     }
   }
 }
 
-// Responsive design
+// Mobile responsive
 @media (max-width: 768px) {
   .profile-content {
     padding: 1rem;
-    align-items: flex-start;
-    padding-top: 2rem;
   }
   
   .profile-card {
     max-width: 100%;
-    margin: 0;
   }
   
   .profile-header {
+    padding: 1.5rem;
     flex-direction: column;
     text-align: center;
-    gap: 1rem;
-    padding: 1.5rem;
     
     .profile-avatar {
       width: 60px;
       height: 60px;
-      
-      mat-icon {
-        font-size: 2rem;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
+      font-size: 1.5rem;
     }
     
     .profile-info h2 {
@@ -209,35 +130,16 @@
     }
   }
   
-  .profile-content {
-    padding: 1rem;
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .profile-actions {
+    flex-direction: column;
     
-    .profile-card {
-      mat-card-header {
-        padding: 1rem;
-        
-        mat-card-title {
-          font-size: 1.25rem;
-        }
-        
-        mat-card-subtitle {
-          font-size: 0.875rem;
-        }
-      }
-      
-      mat-card-content {
-        padding: 1.5rem;
-      }
-      
-      mat-card-actions {
-        padding: 1rem 1.5rem;
-      }
-    }
-    
-    .profile-actions {
-      .edit-button {
-        width: 100%;
-      }
+    button {
+      min-width: auto;
     }
   }
 }
