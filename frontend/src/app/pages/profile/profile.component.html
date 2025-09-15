@@ -35,13 +35,8 @@
               </div>
               
               <div class="info-item">
-                <div class="info-label">First Name</div>
-                <div class="info-value">{{ currentUser?.first_name || 'Not provided' | titlecase }}</div>
-              </div>
-              
-              <div class="info-item">
-                <div class="info-label">Last Name</div>
-                <div class="info-value">{{ currentUser?.last_name || 'Not provided' | titlecase }}</div>
+                <div class="info-label">Name</div>
+                <div class="info-value">{{ getFullName() | titlecase }}</div>
               </div>
               
               <div class="info-item">

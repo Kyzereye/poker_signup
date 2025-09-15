@@ -3,12 +3,14 @@
 /tmp
 .angular/
 .vscode/
+.env
 
 # Node and project-specific files
 node_modules/
 
-/backend/.env
+# /backend/.env
 
 # Custom folders that should not be tracked
 /python
 /sql
+/dist

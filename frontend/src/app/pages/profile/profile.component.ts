@@ -65,6 +65,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
       });
   }
 
+  getFullName(): string {
+    if (!this.currentUser) return 'Not provided';
+    
+    const firstName = this.currentUser.first_name || '';
+    const lastName = this.currentUser.last_name || '';
+    const fullName = `${firstName} ${lastName}`.trim();
+    
+    return fullName || 'Not provided';
+  }
+
   openEditDialog() {
     const dialogRef = this.dialog.open(ProfileEditDialogComponent, {
       width: '500px',

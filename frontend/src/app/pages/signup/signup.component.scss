@@ -1,50 +1,3 @@
-.page-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  background: var(--background-secondary);
-  z-index: 1000;
-  padding: 2rem;
-  overflow-y: auto;
-}
-
-.content-wrapper {
-  width: 100%;
-  max-width: 1200px;
-  display: flex;
-  flex-direction: column;
-}
-
-.page-header {
-  text-align: center;
-  margin-bottom: 2rem;
-  
-  h1 {
-    color: var(--text-primary);
-    font-size: 2.5rem;
-    font-weight: 600;
-    margin: 0 0 1rem 0;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
-  p {
-    color: var(--text-secondary);
-    font-size: 1.1rem;
-    margin: 0;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-}
-
 .filters-section {
   margin-bottom: 2rem;
 
@@ -93,20 +46,6 @@
   }
 }
 
-// Responsive design for filters
-@media (max-width: 768px) {
-  .filters-section {
-    .filters-card {
-      .filters-form {
-        .filter-row {
-          grid-template-columns: 1fr;
-          gap: 15px;
-        }
-      }
-    }
-  }
-}
-
 .games-section {
   h2 {
     color: var(--text-primary);
@@ -117,17 +56,6 @@
   }
 
   .game-card {
-    background: var(--background-primary);
-    border: 1px solid var(--border-light);
-    box-shadow: var(--shadow-light);
-    transition: all 0.3s ease;
-    border-radius: var(--border-radius);
-
-    &:hover:not(.gray-out) {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-medium);
-    }
-
     mat-card-header {
       margin-bottom: 1rem;
 
@@ -163,28 +91,6 @@
           flex: 1;
           font-size: 0.875rem;
         }
-      }
-    }
-
-    .signup-button {
-      width: 100%;
-      margin-top: 0.75rem;
-      padding: 0.75rem 1.5rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: var(--border-radius);
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: var(--primary-dark);
-        transform: translateY(-1px);
-      }
-
-      mat-icon {
-        margin-right: 0.5rem;
       }
     }
 
@@ -256,34 +162,10 @@
   }
 }
 
-// Responsive design
+// Mobile responsive
 @media (max-width: 768px) {
-  .page-container {
-    padding: 1rem;
-  }
-  
-  .content-wrapper {
-    max-width: 100%;
-  }
-  
-  .page-header {
-    h1 {
-      font-size: 2rem;
-    }
-    
-    p {
-      font-size: 1rem;
-    }
-  }
-  
-  .filters-section {
-    .filters-card {
-      .filters-form {
-        .filter-row {
-          grid-template-columns: 1fr;
-          gap: 1rem;
-        }
-      }
-    }
+  .filters-section .filters-card .filters-form .filter-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 }
