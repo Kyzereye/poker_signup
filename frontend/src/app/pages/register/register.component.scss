@@ -36,46 +36,23 @@
 }
 
 .register-form {
-  .form-layout {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 2rem;
-    margin-bottom: 2rem;
-  }
-  
-  .form-fields {
-    .form-group {
-      margin-bottom: 1.5rem;
-      
-      .full-width {
-        width: 100%;
-      }
-      
-      mat-hint {
-        color: var(--text-secondary);
-        font-size: 0.75rem;
-        margin-top: 0.25rem;
-      }
-    }
+  .error-messages {
+    margin-bottom: 1.5rem;
     
-    .error-messages {
-      margin-bottom: 1.5rem;
+    .error-message {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem;
+      background: #ffebee;
+      border: 1px solid #f44336;
+      border-radius: var(--border-radius);
+      color: #c62828;
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
       
-      .error-message {
-        display: flex;
-        align-items: center;
-        padding: 0.75rem;
-        background: #ffebee;
-        border: 1px solid #f44336;
-        border-radius: var(--border-radius);
-        color: #c62828;
-        font-size: 0.875rem;
-        margin-bottom: 0.5rem;
-        
-        mat-icon {
-          margin-right: 0.5rem;
-          font-size: 18px;
-        }
+      mat-icon {
+        margin-right: 0.5rem;
+        font-size: 18px;
       }
     }
   }
@@ -210,7 +187,7 @@
   }
 }
 
-// Responsive design
+// Mobile responsive
 @media (max-width: 768px) {
   .register-container {
     padding: 1rem;
@@ -225,11 +202,6 @@
     font-size: 1.75rem;
   }
   
-  .register-form .form-layout {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-  
   .password-requirements {
     position: static;
     order: -1;
@@ -240,14 +212,4 @@
       gap: 0.5rem;
     }
   }
-}
-
-// Snackbar animations
-.snackbar-fade {
-  animation: fadeInOut 3s ease-in-out;
-}
-
-@keyframes fadeInOut {
-  0%, 100% { opacity: 0; }
-  10%, 90% { opacity: 1; }
 }
