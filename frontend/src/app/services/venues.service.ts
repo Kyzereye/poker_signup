@@ -26,6 +26,6 @@ export class VenuesService {
 
     console.log("data", data);
 
-    return this.http_client.post<VenueDetails[]>(this.url + "/venue_routes/get_venue_data", data);
+    return this.http_client.post<VenueDetails[]>(this.url + "/api/venues/get_venue_data", data);
   }
 }

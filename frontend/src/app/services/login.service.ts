@@ -21,7 +21,7 @@ export class LoginService {
   ) { }
 
   login(data: any) {
-    return this.httpClient.post(this.url + "/login_routes/login", data, {
+    return this.httpClient.post(this.url + "/api/auth/login", data, {
       headers: new HttpHeaders().set("Content-Type", "application/json")
     }).pipe(
       switchMap((loginResponse: any) => {

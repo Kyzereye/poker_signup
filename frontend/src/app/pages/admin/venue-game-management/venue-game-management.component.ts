@@ -100,7 +100,7 @@ export class VenueGameManagementComponent implements OnInit, OnDestroy {
 
   loadVenues() {
     this.venuesLoading = true;
-    const url = `${environment.apiUrl}/venue_routes/locations`;
+    const url = `${environment.apiUrl}/api/venues/locations`;
     
     this.http.get<Venue[]>(url)
       .pipe(takeUntil(this.destroy$))
@@ -121,7 +121,7 @@ export class VenueGameManagementComponent implements OnInit, OnDestroy {
 
   loadGames() {
     this.gamesLoading = true;
-    const url = `${environment.apiUrl}/venue_routes/games`;
+    const url = `${environment.apiUrl}/api/venues/games`;
     
     this.http.get<Game[]>(url)
       .pipe(takeUntil(this.destroy$))
@@ -204,7 +204,7 @@ export class VenueGameManagementComponent implements OnInit, OnDestroy {
   }
 
   private performDeleteVenue(venue: Venue): void {
-    const url = `${environment.apiUrl}/venue_routes/locations/${venue.id}`;
+    const url = `${environment.apiUrl}/api/venues/locations/${venue.id}`;
     
     this.http.delete(url).subscribe({
       next: (response: any) => {

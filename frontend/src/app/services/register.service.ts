@@ -14,7 +14,7 @@ export class RegisterService {
   constructor(private httpClient: HttpClient) { }
 
   registerUser(data: any) {
-    return this.httpClient.post(this.url + "/register_routes/user_registration", data, {
+    return this.httpClient.post(this.url + "/api/auth/user_registration", data, {
       headers: new HttpHeaders().set("Content-Type", "application/json")
     })
   }

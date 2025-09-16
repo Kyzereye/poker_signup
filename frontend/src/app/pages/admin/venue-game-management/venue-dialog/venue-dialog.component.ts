@@ -77,7 +77,7 @@ export class VenueDialogComponent implements OnInit {
   }
 
   private addVenue(venueData: any): void {
-    const url = `${environment.apiUrl}/venue_routes/locations`;
+    const url = `${environment.apiUrl}/api/venues/locations`;
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     
     this.http.post(url, venueData, { headers }).subscribe({
@@ -109,7 +109,7 @@ export class VenueDialogComponent implements OnInit {
   private editVenue(venueData: any): void {
     if (!this.data.venue?.id) return;
 
-    const url = `${environment.apiUrl}/venue_routes/locations/${this.data.venue.id}`;
+    const url = `${environment.apiUrl}/api/venues/locations/${this.data.venue.id}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     
     this.http.put(url, venueData, { headers }).subscribe({

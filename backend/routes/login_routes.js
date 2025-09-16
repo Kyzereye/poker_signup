@@ -5,6 +5,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 
 router.post('/login', async (req, res) => {
+  console.log("In the login route of the local machine");
   const { email, password } = req.body;
 
 

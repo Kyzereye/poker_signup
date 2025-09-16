@@ -43,46 +43,46 @@ export class AdminService {
 
   // Get admin dashboard data
   getDashboardData(): Observable<AdminDashboardData> {
-    return this.httpClient.get<AdminDashboardData>(`${this.url}/admin_routes/dashboard_data`);
+    return this.httpClient.get<AdminDashboardData>(`${this.url}/api/admin/dashboard_data`);
   }
 
   // Get user statistics
   getUserStats(): Observable<UserStats> {
-    return this.httpClient.get<UserStats>(`${this.url}/admin_routes/user_stats`);
+    return this.httpClient.get<UserStats>(`${this.url}/api/admin/user_stats`);
   }
 
   // Get all users with pagination
   getAllUsers(page: number = 1, limit: number = 10): Observable<{users: User[], total: number, page: number, totalPages: number}> {
-    return this.httpClient.get<{users: User[], total: number, page: number, totalPages: number}>(`${this.url}/admin_routes/users?page=${page}&limit=${limit}`);
+    return this.httpClient.get<{users: User[], total: number, page: number, totalPages: number}>(`${this.url}/api/admin/users?page=${page}&limit=${limit}`);
   }
 
   // Get user by ID
   getUserById(userId: number): Observable<User> {
-    return this.httpClient.get<User>(`${this.url}/admin_routes/users/${userId}`);
+    return this.httpClient.get<User>(`${this.url}/api/admin/users/${userId}`);
   }
 
   // Update user role
   updateUserRole(userId: number, role: 'player' | 'dealer' | 'admin'): Observable<any> {
-    return this.httpClient.put(`${this.url}/admin_routes/users/${userId}/role`, { role });
+    return this.httpClient.put(`${this.url}/api/admin/users/${userId}/role`, { role });
   }
 
   // Update user information
   updateUser(userId: number, userData: Partial<User>): Observable<any> {
-    return this.httpClient.put(`${this.url}/admin_routes/users/${userId}`, userData);
+    return this.httpClient.put(`${this.url}/api/admin/users/${userId}`, userData);
   }
 
   // Delete user (soft delete)
   deleteUser(userId: number): Observable<any> {
-    return this.httpClient.delete(`${this.url}/admin_routes/users/${userId}`);
+    return this.httpClient.delete(`${this.url}/api/admin/users/${userId}`);
   }
 
   // Get system information
   getSystemInfo(): Observable<any> {
-    return this.httpClient.get(`${this.url}/admin_routes/system_info`);
+    return this.httpClient.get(`${this.url}/api/admin/system_info`);
   }
 
   // Refresh all data
   refreshData(): Observable<AdminDashboardData> {
-    return this.httpClient.post<AdminDashboardData>(`${this.url}/admin_routes/refresh_data`, {});
+    return this.httpClient.post<AdminDashboardData>(`${this.url}/api/admin/refresh_data`, {});
   }
 }

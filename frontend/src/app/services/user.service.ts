@@ -29,55 +29,55 @@ export class UserService {
   }
 
   getUserData(data: any) {
-    return this.httpClient.post(this.url + "/user_routes/get_user_data", data);
+    return this.httpClient.post(this.url + "/api/users/get_user_data", data);
   }
 
   getAllLocations(): Observable<any> {
-    return this.httpClient.get<Location[]>(`${this.url}/user_routes/get_all_locations`);
+    return this.httpClient.get<Location[]>(`${this.url}/api/users/get_all_locations`);
   }
 
   getAllUsers(): Observable<any> {
-    return this.httpClient.get<Location[]>(`${this.url}/user_routes/get_all_users`);
+    return this.httpClient.get<Location[]>(`${this.url}/api/users/get_all_users`);
   }
 
   gameSignUp(data: any): Observable<any> {
-    return this.httpClient.post<Location[]>(`${this.url}/user_routes/game_sign_up`, data);
+    return this.httpClient.post<Location[]>(`${this.url}/api/users/game_sign_up`, data);
   }
 
   deleteGameSignup(data: any): Observable<any> {
-    return this.httpClient.delete(`${this.url}/user_routes/delete_game_signup`, { body: data });
+    return this.httpClient.delete(`${this.url}/api/users/delete_game_signup`, { body: data });
   }
 
   getAllPlayerSignups(): Observable<any> {
-    return this.httpClient.get(`${this.url}/user_routes/get_all_player_signups`);
+    return this.httpClient.get(`${this.url}/api/users/get_all_player_signups`);
   }
 
   getUserCurrentGame(userId: number): Observable<any> {
-    return this.httpClient.get(`${this.url}/user_routes/get_user_current_game/${userId}`);
+    return this.httpClient.get(`${this.url}/api/users/get_user_current_game/${userId}`);
   }
 
   getPlayerSignups(gameId: number): Observable<any> {
-    return this.httpClient.get(`${this.url}/user_routes/get_player_signups/${gameId}`);
+    return this.httpClient.get(`${this.url}/api/users/get_player_signups/${gameId}`);
   }
 
   getLocationsWithGames(day: string): Observable<any> {
-    return this.httpClient.get(`${this.url}/user_routes/get_locations_with_games/${day}`);
+    return this.httpClient.get(`${this.url}/api/users/get_locations_with_games/${day}`);
   }
 
   updateProfile(data: any): Observable<any> {
-    return this.httpClient.put(`${this.url}/user_routes/update_profile`, data);
+    return this.httpClient.put(`${this.url}/api/users/update_profile`, data);
   }
 
   getUserRole(userId: number): Observable<any> {
-    return this.httpClient.get(`${this.url}/user_routes/get_user_role/${userId}`);
+    return this.httpClient.get(`${this.url}/api/users/get_user_role/${userId}`);
   }
 
   getAllRoles(): Observable<any> {
-    return this.httpClient.get(`${this.url}/user_routes/get_all_roles`);
+    return this.httpClient.get(`${this.url}/api/users/get_all_roles`);
   }
 
   updateUserRole(data: any): Observable<any> {
-    return this.httpClient.put(`${this.url}/user_routes/update_user_role`, data);
+    return this.httpClient.put(`${this.url}/api/users/update_user_role`, data);
   }
 
 }

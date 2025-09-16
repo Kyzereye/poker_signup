@@ -81,7 +81,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
   loadUsers() {
     this.usersLoading = true;
-    const url = `${environment.apiUrl}/admin_routes/all_users`;
+    const url = `${environment.apiUrl}/api/admin/all_users`;
     
     this.http.get<User[]>(url)
       .pipe(takeUntil(this.destroy$))
@@ -163,7 +163,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   }
 
   private performDeleteUser(user: User): void {
-    const url = `${environment.apiUrl}/admin_routes/delete_user/${user.id}`;
+    const url = `${environment.apiUrl}/api/admin/delete_user/${user.id}`;
     
     this.http.delete(url).subscribe({
       next: (response: any) => {

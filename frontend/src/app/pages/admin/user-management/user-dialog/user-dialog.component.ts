@@ -91,7 +91,7 @@ export class UserDialogComponent implements OnInit {
   }
 
   private addUser(userData: any): void {
-    const url = `${environment.apiUrl}/admin_routes/create_user`;
+    const url = `${environment.apiUrl}/api/admin/create_user`;
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     
     this.http.post(url, userData, { headers }).subscribe({
@@ -123,7 +123,7 @@ export class UserDialogComponent implements OnInit {
   private editUser(userData: any): void {
     if (!this.data.user?.id) return;
 
-    const url = `${environment.apiUrl}/admin_routes/update_user/${this.data.user.id}`;
+    const url = `${environment.apiUrl}/api/admin/update_user/${this.data.user.id}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     
     this.http.put(url, userData, { headers }).subscribe({

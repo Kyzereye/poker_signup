@@ -30,10 +30,10 @@ export class TheListService {
   constructor(private httpClient: HttpClient) { }
 
   getGameDetails(gameId: number): Observable<GameDetails> {
-    return this.httpClient.get<GameDetails>(`${this.url}/user_routes/get_game_details/${gameId}`);
+    return this.httpClient.get<GameDetails>(`${this.url}/api/users/get_game_details/${gameId}`);
   }
 
   getPlayerSignups(gameId: number): Observable<PlayerSignup[]> {
-    return this.httpClient.get<PlayerSignup[]>(`${this.url}/user_routes/get_player_signups/${gameId}`);
+    return this.httpClient.get<PlayerSignup[]>(`${this.url}/api/users/get_player_signups/${gameId}`);
   }
 }

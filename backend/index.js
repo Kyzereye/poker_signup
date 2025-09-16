@@ -15,17 +15,21 @@ const user_routes = require('./routes/user_routes');
 const venue_game_routes = require('./routes/venue_game_routes');
 const admin_routes = require('./routes/admin_routes');
 
-app.use('/login_routes', login_routes); 
-app.use('/register_routes', register_routes);
-app.use('/user_routes', user_routes);
-app.use('/venue_routes', venue_game_routes);
-app.use('/admin_routes', admin_routes);
+app.use('/api/auth', login_routes); 
+app.use('/api/auth', register_routes);
+app.use('/api/users', user_routes);
+app.use('/api/venues', venue_game_routes);
+app.use('/api/admin', admin_routes);
 // Add a simple root route for testing
 app.get('/', (req, res) => {
-    res.json({ message: 'Backend server is running!' });
+    res.json({ message: 'Local Backend server is running!' });
   });
 
 // Error handling middleware (must be last)
 app.use(errorHandler);
 
 module.exports = app;
+
+// kyzereyeemporium.com
+// ln -s /etc/nginx/sites-available/kyzereyeemporium.com.conf /etc/nginx/sites-enabled/
+// certbot --nginx -d kyzereyeemporium.com -d www.kyzereyeemporium.com -d kyzereyeemporium.com -d api.kyzereyeemporium.com
