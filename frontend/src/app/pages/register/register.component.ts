@@ -106,12 +106,12 @@ export class RegisterComponent {
 
   initForm() {
     this.register_form = this.fb.group({
-      email: ['kyzereye@gmail.com', [Validators.required, Validators.email]],
-      password: ['1Q!azxsw2', [Validators.required, Validators.minLength(6)]],
-      confirm_password: ['1Q!azxsw2', [Validators.required]],
-      username: ['jkyzer', [Validators.required, Validators.minLength(3), Validators.maxLength(25)]],
-      firstName: ['Jeff', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
-      lastName: ['Kyser', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]]
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirm_password: ['', [Validators.required]],
+      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(25)]],
+      firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+      lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]]
     }, { validator: this.passwordMatchValidator });
     this.register_form.valueChanges.subscribe(() => this.updatePasswordRequirements())
   }
