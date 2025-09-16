@@ -22,14 +22,10 @@ app.use('/api/venues', venue_game_routes);
 app.use('/api/admin', admin_routes);
 // Add a simple root route for testing
 app.get('/', (req, res) => {
-    res.json({ message: 'Local Backend server is running!' });
+    res.json({ message: 'Backend server is running!' });
   });
 
 // Error handling middleware (must be last)
 app.use(errorHandler);
 
 module.exports = app;
-
-// kyzereyeemporium.com
-// ln -s /etc/nginx/sites-available/kyzereyeemporium.com.conf /etc/nginx/sites-enabled/
-// certbot --nginx -d kyzereyeemporium.com -d www.kyzereyeemporium.com -d kyzereyeemporium.com -d api.kyzereyeemporium.com

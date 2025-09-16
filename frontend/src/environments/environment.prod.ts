@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://kyzereyeemporium.com' // Backend API endpoint
+  apiUrl: 'http://kyzereyeemporium.com:3333' // Backend API endpoint
 };

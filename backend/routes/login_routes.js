@@ -8,7 +8,6 @@ router.post('/login', async (req, res) => {
   console.log("In the login route of the local machine");
   const { email, password } = req.body;
 
-
   if (!email || !password) {
     return res.status(400).json({ error: 'Email and password are required' });
   }
