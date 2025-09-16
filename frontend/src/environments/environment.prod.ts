@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://kyzereyeemporium.com'
+  apiUrl: 'https://api.kyzereyeemporium.com'
 };
