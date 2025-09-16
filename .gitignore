@@ -1,5 +1,6 @@
 # Compiled output and temporary files
 /dist
+frontend/dist/
 /tmp
 .angular/
 .vscode/

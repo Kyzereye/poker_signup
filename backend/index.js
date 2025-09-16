@@ -20,6 +20,7 @@ app.use('/api/auth', register_routes);
 app.use('/api/users', user_routes);
 app.use('/api/venues', venue_game_routes);
 app.use('/api/admin', admin_routes);
+
 // Add a simple root route for testing
 app.get('/', (req, res) => {
     res.json({ message: 'Backend server is running!' });

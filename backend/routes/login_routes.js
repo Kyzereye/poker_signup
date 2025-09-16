@@ -5,8 +5,9 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 
 router.post('/login', async (req, res) => {
-  console.log("In the login route of the local machine");
+  console.log("In the login route of");
   const { email, password } = req.body;
+
 
   if (!email || !password) {
     return res.status(400).json({ error: 'Email and password are required' });
@@ -53,3 +54,5 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router;
+
+// http://kyzereyeemporium.com:3333/api/test
