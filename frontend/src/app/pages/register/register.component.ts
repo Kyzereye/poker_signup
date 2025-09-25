@@ -61,7 +61,11 @@ export class RegisterComponent {
       this.registerService.registerUser(register_data).subscribe({
         next: (results: any) => {
           this.errorMessages = []; // Clear any previous error messages
-          this.showSuccessMessage('Registration successful!');
+          if (results.email_sent) {
+            this.showSuccessMessage('Registration successful! Please check your email to verify your account before logging in.');
+          } else {
+            this.showSuccessMessage('Registration successful! Please check your email to verify your account. If you don\'t receive an email, you can request a new verification email from the login page.');
+          }
           this.router.navigate(['/login']);
         },
         error: (error: any) => {

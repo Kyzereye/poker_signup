@@ -28,22 +28,33 @@ router.post('/login', async (req, res) => {
     const [results] = await pool.query(query, [email]);
 
    if (results.length === 0) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: 'Login credentials are incorrect' });
+    }
+
+    const user = results[0];
+    const is_valid_password = await bcrypt.compare(password, user.password);
+
+    if (!is_valid_password) {
+      return res.status(401).json({ error: 'Login credentials are incorrect' });
+    }
+
+    // Check if email is verified
+    if (!user.email_verified) {
+      return res.status(403).json({ 
+        error: 'Please verify your email address before logging in. Check your email for a verification link.',
+        requires_verification: true,
+        email: email
+      });
     }
 
     const user_data = {
-      "id": results[0].id, 
-      "username": results[0].username, 
+      "id": user.id, 
+      "username": user.username, 
       "email": email,
-      "role": results[0].role,
-      "first_name": results[0].first_name,
-      "last_name": results[0].last_name,
-      "phone": results[0].phone
-    }
-    const is_valid_password = await bcrypt.compare(password, results[0].password);
-
-    if (!is_valid_password) {
-      return res.status(401).json({ message: 'Invalid password' });
+      "role": user.role,
+      "first_name": user.first_name,
+      "last_name": user.last_name,
+      "phone": user.phone
     }
 
     return res.status(200).json({ success: true, user_data: user_data });

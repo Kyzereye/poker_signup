@@ -7,3 +7,4 @@ export * from './role.service';
 export * from './the-list.service';
 export * from './user.service';
 export * from './venues.service';
+export * from './verification.service';

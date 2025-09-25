@@ -7,6 +7,8 @@ import { SignupComponent } from './pages/signup/signup.component';
 import { TheListComponent } from './pages/the-list/the-list.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
+import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';
+import { ResendVerificationComponent } from './pages/resend-verification/resend-verification.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { VenueGameManagementComponent } from './pages/admin/venue-game-management/venue-game-management.component';
 import { UserManagementComponent } from './pages/admin/user-management/user-management.component';
@@ -22,6 +24,14 @@ export const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent
+  },
+  {
+    path: 'verify-email',
+    component: EmailVerificationComponent
+  },
+  {
+    path: 'resend-verification',
+    component: ResendVerificationComponent
   },
   // Authenticated routes
   {

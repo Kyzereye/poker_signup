@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SimpleDialogComponent } from '../components/simple-dialog/simple-dialog.component';
+import { VerificationService } from '../services/verification.service';
 
 @Component({
   selector: 'app-login',
@@ -33,7 +34,8 @@ export class LoginComponent {
     private userService: UserService,
     private authService: AuthService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private verificationService: VerificationService
   ) { }
 
   ngOnInit(): void {
@@ -58,11 +60,20 @@ onSubmit() {
       }
     }, (error) => {
       console.error("Login error:", error);
-      this.showLoginError(error);
+      this.handleLoginError(error, form_data.email);
     });
 }
 
-private showLoginError(error: any): void {
+private handleLoginError(error: any, email: string): void {
+  // Check if the error is due to unverified email
+  if (error.status === 403 && error.error?.requires_verification) {
+    this.showVerificationRequiredDialog(email);
+  } else {
+    this.showLoginError();
+  }
+}
+
+private showLoginError(): void {
   // Generic error message for security - don't reveal if email exists or password is wrong
   const errorMessage = 'Login credentials are incorrect. Please check your email and password and try again.';
 
@@ -73,6 +84,53 @@ private showLoginError(error: any): void {
       message: errorMessage,
       confirmText: 'OK',
       cancelText: null
+    }
+  });
+}
+
+private showVerificationRequiredDialog(email: string): void {
+  this.dialog.open(SimpleDialogComponent, {
+    width: '450px',
+    data: {
+      title: 'Email Verification Required',
+      message: 'Please verify your email address before logging in. Check your email for a verification link.',
+      confirmText: 'Resend Verification Email',
+      cancelText: 'Cancel',
+      showResendButton: true
+    }
+  }).afterClosed().subscribe(result => {
+    if (result === 'resend') {
+      this.resendVerificationEmail(email);
+    }
+  });
+}
+
+private resendVerificationEmail(email: string): void {
+  this.verificationService.resendVerificationEmail(email).subscribe({
+    next: (response) => {
+      if (response.success) {
+        this.dialog.open(SimpleDialogComponent, {
+          width: '400px',
+          data: {
+            title: 'Email Sent',
+            message: 'If the email address exists and is unverified, a new verification email has been sent.',
+            confirmText: 'OK',
+            cancelText: null
+          }
+        });
+      }
+    },
+    error: (error) => {
+      console.error('Resend verification error:', error);
+      this.dialog.open(SimpleDialogComponent, {
+        width: '400px',
+        data: {
+          title: 'Error',
+          message: 'Failed to send verification email. Please try again.',
+          confirmText: 'OK',
+          cancelText: null
+        }
+      });
     }
   });
 }

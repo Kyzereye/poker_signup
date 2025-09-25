@@ -8,6 +8,7 @@ export interface DialogData {
   message: string;
   confirmText: string;
   cancelText?: string;
+  showResendButton?: boolean;
 }
 
 @Component({
@@ -36,7 +37,11 @@ export class SimpleDialogComponent {
   ) {}
 
   onConfirm(): void {
-    this.dialogRef.close(true);
+    if (this.data.showResendButton) {
+      this.dialogRef.close('resend');
+    } else {
+      this.dialogRef.close(true);
+    }
   }
 
   onCancel(): void {

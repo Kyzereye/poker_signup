@@ -2,6 +2,7 @@ const express = require('express');
 const pool = require('../connection.js');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const emailService = require('../services/emailService');
 
 router.post('/user_registration', async (req, res) => {
   const { email, password, username, firstName, lastName } = req.body;
@@ -32,19 +33,26 @@ router.post('/user_registration', async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const password_hash = await bcrypt.hash(password, salt);
 
+    // Generate verification token and expiration
+    const verificationToken = emailService.generateVerificationToken();
+    const tokenExpiration = emailService.generateTokenExpiration();
+
     console.log("username", username);
     const insert_user_query = `
       INSERT INTO users 
-        (email, password, username) 
+        (email, password, username, email_verified, verification_token, verification_token_expires) 
       VALUES 
-        (?, ?, ?)
+        (?, ?, ?, ?, ?, ?)
     `;
 
     // Execute insert with correct parameters
     const [user_result] = await pool.query(insert_user_query, [
       email,
       password_hash,
-      username
+      username,
+      false, // email_verified starts as false
+      verificationToken,
+      tokenExpiration
     ]);
 
     const user_id = user_result.insertId;
@@ -64,11 +72,24 @@ router.post('/user_registration', async (req, res) => {
       'player' // Default role for new users
     ]);
 
+    // Send verification email
+    const emailResult = await emailService.sendVerificationEmail(
+      email, 
+      firstName, 
+      verificationToken
+    );
+
+    if (!emailResult.success) {
+      console.error('Failed to send verification email:', emailResult.error);
+      // Note: User is still created, but they'll need to request resend
+    }
+
     // Return appropriate response
     res.status(201).json({
       success: true,
-      message: 'User registered successfully',
-      user_id: user_id
+      message: 'User registered successfully. Please check your email to verify your account.',
+      user_id: user_id,
+      email_sent: emailResult.success
     });
 
   } catch (error) {
