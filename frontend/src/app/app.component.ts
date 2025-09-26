@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
   @HostListener("window: resize")
   onResize() {
     this.screenWidth.set(window.innerWidth);
-    if(this.screenWidth() < 766) {
+    if(this.screenWidth() < 768) {
       this.isLeftSidebarCollapsed.set(true);
     } else {
       this.isLeftSidebarCollapsed.set(false);

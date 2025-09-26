@@ -1,0 +1,52 @@
+<div class="role-dialog">
+  <h2 mat-dialog-title>
+    {{ isEditMode ? 'Edit Role' : 'Add New Role' }}
+  </h2>
+
+  <mat-dialog-content>
+    <form [formGroup]="roleForm" (ngSubmit)="onSubmit()">
+      <div class="form-fields">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Role Name</mat-label>
+          <input matInput 
+                 formControlName="name" 
+                 placeholder="e.g., moderator, manager"
+                 [disabled]="loading">
+          <mat-error *ngIf="roleForm.get('name')?.hasError('required')">
+            {{ getErrorMessage('name') }}
+          </mat-error>
+          <mat-error *ngIf="roleForm.get('name')?.hasError('pattern')">
+            {{ getErrorMessage('name') }}
+          </mat-error>
+          <mat-hint>Only letters, numbers, and underscores allowed</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description (Optional)</mat-label>
+          <textarea matInput 
+                    formControlName="description" 
+                    placeholder="Brief description of this role's permissions"
+                    rows="3"
+                    [disabled]="loading"></textarea>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button 
+            type="button" 
+            (click)="onCancel()"
+            [disabled]="loading">
+      Cancel
+    </button>
+    <button mat-raised-button 
+            color="primary" 
+            type="submit"
+            (click)="onSubmit()"
+            [disabled]="!roleForm.valid || loading">
+      <mat-spinner *ngIf="loading" diameter="20" class="button-spinner"></mat-spinner>
+      <span *ngIf="!loading">{{ isEditMode ? 'Update' : 'Create' }} Role</span>
+    </button>
+  </mat-dialog-actions>
+</div>

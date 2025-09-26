@@ -101,4 +101,8 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.router.navigate(['/admin/user-management']);
   }
 
+  manageRoles() {
+    this.router.navigate(['/admin/role-management']);
+  }
+
 }

@@ -9,11 +9,12 @@ router.get('/dashboard_data', async (req, res) => {
     const userStatsQuery = `
       SELECT 
         COUNT(*) as totalUsers,
-        SUM(CASE WHEN uf.role = 'admin' THEN 1 ELSE 0 END) as adminUsers,
-        SUM(CASE WHEN uf.role = 'dealer' THEN 1 ELSE 0 END) as dealerUsers,
-        SUM(CASE WHEN uf.role = 'player' THEN 1 ELSE 0 END) as playerUsers
+        SUM(CASE WHEN r.name = 'admin' THEN 1 ELSE 0 END) as adminUsers,
+        SUM(CASE WHEN r.name = 'dealer' THEN 1 ELSE 0 END) as dealerUsers,
+        SUM(CASE WHEN r.name = 'player' THEN 1 ELSE 0 END) as playerUsers
       FROM users u
       LEFT JOIN user_features uf ON u.id = uf.user_id
+      LEFT JOIN roles r ON uf.role_id = r.id
     `;
     const [userStats] = await pool.query(userStatsQuery);
 
@@ -26,9 +27,10 @@ router.get('/dashboard_data', async (req, res) => {
         uf.first_name,
         uf.last_name,
         uf.phone,
-        uf.role
+        r.name as role
       FROM users u
       LEFT JOIN user_features uf ON u.id = uf.user_id
+      LEFT JOIN roles r ON uf.role_id = r.id
       ORDER BY u.id DESC
       LIMIT 10
     `;
@@ -73,11 +75,12 @@ router.get('/user_stats', async (req, res) => {
     const query = `
       SELECT 
         COUNT(*) as totalUsers,
-        SUM(CASE WHEN uf.role = 'admin' THEN 1 ELSE 0 END) as adminUsers,
-        SUM(CASE WHEN uf.role = 'dealer' THEN 1 ELSE 0 END) as dealerUsers,
-        SUM(CASE WHEN uf.role = 'player' THEN 1 ELSE 0 END) as playerUsers
+        SUM(CASE WHEN r.name = 'admin' THEN 1 ELSE 0 END) as adminUsers,
+        SUM(CASE WHEN r.name = 'dealer' THEN 1 ELSE 0 END) as dealerUsers,
+        SUM(CASE WHEN r.name = 'player' THEN 1 ELSE 0 END) as playerUsers
       FROM users u
       LEFT JOIN user_features uf ON u.id = uf.user_id
+      LEFT JOIN roles r ON uf.role_id = r.id
     `;
     const [results] = await pool.query(query);
     
@@ -143,6 +146,21 @@ router.get('/users', async (req, res) => {
   }
 });
 
+// Get all roles
+router.get('/roles', async (req, res) => {
+  try {
+    const query = 'SELECT id, name, description FROM roles ORDER BY id ASC';
+    const [roles] = await pool.query(query);
+    res.status(200).json(roles);
+  } catch (error) {
+    console.error('Get roles error:', error);
+    res.status(500).json({ 
+      error: 'Internal server error', 
+      details: error.message 
+    });
+  }
+});
+
 // Get all users (for user management)
 router.get('/all_users', async (req, res) => {
   try {
@@ -153,9 +171,10 @@ router.get('/all_users', async (req, res) => {
         u.email,
         uf.first_name,
         uf.last_name,
-        uf.role
+        r.name as role
       FROM users u
       LEFT JOIN user_features uf ON u.id = uf.user_id
+      LEFT JOIN roles r ON uf.role_id = r.id
       ORDER BY u.username ASC
     `;
     const [users] = await pool.query(query);
@@ -226,13 +245,23 @@ router.put('/users/:userId/role', async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Update role in user_features
+    // Get role_id from role name
+    const roleQuery = 'SELECT id FROM roles WHERE name = ?';
+    const [roleResult] = await pool.query(roleQuery, [role]);
+    
+    if (roleResult.length === 0) {
+      return res.status(400).json({ error: 'Invalid role name' });
+    }
+    
+    const roleId = roleResult[0].id;
+
+    // Update role_id in user_features
     const updateQuery = `
       UPDATE user_features 
-      SET role = ? 
+      SET role_id = ? 
       WHERE user_id = ?
     `;
-    await pool.query(updateQuery, [role, userId]);
+    await pool.query(updateQuery, [roleId, userId]);
 
     res.status(200).json({ 
       success: true, 
@@ -293,12 +322,17 @@ router.post('/create_user', async (req, res) => {
       const [userResult] = await pool.query(insertUserQuery, [username, email, hashedPassword]);
       const userId = userResult.insertId;
 
+      // Get role_id from role name
+      const roleQuery = 'SELECT id FROM roles WHERE name = ?';
+      const [roleResult] = await pool.query(roleQuery, [role]);
+      const roleId = roleResult[0]?.id || 1; // Default to player if role not found
+
       // Insert into user_features table
       const insertFeaturesQuery = `
-        INSERT INTO user_features (user_id, first_name, last_name, role) 
+        INSERT INTO user_features (user_id, first_name, last_name, role_id) 
         VALUES (?, ?, ?, ?)
       `;
-      await pool.query(insertFeaturesQuery, [userId, first_name, last_name, role]);
+      await pool.query(insertFeaturesQuery, [userId, first_name, last_name, roleId]);
 
       await pool.query('COMMIT');
       res.status(201).json({ 
@@ -457,9 +491,19 @@ router.put('/update_user/:userId', async (req, res) => {
           updateFeaturesParams.push(last_name);
         }
         if (role) {
+          // Get role_id from role name
+          const roleQuery = 'SELECT id FROM roles WHERE name = ?';
+          const [roleResult] = await pool.query(roleQuery, [role]);
+          
+          if (roleResult.length === 0) {
+            throw new Error('Invalid role name');
+          }
+          
+          const roleId = roleResult[0].id;
+          
           if (updateFeaturesParams.length > 0) updateFeaturesQuery += ', ';
-          updateFeaturesQuery += 'role = ?';
-          updateFeaturesParams.push(role);
+          updateFeaturesQuery += 'role_id = ?';
+          updateFeaturesParams.push(roleId);
         }
         
         updateFeaturesQuery += ' WHERE user_id = ?';
@@ -637,5 +681,217 @@ async function getDashboardData() {
     }
   };
 }
+
+// ==================== ROLE MANAGEMENT ENDPOINTS ====================
+
+// Get all roles
+router.get('/roles', async (req, res) => {
+  try {
+    const query = `
+      SELECT 
+        r.id,
+        r.name,
+        r.description,
+        r.created_at,
+        COUNT(uf.user_id) as user_count
+      FROM roles r
+      LEFT JOIN user_features uf ON r.id = uf.role_id
+      GROUP BY r.id, r.name, r.description, r.created_at
+      ORDER BY r.id ASC
+    `;
+    const [roles] = await pool.query(query);
+    res.status(200).json(roles);
+  } catch (error) {
+    console.error('Get roles error:', error);
+    res.status(500).json({
+      error: 'Internal server error',
+      details: error.message
+    });
+  }
+});
+
+// Get single role by ID
+router.get('/roles/:id', async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    const query = `
+      SELECT 
+        r.id,
+        r.name,
+        r.description,
+        r.created_at,
+        COUNT(uf.user_id) as user_count
+      FROM roles r
+      LEFT JOIN user_features uf ON r.id = uf.role_id
+      WHERE r.id = ?
+      GROUP BY r.id, r.name, r.description, r.created_at
+    `;
+    const [roles] = await pool.query(query, [id]);
+    
+    if (roles.length === 0) {
+      return res.status(404).json({ error: 'Role not found' });
+    }
+    
+    res.status(200).json(roles[0]);
+  } catch (error) {
+    console.error('Get role error:', error);
+    res.status(500).json({
+      error: 'Internal server error',
+      details: error.message
+    });
+  }
+});
+
+// Create new role
+router.post('/roles', async (req, res) => {
+  const { name, description } = req.body;
+  
+  if (!name || name.trim() === '') {
+    return res.status(400).json({ 
+      error: 'Role name is required' 
+    });
+  }
+  
+  // Validate name format (alphanumeric and underscores only)
+  const nameRegex = /^[a-zA-Z0-9_]+$/;
+  if (!nameRegex.test(name)) {
+    return res.status(400).json({ 
+      error: 'Role name can only contain letters, numbers, and underscores' 
+    });
+  }
+  
+  try {
+    // Check if role name already exists
+    const checkQuery = 'SELECT id FROM roles WHERE name = ?';
+    const [existing] = await pool.query(checkQuery, [name]);
+    
+    if (existing.length > 0) {
+      return res.status(409).json({ 
+        error: 'Role name already exists' 
+      });
+    }
+    
+    // Insert new role
+    const insertQuery = `
+      INSERT INTO roles (name, description) 
+      VALUES (?, ?)
+    `;
+    const [result] = await pool.query(insertQuery, [name, description || null]);
+    
+    res.status(201).json({
+      success: true,
+      message: 'Role created successfully',
+      role_id: result.insertId
+    });
+  } catch (error) {
+    console.error('Create role error:', error);
+    res.status(500).json({
+      error: 'Internal server error',
+      details: error.message
+    });
+  }
+});
+
+// Update role
+router.put('/roles/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, description } = req.body;
+  
+  if (!name || name.trim() === '') {
+    return res.status(400).json({ 
+      error: 'Role name is required' 
+    });
+  }
+  
+  // Validate name format
+  const nameRegex = /^[a-zA-Z0-9_]+$/;
+  if (!nameRegex.test(name)) {
+    return res.status(400).json({ 
+      error: 'Role name can only contain letters, numbers, and underscores' 
+    });
+  }
+  
+  try {
+    // Check if role exists
+    const checkQuery = 'SELECT id FROM roles WHERE id = ?';
+    const [existing] = await pool.query(checkQuery, [id]);
+    
+    if (existing.length === 0) {
+      return res.status(404).json({ error: 'Role not found' });
+    }
+    
+    // Check if new name conflicts with existing role
+    const nameCheckQuery = 'SELECT id FROM roles WHERE name = ? AND id != ?';
+    const [nameConflict] = await pool.query(nameCheckQuery, [name, id]);
+    
+    if (nameConflict.length > 0) {
+      return res.status(409).json({ 
+        error: 'Role name already exists' 
+      });
+    }
+    
+    // Update role
+    const updateQuery = `
+      UPDATE roles 
+      SET name = ?, description = ? 
+      WHERE id = ?
+    `;
+    await pool.query(updateQuery, [name, description || null, id]);
+    
+    res.status(200).json({
+      success: true,
+      message: 'Role updated successfully'
+    });
+  } catch (error) {
+    console.error('Update role error:', error);
+    res.status(500).json({
+      error: 'Internal server error',
+      details: error.message
+    });
+  }
+});
+
+// Delete role
+router.delete('/roles/:id', async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    // Check if role exists
+    const checkQuery = 'SELECT id FROM roles WHERE id = ?';
+    const [existing] = await pool.query(checkQuery, [id]);
+    
+    if (existing.length === 0) {
+      return res.status(404).json({ error: 'Role not found' });
+    }
+    
+    // Check if role is in use
+    const usageQuery = 'SELECT COUNT(*) as count FROM user_features WHERE role_id = ?';
+    const [usage] = await pool.query(usageQuery, [id]);
+    const userCount = parseInt(usage[0].count);
+    
+    if (userCount > 0) {
+      return res.status(409).json({ 
+        error: `Cannot delete role. ${userCount} user(s) are currently assigned to this role.`,
+        user_count: userCount
+      });
+    }
+    
+    // Delete role
+    const deleteQuery = 'DELETE FROM roles WHERE id = ?';
+    await pool.query(deleteQuery, [id]);
+    
+    res.status(200).json({
+      success: true,
+      message: 'Role deleted successfully'
+    });
+  } catch (error) {
+    console.error('Delete role error:', error);
+    res.status(500).json({
+      error: 'Internal server error',
+      details: error.message
+    });
+  }
+});
 
 module.exports = router;

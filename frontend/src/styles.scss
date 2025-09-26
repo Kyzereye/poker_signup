@@ -171,19 +171,9 @@ p {
 
 // Common component patterns
 .page-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  background: var(--background-secondary);
-  z-index: 1000;
-  padding: 2rem;
-  overflow-y: auto;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
 }
 
 .content-wrapper {

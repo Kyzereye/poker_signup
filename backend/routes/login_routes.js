@@ -5,7 +5,6 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 
 router.post('/login', async (req, res) => {
-  console.log("In the login route of");
   const { email, password } = req.body;
 
 
@@ -20,9 +19,10 @@ router.post('/login', async (req, res) => {
 
   try {
     const query = `
-      SELECT u.*, uf.first_name, uf.last_name, uf.phone, uf.role 
+      SELECT u.*, uf.first_name, uf.last_name, uf.phone, r.name as role 
       FROM users u 
       LEFT JOIN user_features uf ON u.id = uf.user_id 
+      LEFT JOIN roles r ON uf.role_id = r.id
       WHERE u.email = ?
     `;
     const [results] = await pool.query(query, [email]);

@@ -12,6 +12,7 @@ import { ResendVerificationComponent } from './pages/resend-verification/resend-
 import { AdminComponent } from './pages/admin/admin.component';
 import { VenueGameManagementComponent } from './pages/admin/venue-game-management/venue-game-management.component';
 import { UserManagementComponent } from './pages/admin/user-management/user-management.component';
+import { RoleManagementComponent } from './pages/admin/role-management/role-management.component';
 import { AuthGuard } from './auth.guard';
 import { AdminGuard } from './guards/admin.guard';
 
@@ -76,6 +77,11 @@ export const routes: Routes = [
       {
         path: 'admin/user-management',
         component: UserManagementComponent,
+        canActivate: [AdminGuard]
+      },
+      {
+        path: 'admin/role-management',
+        component: RoleManagementComponent,
         canActivate: [AdminGuard]
       }
     ]

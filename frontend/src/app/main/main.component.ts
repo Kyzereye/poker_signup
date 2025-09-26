@@ -14,10 +14,11 @@ isLeftSideCollapsed = input.required<boolean>();
 screenWidth = input.required<number>();
 sizeClass = computed(() => {
   const isLeftSidebarCollapsed = this.isLeftSideCollapsed();
-  // console.log(this.screenWidth())
+  const screenWidth = this.screenWidth();
+  
   if(isLeftSidebarCollapsed) {
-    return '';
+    return 'body';
   }
-  return this.screenWidth() > 768 ? 'body-trimmed' : 'body-md-screen';
+  return screenWidth > 768 ? 'body-trimmed' : 'body-md-screen';
 });
 }

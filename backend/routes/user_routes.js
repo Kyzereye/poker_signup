@@ -510,13 +510,25 @@ router.put('/update_user_role', async (req, res) => {
       });
     }
 
+    // Get role_id from role name
+    const roleQuery = 'SELECT id FROM roles WHERE name = ?';
+    const [roleResult] = await pool.query(roleQuery, [role]);
+    
+    if (roleResult.length === 0) {
+      return res.status(400).json({ 
+        error: 'Invalid role name' 
+      });
+    }
+    
+    const roleId = roleResult[0].id;
+
     // Update user role in user_features table
     const updateQuery = `
       UPDATE user_features 
-      SET role = ? 
+      SET role_id = ? 
       WHERE user_id = ?
     `;
-    await pool.query(updateQuery, [role, user_id]);
+    await pool.query(updateQuery, [roleId, user_id]);
     
     res.status(200).json({ 
       success: true, 

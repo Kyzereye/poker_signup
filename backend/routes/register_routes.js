@@ -60,7 +60,7 @@ router.post('/user_registration', async (req, res) => {
     // Insert into user_features table
     const insert_features_query = `
       INSERT INTO user_features 
-        (user_id, first_name, last_name, role) 
+        (user_id, first_name, last_name, role_id) 
       VALUES 
         (?, ?, ?, ?)
     `;
@@ -69,7 +69,7 @@ router.post('/user_registration', async (req, res) => {
       user_id,
       firstName,
       lastName,
-      'player' // Default role for new users
+      1 // Default role_id for 'player' (role_id = 1)
     ]);
 
     // Send verification email

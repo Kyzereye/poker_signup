@@ -61,7 +61,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(userData => {
         this.currentUser = userData;
-        console.log('Current user data:', this.currentUser); // Debug log
       });
   }
 
