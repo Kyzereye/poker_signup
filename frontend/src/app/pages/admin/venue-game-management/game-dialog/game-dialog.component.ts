@@ -11,6 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '@environments/environment';
+import { DAYS_OF_WEEK } from '@shared/constants';
 
 export interface GameDialogData {
   game?: {
@@ -47,15 +48,7 @@ export class GameDialogComponent implements OnInit {
   venues: any[] = [];
   
   // Game days of the week
-  gameDays = [
-    'Monday',
-    'Tuesday', 
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday'
-  ];
+  gameDays: readonly string[] = DAYS_OF_WEEK;
 
   constructor(
     private fb: FormBuilder,

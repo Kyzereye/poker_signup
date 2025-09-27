@@ -13,5 +13,5 @@ node_modules/
 
 # Custom folders that should not be tracked
 /python
-/sql
+# /sql
 /dist

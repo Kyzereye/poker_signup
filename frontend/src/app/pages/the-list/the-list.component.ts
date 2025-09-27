@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { UserService } from '../../services/user.service';
 import { SimpleDialogComponent } from '../../components/simple-dialog/simple-dialog.component';
+import { DAYS_OF_WEEK, MONTH_NAMES } from '@shared/constants';
 
 interface PlayerSignup {
   user_id: number;
@@ -57,8 +58,7 @@ export class TheListComponent implements OnInit, OnDestroy {
   }
 
   getCurrentDay(): void {
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    this.current_day = days[new Date().getDay()];
+    this.current_day = DAYS_OF_WEEK[new Date().getDay()];
   }
 
   getCurrentUser(): void {
@@ -212,11 +212,8 @@ export class TheListComponent implements OnInit, OnDestroy {
     }
     
     const today = new Date();
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    
     const dayName = this.user_game.game_day;
-    const month = monthNames[today.getMonth()];
+    const month = MONTH_NAMES[today.getMonth()];
     const day = today.getDate();
     
     return `${dayName} ${month} ${day}`;

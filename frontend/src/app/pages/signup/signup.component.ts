@@ -13,6 +13,7 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 import { UserService } from '../../services/user.service';
 import { VenuesService, VenueDetails } from '../../services/venues.service';
 import { SimpleDialogComponent } from '../../components/simple-dialog/simple-dialog.component';
+import { DAYS_OF_WEEK } from '@shared/constants';
 
 @Component({
   selector: 'app-signup',
@@ -32,7 +33,7 @@ export class SignupComponent implements OnInit, OnDestroy {
   currentDay: string = '';
   selectedDay: string = ''; // The day selected in the filter
   show_all_games = true; // Flag to show all games or filtered games
-  days_of_week: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  days_of_week: readonly string[] = DAYS_OF_WEEK;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -155,8 +156,7 @@ export class SignupComponent implements OnInit, OnDestroy {
   }
 
   getCurrentDay(): void {
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    this.currentDay = days[new Date().getDay()];
+    this.currentDay = DAYS_OF_WEEK[new Date().getDay()];
   }
 
   loadGamesForDay(day: string): void {

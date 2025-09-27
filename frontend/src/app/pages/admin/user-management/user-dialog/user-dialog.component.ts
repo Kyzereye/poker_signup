@@ -11,6 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '@environments/environment';
+import { USER_ROLES } from '@shared/constants';
 
 export interface UserDialogData {
   user?: {
@@ -45,7 +46,7 @@ export interface UserDialogData {
 export class UserDialogComponent implements OnInit {
   userForm: FormGroup;
   isLoading = false;
-  roles = ['player', 'dealer', 'admin'];
+  roles: readonly string[] = USER_ROLES;
 
   constructor(
     private fb: FormBuilder,

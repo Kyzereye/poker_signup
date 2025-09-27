@@ -11,6 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '@environments/environment';
+import { US_STATES, DEFAULT_STATE } from '@shared/constants';
 
 export interface VenueDialogData {
   venue?: {
@@ -43,19 +44,8 @@ export class VenueDialogComponent implements OnInit {
   venueForm: FormGroup;
   isLoading = false;
   
-  // US States list with Colorado as default
-  states = [
-    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
-    'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho',
-    'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
-    'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
-    'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada',
-    'New Hampshire', 'New Jersey', 'New Mexico', 'New York',
-    'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon',
-    'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota',
-    'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington',
-    'West Virginia', 'Wisconsin', 'Wyoming'
-  ];
+  // US States list
+  states: readonly string[] = US_STATES;
 
   constructor(
     private fb: FormBuilder,
@@ -68,7 +58,7 @@ export class VenueDialogComponent implements OnInit {
       name: ['', [Validators.required, Validators.minLength(2)]],
       streetAddress: ['', [Validators.required, Validators.minLength(5)]],
       city: ['', [Validators.required, Validators.minLength(2)]],
-      state: ['Colorado', [Validators.required]], // Colorado as default
+      state: [DEFAULT_STATE, [Validators.required]], // Colorado as default
       zip: ['', [Validators.required, Validators.pattern(/^\d{5}(-\d{4})?$/)]]
     });
   }
@@ -186,7 +176,7 @@ export class VenueDialogComponent implements OnInit {
       const streetAddress = parts[0];
       const city = parts[1];
       const stateZip = parts[2].split(' ');
-      const state = stateZip[0] || 'Colorado';
+      const state = stateZip[0] || DEFAULT_STATE;
       const zip = stateZip[1] || '';
       
       return { streetAddress, city, state, zip };
@@ -196,7 +186,7 @@ export class VenueDialogComponent implements OnInit {
     return { 
       streetAddress: address, 
       city: '', 
-      state: 'Colorado', 
+      state: DEFAULT_STATE, 
       zip: '' 
     };
   }
