@@ -28,7 +28,7 @@
   overflow-y: auto;
 }
 
-.venue-form {
+.game-form {
   .form-row {
     display: flex;
     gap: 16px;
@@ -41,6 +41,19 @@
   
   .form-field {
     width: 100%;
+    
+    &.notes-field {
+      .mat-mdc-form-field-infix {
+        padding: 0;
+      }
+      
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+        font-family: inherit;
+        line-height: 1.4;
+      }
+    }
   }
 }
 
@@ -84,7 +97,7 @@
     padding: 0 16px;
   }
   
-  .venue-form {
+  .game-form {
     .form-row {
       flex-direction: column;
       gap: 0;

@@ -108,7 +108,7 @@
 - [ ] Verify role changes are saved correctly
 
 ### Venue & Game Management
-- [ ] Click "Location & Game Management" button
+- [ ] Click "Venue & Game Management" button
 - [ ] Verify venue management page loads
 - [ ] Verify both "Venues" and "Games" tabs are present
 

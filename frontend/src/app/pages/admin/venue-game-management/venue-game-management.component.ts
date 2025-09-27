@@ -34,6 +34,7 @@ export interface Game {
   location_address?: string;
 }
 import { VenueDialogComponent, VenueDialogData } from './venue-dialog/venue-dialog.component';
+import { GameDialogComponent, GameDialogData } from './game-dialog/game-dialog.component';
 import { DeleteConfirmationDialogComponent, DeleteConfirmationData } from './delete-confirmation-dialog/delete-confirmation-dialog.component';
 
 @Component({
@@ -74,11 +75,11 @@ export class VenueGameManagementComponent implements OnInit, OnDestroy {
   venueSearchTerm = '';
   gameSearchTerm = '';
   venueSort: Sort = { active: 'name', direction: 'asc' };
-  gameSort: Sort = { active: 'location_name', direction: 'asc' };
+  gameSort: Sort = { active: 'day', direction: 'asc' };
   
   // Table columns
   venueColumns: string[] = ['name', 'address', 'actions'];
-  gameColumns: string[] = ['location_name', 'game_day', 'start_time', 'notes', 'actions'];
+  gameColumns: string[] = ['venue', 'day', 'time', 'notes', 'actions'];
 
   constructor(
     private http: HttpClient,
@@ -234,11 +235,40 @@ export class VenueGameManagementComponent implements OnInit, OnDestroy {
 
   // Game actions
   addGame() {
-    this.snackBar.open('Add Game - Coming soon!', 'Close', { duration: 2000 });
+    const dialogRef = this.dialog.open(GameDialogComponent, {
+      width: '600px',
+      data: { mode: 'add' } as GameDialogData
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.success) {
+        this.loadGames();
+        this.snackBar.open('Game added successfully', 'Close', { duration: 3000 });
+      }
+    });
   }
 
   editGame(game: Game) {
-    this.snackBar.open(`Edit Game: ${game.location_name} - Coming soon!`, 'Close', { duration: 2000 });
+    const dialogRef = this.dialog.open(GameDialogComponent, {
+      width: '600px',
+      data: { 
+        mode: 'edit',
+        game: {
+          id: game.id,
+          location_id: game.location_id,
+          game_day: game.game_day,
+          start_time: game.start_time,
+          notes: game.notes || ''
+        }
+      } as GameDialogData
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.success) {
+        this.loadGames();
+        this.snackBar.open('Game updated successfully', 'Close', { duration: 3000 });
+      }
+    });
   }
 
   deleteGame(game: Game) {
@@ -332,28 +362,29 @@ export class VenueGameManagementComponent implements OnInit, OnDestroy {
     if (this.gameSearchTerm.trim()) {
       const searchLower = this.gameSearchTerm.toLowerCase();
       filtered = filtered.filter(game => 
-        (game.location_name || '').toLowerCase().includes(searchLower) ||
+        (this.getVenueName(game.location_id) || '').toLowerCase().includes(searchLower) ||
         game.game_day.toLowerCase().includes(searchLower) ||
         game.start_time.toLowerCase().includes(searchLower) ||
         (game.notes || '').toLowerCase().includes(searchLower)
       );
     }
 
-    // Apply sorting
-    filtered.sort((a, b) => {
+    // Apply sorting only if we have data
+    if (filtered.length > 0 && this.gameSort.active) {
+      filtered.sort((a, b) => {
       const isAsc = this.gameSort.direction === 'asc';
       let valueA: any, valueB: any;
 
       switch (this.gameSort.active) {
-        case 'location_name':
-          valueA = a.location_name || '';
-          valueB = b.location_name || '';
+        case 'venue':
+          valueA = this.getVenueName(a.location_id) || '';
+          valueB = this.getVenueName(b.location_id) || '';
           break;
-        case 'game_day':
+        case 'day':
           valueA = a.game_day;
           valueB = b.game_day;
           break;
-        case 'start_time':
+        case 'time':
           valueA = a.start_time;
           valueB = b.start_time;
           break;
@@ -368,8 +399,15 @@ export class VenueGameManagementComponent implements OnInit, OnDestroy {
         return isAsc ? 1 : -1;
       }
       return 0;
-    });
+      });
+    }
 
     this.filteredGames = filtered;
+  }
+
+  // Helper method to get venue name by ID
+  getVenueName(locationId: number): string {
+    const venue = this.venues.find(v => v.id === locationId);
+    return venue ? venue.name : 'Unknown Venue';
   }
 }

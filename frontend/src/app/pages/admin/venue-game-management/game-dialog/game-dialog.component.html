@@ -1,0 +1,73 @@
+<div class="dialog-header">
+  <h2 mat-dialog-title>
+    {{ data.mode === 'add' ? 'Add New Game' : 'Edit Game' }}
+  </h2>
+  <button mat-icon-button (click)="onCancel()" class="close-button">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content class="dialog-content">
+  <form [formGroup]="gameForm" (ngSubmit)="onSubmit()" class="game-form">
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Venue</mat-label>
+        <mat-select formControlName="location_id" placeholder="Select venue">
+          <mat-option *ngFor="let venue of venues" [value]="venue.id">
+            {{ venue.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="gameForm.get('location_id')?.hasError('required')">
+          Venue is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Game Day</mat-label>
+        <mat-select formControlName="game_day" placeholder="Select day">
+          <mat-option *ngFor="let day of gameDays" [value]="day">
+            {{ day }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="gameForm.get('game_day')?.hasError('required')">
+          Game day is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Start Time</mat-label>
+        <input matInput formControlName="start_time" placeholder="e.g., 7:00 PM">
+        <mat-error *ngIf="gameForm.get('start_time')?.hasError('required')">
+          Start time is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field notes-field">
+        <mat-label>Notes</mat-label>
+        <textarea matInput 
+                  formControlName="notes" 
+                  placeholder="Optional notes about the game..."
+                  rows="4"
+                  resize="vertical"></textarea>
+        <mat-hint>Examples: Food & beverage specials, winner gift card amounts, happy hour times, special rules, etc.</mat-hint>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions">
+  <button mat-button (click)="onCancel()" [disabled]="isLoading">
+    Cancel
+  </button>
+  <button mat-raised-button 
+          color="primary" 
+          (click)="onSubmit()" 
+          [disabled]="gameForm.invalid || isLoading">
+    <mat-spinner *ngIf="isLoading" diameter="20" class="button-spinner"></mat-spinner>
+    <span *ngIf="!isLoading">{{ data.mode === 'add' ? 'Create Game' : 'Update Game' }}</span>
+  </button>
+</mat-dialog-actions>

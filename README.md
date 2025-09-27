@@ -10,10 +10,12 @@ A full-stack web application for managing poker game signups with real-time play
 - **Real-time Updates** - Refresh player lists instantly
 - **Duplicate Prevention** - Prevents multiple signups for the same game
 - **Day-of-Game Only** - Users can only sign up on the actual game day
+- **Email Verification** - Secure user registration with email verification system
 - **Role-Based Access** - Player, Dealer, and Admin roles with different permissions
-- **Venue Management** - Add, edit, and delete poker venues
-- **Game Management** - Create and manage recurring poker games
+- **Venue Management** - Add, edit, and delete poker venues with separate address fields
+- **Game Management** - Create and manage recurring poker games with detailed notes
 - **User Management** - Complete user administration with add, edit, delete, search, and sort
+- **Role Management** - Dedicated role administration with CRUD operations
 - **Admin Dashboard** - Comprehensive admin panel with user and system management
 
 ### User Experience
@@ -26,13 +28,19 @@ A full-stack web application for managing poker game signups with real-time play
 - **Smart Sorting** - Sortable tables with intuitive toggle behavior
 - **Confirmation Dialogs** - Safe delete operations with user confirmation
 - **Role Management** - Visual role badges and easy role assignment
+- **Email Verification** - User-friendly email verification flow with resend options
+- **Form Validation** - Comprehensive form validation with helpful error messages
+- **Expandable Notes** - Resizable textarea fields for detailed game information
 
 ### Technical Features
 - **RESTful API** - Clean backend architecture with Express.js
-- **MySQL Database** - Reliable data storage with proper indexing
+- **MySQL Database** - Reliable data storage with proper indexing and normalization
 - **Type Safety** - Full TypeScript implementation
 - **Error Handling** - Comprehensive error management and user feedback
 - **Code Optimization** - Efficient memory management and performance
+- **Email System** - Nodemailer integration for email verification
+- **Database Normalization** - Proper foreign key relationships and role management
+- **Token-based Verification** - Secure email verification with expiration
 
 ## 🛠️ Tech Stack
 
@@ -48,6 +56,8 @@ A full-stack web application for managing poker game signups with real-time play
 - **Express.js** - Web application framework
 - **MySQL** - Relational database
 - **mysql2** - MySQL client for Node.js
+- **Nodemailer** - Email sending service
+- **bcryptjs** - Password hashing
 
 ### Development Tools
 - **Git** - Version control
@@ -159,11 +169,12 @@ poker_signup/
 ## 📊 Database Schema
 
 ### Tables
-- **users** - User accounts and authentication
-- **locations** - Poker game venues
-- **games** - Recurring poker games (weekly schedule)
+- **users** - User accounts and authentication with email verification
+- **roles** - Normalized role definitions (player, dealer, admin)
+- **locations** - Poker game venues with detailed address information
+- **games** - Recurring poker games with notes and scheduling
 - **user_game_signups** - Player signups for specific games
-- **user_features** - Additional user profile information including roles
+- **user_features** - Additional user profile information with role references
 
 ### Key Relationships
 - Games belong to locations
@@ -173,16 +184,19 @@ poker_signup/
 
 ### Role System
 - **Player** (default) - Can sign up for games and view player lists
-- **Dealer** - Additional permissions for game management (future feature)
-- **Admin** - Full system access including admin panel
-- Roles are stored as ENUM in user_features.role column
+- **Dealer** - Additional permissions for game management
+- **Admin** - Full system access including admin panel and role management
+- Roles are normalized in a separate `roles` table with foreign key references
 - New users automatically get 'player' role upon registration
+- Role management includes CRUD operations for creating and managing roles
 
 ## 🔧 API Endpoints
 
 ### Authentication
-- `POST /login_routes/login` - User login
-- `POST /register_routes/register` - User registration
+- `POST /login_routes/login` - User login with email verification check
+- `POST /register_routes/register` - User registration with email verification
+- `GET /auth/verify-email/:token` - Email verification endpoint
+- `POST /auth/resend-verification` - Resend verification email
 
 ### Game Management
 - `GET /user_routes/get_all_locations` - Get all venues
@@ -191,16 +205,16 @@ poker_signup/
 - `GET /user_routes/get_player_signups/:gameId` - Get players signed up for a game
 
 ### Venue Management (Admin)
-- `GET /venue_routes/locations` - Get all venues
-- `POST /venue_routes/locations` - Create new venue
-- `PUT /venue_routes/locations/:id` - Update venue
-- `DELETE /venue_routes/locations/:id` - Delete venue (with safety checks)
+- `GET /venues/locations` - Get all venues
+- `POST /venues/locations` - Create new venue with separate address fields
+- `PUT /venues/locations/:id` - Update venue
+- `DELETE /venues/locations/:id` - Delete venue (with safety checks)
 
 ### Game Management (Admin)
-- `GET /venue_routes/games` - Get all games with venue details
-- `POST /venue_routes/games` - Create new game
-- `PUT /venue_routes/games/:id` - Update game
-- `DELETE /venue_routes/games/:id` - Delete game (with safety checks)
+- `GET /venues/games` - Get all games with venue details
+- `POST /venues/games` - Create new game with notes and scheduling
+- `PUT /venues/games/:id` - Update game
+- `DELETE /venues/games/:id` - Delete game (with safety checks)
 
 ### User Management (Admin)
 - `GET /admin_routes/all_users` - Get all users for management
@@ -213,28 +227,32 @@ poker_signup/
 - `POST /user_routes/game_sign_up` - Sign up for a game
 - `PUT /user_routes/update_profile` - Update user profile information
 
-### Role Management
-- `GET /user_routes/get_user_role/:userId` - Get user's role
-- `GET /user_routes/get_all_roles` - Get all available roles
-- `PUT /user_routes/update_user_role` - Update user role (admin only)
+### Role Management (Admin)
+- `GET /admin/roles` - Get all roles with user counts
+- `GET /admin/roles/:id` - Get specific role details
+- `POST /admin/roles` - Create new role
+- `PUT /admin/roles/:id` - Update role
+- `DELETE /admin/roles/:id` - Delete role (with safety checks)
 
 ## 🎮 Usage
 
 ### For Players
-1. **Register/Login** - Create an account or sign in
-2. **Select Location** - Choose a poker venue
-3. **View Games** - See available games for today
-4. **Sign Up** - Click to sign up for a game
-5. **View List** - See who else is signed up
+1. **Register/Login** - Create an account with email verification or sign in
+2. **Verify Email** - Check email and click verification link (if new user)
+3. **Select Location** - Choose a poker venue
+4. **View Games** - See available games for today
+5. **Sign Up** - Click to sign up for a game
+6. **View List** - See who else is signed up
 
 ### For Administrators
 1. **Admin Dashboard** - Access comprehensive admin panel
-2. **Manage Venues** - Add, edit, and delete poker locations with real-time search
-3. **Schedule Games** - Create and manage recurring poker games
+2. **Manage Venues** - Add, edit, and delete poker locations with separate address fields
+3. **Schedule Games** - Create and manage recurring poker games with detailed notes
 4. **User Management** - Complete user administration with add, edit, delete, search, and sort
-5. **Role Management** - Assign and change user roles (Player, Dealer, Admin)
+5. **Role Management** - Dedicated role administration with full CRUD operations
 6. **Search & Sort** - Advanced filtering and sorting capabilities
 7. **Safety Features** - Confirmation dialogs and data integrity checks
+8. **Email Verification** - Monitor and manage user email verification status
 
 ## 🎛️ Admin Features
 
@@ -245,6 +263,8 @@ poker_signup/
 - **Data Validation** - Form validation with user-friendly error messages
 - **Safety Checks** - Prevents deletion of venues with associated games
 - **Confirmation Dialogs** - Safe delete operations with user confirmation
+- **Address Management** - Separate fields for street address, city, state, and ZIP
+- **Game Notes** - Expandable notes field with helpful hints for game details
 
 ### User Management
 - **Complete CRUD Operations** - Add, view, edit, and delete users
@@ -255,10 +275,16 @@ poker_signup/
 - **Data Validation** - Form validation with user-friendly error messages
 - **Safety Checks** - Prevents deletion of users with active signups
 
+### Role Management
+- **Complete CRUD Operations** - Create, read, update, and delete roles
+- **User Count Tracking** - See how many users are assigned to each role
+- **Safety Checks** - Prevents deletion of roles with assigned users
+- **Validation** - Role name validation and duplicate prevention
+
 ### Admin Dashboard
 - **User Statistics** - View total users and system information
-- **Role Management** - Manage user roles (Player, Dealer, Admin)
-- **Quick Actions** - Easy access to venue, game, and user management
+- **Role Management** - Dedicated role administration panel
+- **Quick Actions** - Easy access to venue, game, user, and role management
 - **Responsive Design** - Works on all screen sizes
 
 ## 🚨 Error Handling
@@ -266,9 +292,11 @@ poker_signup/
 The application includes comprehensive error handling:
 - **409 Conflict** - User already signed up for game
 - **404 Not Found** - Game or location not found
+- **403 Forbidden** - Email verification required
 - **500 Server Error** - Database or server issues
 - **User-friendly dialogs** - Clear error messages with actions
 - **Data Integrity** - Prevents orphaned data with foreign key constraints
+- **Email Verification** - Secure token-based verification with expiration
 
 ## 🔒 Security Features
 
@@ -276,6 +304,9 @@ The application includes comprehensive error handling:
 - **SQL injection protection** - Parameterized queries
 - **Error sanitization** - Safe error message display
 - **Route protection** - Authentication guards
+- **Email verification** - Token-based verification with expiration
+- **Password hashing** - Secure password storage with bcryptjs
+- **Generic error messages** - Prevents information disclosure
 
 ## 🚀 Deployment
 

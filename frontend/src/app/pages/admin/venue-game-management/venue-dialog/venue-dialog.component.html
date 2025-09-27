@@ -1,66 +1,69 @@
-<div class="dialog-container">
-  <div class="dialog-header">
-    <h2 mat-dialog-title>
-      <mat-icon>{{ data.mode === 'add' ? 'add_location' : 'edit_location' }}</mat-icon>
-      {{ data.mode === 'add' ? 'Add New Venue' : 'Edit Venue' }}
-    </h2>
-    <button mat-icon-button (click)="onCancel()" class="close-button">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
-
-  <mat-dialog-content class="dialog-content">
-    <form [formGroup]="venueForm" (ngSubmit)="onSubmit()">
-      <div class="form-fields">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Venue Name</mat-label>
-          <input matInput 
-                 formControlName="name" 
-                 placeholder="Enter venue name"
-                 maxlength="100">
-          <mat-icon matSuffix>place</mat-icon>
-          <mat-error *ngIf="venueForm.get('name')?.hasError('required')">
-            Venue name is required
-          </mat-error>
-          <mat-error *ngIf="venueForm.get('name')?.hasError('minlength')">
-            Venue name must be at least 2 characters
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Address</mat-label>
-          <textarea matInput 
-                    formControlName="address" 
-                    placeholder="Enter full address"
-                    rows="3"
-                    maxlength="255"></textarea>
-          <mat-icon matSuffix>location_on</mat-icon>
-          <mat-error *ngIf="venueForm.get('address')?.hasError('required')">
-            Address is required
-          </mat-error>
-          <mat-error *ngIf="venueForm.get('address')?.hasError('minlength')">
-            Address must be at least 10 characters
-          </mat-error>
-        </mat-form-field>
-      </div>
-    </form>
-  </mat-dialog-content>
-
-  <mat-dialog-actions class="dialog-actions">
-    <button mat-button 
-            (click)="onCancel()" 
-            [disabled]="isLoading"
-            class="cancel-button">
-      Cancel
-    </button>
-    <button mat-raised-button 
-            color="primary" 
-            (click)="onSubmit()" 
-            [disabled]="venueForm.invalid || isLoading"
-            class="submit-button">
-      <mat-spinner *ngIf="isLoading" diameter="20" class="button-spinner"></mat-spinner>
-      <mat-icon *ngIf="!isLoading">{{ data.mode === 'add' ? 'add' : 'save' }}</mat-icon>
-      {{ data.mode === 'add' ? 'Add Venue' : 'Save Changes' }}
-    </button>
-  </mat-dialog-actions>
+<div class="dialog-header">
+  <h2 mat-dialog-title>
+    {{ data.mode === 'add' ? 'Add New Venue' : 'Edit Venue' }}
+  </h2>
+  <button mat-icon-button (click)="onCancel()" class="close-button">
+    <mat-icon>close</mat-icon>
+  </button>
 </div>
+
+<mat-dialog-content class="dialog-content">
+  <form [formGroup]="venueForm" (ngSubmit)="onSubmit()" class="venue-form">
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Venue Name</mat-label>
+        <input matInput formControlName="name" placeholder="Enter venue name">
+        <mat-error *ngIf="venueForm.get('name')?.hasError('required')">Venue name is required</mat-error>
+        <mat-error *ngIf="venueForm.get('name')?.hasError('minlength')">Venue name must be at least 2 characters</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Street Address</mat-label>
+        <input matInput formControlName="streetAddress" placeholder="Enter street address">
+        <mat-error *ngIf="venueForm.get('streetAddress')?.hasError('required')">Street address is required</mat-error>
+        <mat-error *ngIf="venueForm.get('streetAddress')?.hasError('minlength')">Street address must be at least 5 characters</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>City</mat-label>
+        <input matInput formControlName="city" placeholder="Enter city">
+        <mat-error *ngIf="venueForm.get('city')?.hasError('required')">City is required</mat-error>
+        <mat-error *ngIf="venueForm.get('city')?.hasError('minlength')">City must be at least 2 characters</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>State</mat-label>
+        <mat-select formControlName="state" placeholder="Select state">
+          <mat-option *ngFor="let state of states" [value]="state">
+            {{ state }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="venueForm.get('state')?.hasError('required')">State is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>ZIP Code</mat-label>
+        <input matInput formControlName="zip" placeholder="12345">
+        <mat-error *ngIf="venueForm.get('zip')?.hasError('required')">ZIP code is required</mat-error>
+        <mat-error *ngIf="venueForm.get('zip')?.hasError('pattern')">Please enter a valid ZIP code (12345 or 12345-6789)</mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions">
+  <button mat-button (click)="onCancel()" [disabled]="isLoading">
+    Cancel
+  </button>
+  <button mat-raised-button 
+          color="primary" 
+          (click)="onSubmit()" 
+          [disabled]="venueForm.invalid || isLoading">
+    <mat-spinner *ngIf="isLoading" diameter="20" class="button-spinner"></mat-spinner>
+    <span *ngIf="!isLoading">{{ data.mode === 'add' ? 'Create Venue' : 'Update Venue' }}</span>
+  </button>
+</mat-dialog-actions>
