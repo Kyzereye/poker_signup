@@ -14,6 +14,7 @@ import { AuthService } from '../services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SimpleDialogComponent } from '../components/simple-dialog/simple-dialog.component';
 import { VerificationService } from '../services/verification.service';
+import { PasswordResetDialogComponent } from '../components/password-reset-dialog/password-reset-dialog.component';
 
 @Component({
   selector: 'app-login',
@@ -157,9 +158,16 @@ private resendVerificationEmail(email: string): void {
     });
   }
 
-  onLoginHelp() {
-    console.log("onLoginHelp")
-  }
+      onForgotPassword() {
+        const dialogRef = this.dialog.open(PasswordResetDialogComponent, {
+          width: '500px',
+          data: { mode: 'password-reset' }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          // Dialog closed, no action needed
+        });
+      }
 
   goToRegister() {
     this.router.navigate(['/register']);

@@ -9,6 +9,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';
 import { ResendVerificationComponent } from './pages/resend-verification/resend-verification.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { VenueGameManagementComponent } from './pages/admin/venue-game-management/venue-game-management.component';
 import { UserManagementComponent } from './pages/admin/user-management/user-management.component';
@@ -33,6 +34,10 @@ export const routes: Routes = [
   {
     path: 'resend-verification',
     component: ResendVerificationComponent
+  },
+  {
+    path: 'reset-password',
+    component: ResetPasswordComponent
   },
   // Authenticated routes
   {

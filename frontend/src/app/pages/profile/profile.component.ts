@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user.service';
 import { Subject, takeUntil } from 'rxjs';
 import { ProfileEditDialogComponent } from '../../components/profile-edit-dialog/profile-edit-dialog.component';
+import { ChangePasswordDialogComponent } from '../../components/change-password-dialog/change-password-dialog.component';
 
 @Component({
   selector: 'app-profile',
@@ -87,6 +88,27 @@ export class ProfileComponent implements OnInit, OnDestroy {
       if (result) {
         // Refresh user data after successful edit
         this.loadUserData();
+      }
+    });
+  }
+
+  openChangePasswordDialog() {
+    if (!this.currentUser?.id) {
+      console.error('No user ID available for password change');
+      return;
+    }
+
+    const dialogRef = this.dialog.open(ChangePasswordDialogComponent, {
+      width: '500px',
+      data: { 
+        userId: this.currentUser.id
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.success) {
+        // Password changed successfully
+        console.log('Password changed successfully');
       }
     });
   }

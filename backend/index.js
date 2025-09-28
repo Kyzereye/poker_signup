@@ -15,10 +15,12 @@ const user_routes = require('./routes/user_routes');
 const venue_game_routes = require('./routes/venue_game_routes');
 const admin_routes = require('./routes/admin_routes');
 const verification_routes = require('./routes/verification_routes');
+const password_reset_routes = require('./routes/password_reset_routes');
 
 app.use('/api/auth', login_routes); 
 app.use('/api/auth', register_routes);
 app.use('/api/auth', verification_routes);
+app.use('/api/auth', password_reset_routes);
 app.use('/api/users', user_routes);
 app.use('/api/venues', venue_game_routes);
 app.use('/api/admin', admin_routes);

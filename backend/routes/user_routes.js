@@ -1,6 +1,7 @@
 
 const express = require('express');
 const pool = require('../connection.js');
+const bcrypt = require('bcryptjs');
 const router = express.Router();
 
 router.get('/get_all_locations', async (req, res) => {
@@ -536,6 +537,80 @@ router.put('/update_user_role', async (req, res) => {
     });
   } catch (error) {
     console.error('Update user role error:', error);
+    res.status(500).json({ 
+      error: 'Internal server error', 
+      details: error.message 
+    });
+  }
+});
+
+// Change user password
+router.post('/change-password', async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ 
+      error: 'Current password and new password are required' 
+    });
+  }
+
+  if (newPassword.length < 6) {
+    return res.status(400).json({ 
+      error: 'New password must be at least 6 characters long' 
+    });
+  }
+
+  try {
+    // Get user from session/token (you'll need to implement proper authentication)
+    // For now, we'll assume the user ID is passed in the request
+    const userId = req.body.userId;
+    
+    if (!userId) {
+      return res.status(400).json({ 
+        error: 'User ID is required' 
+      });
+    }
+
+    // Get current user's hashed password
+    const [users] = await pool.query(
+      'SELECT password FROM users WHERE id = ?',
+      [userId]
+    );
+
+    if (users.length === 0) {
+      return res.status(404).json({ 
+        error: 'User not found' 
+      });
+    }
+
+    const user = users[0];
+
+    // Verify current password
+    const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
+    
+    if (!isCurrentPasswordValid) {
+      return res.status(400).json({ 
+        error: 'Current password is incorrect' 
+      });
+    }
+
+    // Hash new password
+    const saltRounds = 10;
+    const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+
+    // Update password in database
+    await pool.query(
+      'UPDATE users SET password = ? WHERE id = ?',
+      [hashedNewPassword, userId]
+    );
+
+    res.status(200).json({ 
+      success: true, 
+      message: 'Password changed successfully' 
+    });
+
+  } catch (error) {
+    console.error('Error changing password:', error);
     res.status(500).json({ 
       error: 'Internal server error', 
       details: error.message 

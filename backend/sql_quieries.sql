@@ -30,7 +30,7 @@ CREATE TABLE `locations` (
   KEY `idx_locations_name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Table structure for table `users` (with email verification fields)
+-- Table structure for table `users` (with email verification and password reset fields)
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -40,12 +40,15 @@ CREATE TABLE `users` (
   `email_verified` boolean DEFAULT FALSE,
   `verification_token` varchar(255) DEFAULT NULL,
   `verification_token_expires` datetime DEFAULT NULL,
+  `password_reset_token` varchar(255) DEFAULT NULL,
+  `password_reset_expires` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
   KEY `idx_users_email` (`email`),
   KEY `idx_users_username` (`username`),
-  KEY `idx_verification_token` (`verification_token`)
+  KEY `idx_verification_token` (`verification_token`),
+  KEY `idx_password_reset_token` (`password_reset_token`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Table structure for table `roles` (normalized roles)
