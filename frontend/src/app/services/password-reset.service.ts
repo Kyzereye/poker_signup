@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 
@@ -7,35 +7,36 @@ import { environment } from '@environments/environment';
   providedIn: 'root'
 })
 export class PasswordResetService {
-  private apiUrl = environment.apiUrl;
+  private url = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private httpClient: HttpClient) { }
 
-  // Request password reset email
+  /**
+   * Request password reset email
+   * @param email User email address
+   */
   requestPasswordReset(email: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/api/auth/request-password-reset`, 
-      { email }, 
-      {
-        headers: new HttpHeaders().set('Content-Type', 'application/json')
-      }
-    );
+    return this.httpClient.post(`${this.url}/api/auth/forgot-password`, { email });
   }
 
-
-  // Verify password reset token
-  verifyResetToken(token: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/api/auth/verify-reset-token/${token}`, {
-      headers: new HttpHeaders().set('Content-Type', 'application/json')
+  /**
+   * Reset password with token
+   * @param token Password reset token
+   * @param newPassword New password
+   */
+  resetPassword(token: string, newPassword: string): Observable<any> {
+    return this.httpClient.post(`${this.url}/api/auth/reset-password`, {
+      token,
+      newPassword
     });
   }
 
-  // Reset password with token
-  resetPassword(token: string, newPassword: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/api/auth/reset-password`, 
-      { token, newPassword }, 
-      {
-        headers: new HttpHeaders().set('Content-Type', 'application/json')
-      }
-    );
+  /**
+   * Verify reset token validity
+   * @param token Password reset token
+   */
+  verifyToken(token: string): Observable<any> {
+    return this.httpClient.get(`${this.url}/api/auth/verify-reset-token/${token}`);
   }
 }
+

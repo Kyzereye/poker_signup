@@ -40,8 +40,13 @@ export class AppComponent implements OnInit {
 
   private updateLayoutVisibility(): void {
     const currentUrl = this.router.url;
-    // Hide layout for login and register pages
-    this.showLayout.set(!currentUrl.includes('/login') && !currentUrl.includes('/register'));
+    // Hide layout for login, register, forgot-password, and reset-password pages
+    this.showLayout.set(
+      !currentUrl.includes('/login') && 
+      !currentUrl.includes('/register') && 
+      !currentUrl.includes('/forgot-password') && 
+      !currentUrl.includes('/reset-password')
+    );
   }
 
   changeIsLeftSidebarCollapsed(isLeftSidebarCollapsed: boolean): void {
