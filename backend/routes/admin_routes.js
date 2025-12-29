@@ -147,21 +147,6 @@ router.get('/users', authenticateToken, requireAdmin, async (req, res) => {
   }
 });
 
-// Get all roles
-router.get('/roles', async (req, res) => {
-  try {
-    const query = 'SELECT id, name, description FROM roles ORDER BY id ASC';
-    const [roles] = await pool.query(query);
-    res.status(200).json(roles);
-  } catch (error) {
-    console.error('Get roles error:', error);
-    res.status(500).json({ 
-      error: 'Internal server error', 
-      details: error.message 
-    });
-  }
-});
-
 // Get all users (for user management)
 router.get('/all_users', authenticateToken, requireAdmin, async (req, res) => {
   try {
@@ -686,7 +671,7 @@ async function getDashboardData() {
 // ==================== ROLE MANAGEMENT ENDPOINTS ====================
 
 // Get all roles
-router.get('/roles', async (req, res) => {
+router.get('/roles', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const query = `
       SELECT 
@@ -712,7 +697,7 @@ router.get('/roles', async (req, res) => {
 });
 
 // Get single role by ID
-router.get('/roles/:id', async (req, res) => {
+router.get('/roles/:id', authenticateToken, requireAdmin, async (req, res) => {
   const { id } = req.params;
   
   try {
@@ -745,7 +730,7 @@ router.get('/roles/:id', async (req, res) => {
 });
 
 // Create new role
-router.post('/roles', async (req, res) => {
+router.post('/roles', authenticateToken, requireAdmin, async (req, res) => {
   const { name, description } = req.body;
   
   if (!name || name.trim() === '') {
@@ -795,7 +780,7 @@ router.post('/roles', async (req, res) => {
 });
 
 // Update role
-router.put('/roles/:id', async (req, res) => {
+router.put('/roles/:id', authenticateToken, requireAdmin, async (req, res) => {
   const { id } = req.params;
   const { name, description } = req.body;
   
@@ -854,7 +839,7 @@ router.put('/roles/:id', async (req, res) => {
 });
 
 // Delete role
-router.delete('/roles/:id', async (req, res) => {
+router.delete('/roles/:id', authenticateToken, requireAdmin, async (req, res) => {
   const { id } = req.params;
   
   try {
