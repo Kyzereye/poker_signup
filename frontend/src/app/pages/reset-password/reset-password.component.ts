@@ -1,169 +1,163 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { PasswordResetService } from '../../services/password-reset.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
+    CommonModule,
+    MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
     MatCardModule,
     MatIconModule,
-    MatProgressSpinnerModule,
     MatSnackBarModule
   ],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss'
 })
 export class ResetPasswordComponent implements OnInit {
-  resetForm: FormGroup;
-  isLoading = false;
-  isValidatingToken = true;
-  tokenValid = false;
-  token = '';
-  email = '';
+  resetPasswordForm!: FormGroup;
   hidePassword = true;
   hideConfirmPassword = true;
+  isLoading = false;
+  tokenValid = false;
+  tokenChecked = false;
+  token: string = '';
+
+  passwordRequirements = {
+    min_length: false,
+    has_number: false,
+    has_upper_case: false,
+    has_lower_case: false,
+    passwords_match: false,
+    has_special_character: false,
+  };
+
+  allRequirementsMet = false;
 
   constructor(
     private fb: FormBuilder,
-    private route: ActivatedRoute,
-    public router: Router,
     private passwordResetService: PasswordResetService,
-    private snackBar: MatSnackBar
-  ) {
-    this.resetForm = this.fb.group({
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+    private snackBar: MatSnackBar,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit() {
+    this.token = this.route.snapshot.paramMap.get('token') || '';
+    
+    if (!this.token) {
+      this.showErrorMessage('Invalid reset link');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.initForm();
+    this.verifyToken();
+  }
+
+  initForm() {
+    this.resetPasswordForm = this.fb.group({
+      password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]]
-    }, { validators: this.passwordMatchValidator });
+    }, { validator: this.passwordMatchValidator });
+
+    this.resetPasswordForm.valueChanges.subscribe(() => this.updatePasswordRequirements());
   }
 
-  ngOnInit(): void {
-    // Get token from URL parameters
-    this.route.queryParams.subscribe(params => {
-      this.token = params['token'];
-      
-      if (!this.token) {
-        this.showError('Invalid reset link. No token provided.');
-        return;
-      }
-
-      this.validateToken();
-    });
+  passwordMatchValidator(form: FormGroup) {
+    return form.get('password')?.value === form.get('confirmPassword')?.value
+      ? null : { mismatch: true };
   }
 
-  private validateToken(): void {
-    this.isValidatingToken = true;
-
-    this.passwordResetService.verifyResetToken(this.token).subscribe({
-      next: (response) => {
-        this.isValidatingToken = false;
-        if (response.success) {
-          this.tokenValid = true;
-          this.email = response.email;
-        } else {
-          this.showError('Invalid or expired reset link.');
+  verifyToken() {
+    this.passwordResetService.verifyToken(this.token).subscribe({
+      next: (response: any) => {
+        this.tokenChecked = true;
+        this.tokenValid = response.valid;
+        if (!response.valid) {
+          this.showErrorMessage('Invalid or expired reset link. Please request a new one.');
         }
       },
-      error: (error) => {
-        this.isValidatingToken = false;
-        console.error('Token validation error:', error);
-        this.showError('Invalid or expired reset link.');
+      error: (error: any) => {
+        this.tokenChecked = true;
+        this.tokenValid = false;
+        this.showErrorMessage('Invalid or expired reset link. Please request a new one.');
       }
     });
   }
 
-  onSubmit(): void {
-    if (this.resetForm.valid && !this.isLoading) {
+  updatePasswordRequirements() {
+    const newPassword = this.resetPasswordForm.get('password')?.value || '';
+    const confirmPassword = this.resetPasswordForm.get('confirmPassword')?.value || '';
+    
+    this.passwordRequirements = {
+      min_length: newPassword.length >= 8,
+      has_number: /\d/.test(newPassword),
+      has_upper_case: /[A-Z]/.test(newPassword),
+      has_lower_case: /[a-z]/.test(newPassword),
+      has_special_character: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(newPassword),
+      passwords_match: newPassword === confirmPassword && newPassword !== '',
+    };
+    
+    this.allRequirementsMet = Object.values(this.passwordRequirements).every(req => req);
+  }
+
+  onSubmit() {
+    if (this.resetPasswordForm.valid && this.allRequirementsMet && this.tokenValid) {
       this.isLoading = true;
-      const { newPassword } = this.resetForm.value;
+      const newPassword = this.resetPasswordForm.get('password')?.value;
 
       this.passwordResetService.resetPassword(this.token, newPassword).subscribe({
-        next: (response) => {
+        next: (response: any) => {
           this.isLoading = false;
-          this.snackBar.open(
-            'Password has been reset successfully! You can now log in with your new password.',
-            'Close',
-            {
-              duration: 5000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top'
-            }
-          );
-          this.router.navigate(['/login']);
+          this.showSuccessMessage('Password has been reset successfully. Redirecting to login...');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 2000);
         },
-        error: (error) => {
+        error: (error: any) => {
           this.isLoading = false;
-          console.error('Password reset error:', error);
-          this.snackBar.open(
-            error.error?.error || 'Failed to reset password. Please try again.',
-            'Close',
-            {
-              duration: 5000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top'
-            }
-          );
+          const errorMessage = error.error?.error || 'An error occurred resetting your password';
+          this.showErrorMessage(errorMessage);
         }
       });
     }
   }
 
-  private showError(message: string): void {
-    this.snackBar.open(message, 'Close', {
+  showSuccessMessage(message: string) {
+    const config: MatSnackBarConfig = {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['snackbar-success']
+    };
+    this.snackBar.open(message, '', config);
+  }
+
+  showErrorMessage(message: string) {
+    const config: MatSnackBarConfig = {
       duration: 5000,
       horizontalPosition: 'center',
-      verticalPosition: 'top'
-    });
+      verticalPosition: 'top',
+      panelClass: ['snackbar-error']
+    };
+    this.snackBar.open(message, '', config);
+  }
+
+  goToLogin() {
     this.router.navigate(['/login']);
   }
-
-  private passwordMatchValidator(form: FormGroup) {
-    const newPassword = form.get('newPassword');
-    const confirmPassword = form.get('confirmPassword');
-    
-    if (newPassword && confirmPassword && newPassword.value !== confirmPassword.value) {
-      confirmPassword.setErrors({ passwordMismatch: true });
-      return { passwordMismatch: true };
-    } else {
-      if (confirmPassword?.errors?.['passwordMismatch']) {
-        delete confirmPassword.errors['passwordMismatch'];
-        if (Object.keys(confirmPassword.errors).length === 0) {
-          confirmPassword.setErrors(null);
-        }
-      }
-    }
-    
-    return null;
-  }
-
-  getFieldError(fieldName: string): string {
-    const field = this.resetForm.get(fieldName);
-    if (field?.errors && field.touched) {
-      if (field.errors['required']) {
-        return `${fieldName.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())} is required`;
-      }
-      if (field.errors['minlength']) {
-        const requiredLength = field.errors['minlength'].requiredLength;
-        return `Password must be at least ${requiredLength} characters long`;
-      }
-      if (field.errors['passwordMismatch']) {
-        return 'Passwords do not match';
-      }
-    }
-    return '';
-  }
 }
+

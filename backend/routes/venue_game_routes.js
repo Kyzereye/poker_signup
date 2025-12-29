@@ -1,11 +1,12 @@
 const express = require('express');
 const pool = require('../connection.js');
 const router = express.Router();
+const { authenticateToken, requireAdmin } = require('../middleware/auth.middleware');
 
 // ===== VENUE/LOCATION ROUTES =====
 
 // Get all locations/venues
-router.get('/locations', async (req, res) => {
+router.get('/locations', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const query = 'SELECT * FROM locations ORDER BY name ASC';
     const [results] = await pool.query(query);
@@ -17,7 +18,7 @@ router.get('/locations', async (req, res) => {
 });
 
 // Get location by ID
-router.get('/locations/:id', async (req, res) => {
+router.get('/locations/:id', authenticateToken, requireAdmin, async (req, res) => {
   const { id } = req.params;
   try {
     const query = 'SELECT * FROM locations WHERE id = ?';
@@ -35,7 +36,7 @@ router.get('/locations/:id', async (req, res) => {
 });
 
 // Create new location
-router.post('/locations', async (req, res) => {
+router.post('/locations', authenticateToken, requireAdmin, async (req, res) => {
   const { name, address } = req.body;
   
   if (!name || !address) {
@@ -62,7 +63,7 @@ router.post('/locations', async (req, res) => {
 });
 
 // Update location
-router.put('/locations/:id', async (req, res) => {
+router.put('/locations/:id', authenticateToken, requireAdmin, async (req, res) => {
   const { id } = req.params;
   const { name, address } = req.body;
   
@@ -97,7 +98,7 @@ router.put('/locations/:id', async (req, res) => {
 });
 
 // Delete location
-router.delete('/locations/:id', async (req, res) => {
+router.delete('/locations/:id', authenticateToken, requireAdmin, async (req, res) => {
   const { id } = req.params;
   
   try {
@@ -135,7 +136,7 @@ router.delete('/locations/:id', async (req, res) => {
 // ===== GAME ROUTES =====
 
 // Get all games with location info
-router.get('/games', async (req, res) => {
+router.get('/games', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const query = `
       SELECT 
@@ -159,7 +160,7 @@ router.get('/games', async (req, res) => {
 });
 
 // Get game by ID
-router.get('/games/:id', async (req, res) => {
+router.get('/games/:id', authenticateToken, requireAdmin, async (req, res) => {
   const { id } = req.params;
   try {
     const query = `
@@ -189,7 +190,7 @@ router.get('/games/:id', async (req, res) => {
 });
 
 // Create new game
-router.post('/games', async (req, res) => {
+router.post('/games', authenticateToken, requireAdmin, async (req, res) => {
   const { location_id, game_day, start_time, notes } = req.body;
   
   if (!location_id || !game_day || !start_time) {
@@ -220,7 +221,7 @@ router.post('/games', async (req, res) => {
 });
 
 // Update game
-router.put('/games/:id', async (req, res) => {
+router.put('/games/:id', authenticateToken, requireAdmin, async (req, res) => {
   const { id } = req.params;
   const { location_id, game_day, start_time, notes } = req.body;
   
@@ -259,7 +260,7 @@ router.put('/games/:id', async (req, res) => {
 });
 
 // Delete game
-router.delete('/games/:id', async (req, res) => {
+router.delete('/games/:id', authenticateToken, requireAdmin, async (req, res) => {
   const { id } = req.params;
   
   try {
@@ -297,7 +298,7 @@ router.delete('/games/:id', async (req, res) => {
 // ===== LEGACY VENUE ROUTES (for backward compatibility) =====
 
 // Get venue data with games (legacy endpoint from venue_routes.js)
-router.post('/get_venue_data', async (req, res) => {
+router.post('/get_venue_data', authenticateToken, async (req, res) => {
   const { venue_id } = req.body;
 
   if (!venue_id) {

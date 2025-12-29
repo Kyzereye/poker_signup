@@ -6,7 +6,6 @@ const emailService = require('../services/emailService');
 
 router.post('/user_registration', async (req, res) => {
   const { email, password, username, firstName, lastName } = req.body;
-  console.log("reqbody", req.body);
 
   try {
     // Check if email or username already exists
@@ -36,8 +35,6 @@ router.post('/user_registration', async (req, res) => {
     // Generate verification token and expiration
     const verificationToken = emailService.generateVerificationToken();
     const tokenExpiration = emailService.generateTokenExpiration();
-
-    console.log("username", username);
     const insert_user_query = `
       INSERT INTO users 
         (email, password, username, email_verified, verification_token, verification_token_expires) 

@@ -1,9 +1,10 @@
 const express = require('express');
 const pool = require('../connection.js');
 const router = express.Router();
+const { authenticateToken, requireAdmin } = require('../middleware/auth.middleware');
 
 // Get admin dashboard data
-router.get('/dashboard_data', async (req, res) => {
+router.get('/dashboard_data', authenticateToken, requireAdmin, async (req, res) => {
   try {
     // Get user statistics
     const userStatsQuery = `
@@ -70,7 +71,7 @@ router.get('/dashboard_data', async (req, res) => {
 });
 
 // Get user statistics
-router.get('/user_stats', async (req, res) => {
+router.get('/user_stats', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const query = `
       SELECT 
@@ -102,7 +103,7 @@ router.get('/user_stats', async (req, res) => {
 });
 
 // Get all users with pagination
-router.get('/users', async (req, res) => {
+router.get('/users', authenticateToken, requireAdmin, async (req, res) => {
   const { page = 1, limit = 10 } = req.query;
   const offset = (page - 1) * limit;
 
@@ -162,7 +163,7 @@ router.get('/roles', async (req, res) => {
 });
 
 // Get all users (for user management)
-router.get('/all_users', async (req, res) => {
+router.get('/all_users', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const query = `
       SELECT 
@@ -190,7 +191,7 @@ router.get('/all_users', async (req, res) => {
 });
 
 // Get user by ID
-router.get('/users/:userId', async (req, res) => {
+router.get('/users/:userId', authenticateToken, requireAdmin, async (req, res) => {
   const { userId } = req.params;
 
   try {
@@ -226,7 +227,7 @@ router.get('/users/:userId', async (req, res) => {
 });
 
 // Update user role
-router.put('/users/:userId/role', async (req, res) => {
+router.put('/users/:userId/role', authenticateToken, requireAdmin, async (req, res) => {
   const { userId } = req.params;
   const { role } = req.body;
 
@@ -277,7 +278,7 @@ router.put('/users/:userId/role', async (req, res) => {
 });
 
 // Create new user
-router.post('/create_user', async (req, res) => {
+router.post('/create_user', authenticateToken, requireAdmin, async (req, res) => {
   const { username, email, password, first_name, last_name, role = 'player' } = req.body;
 
   // Validate required fields
@@ -354,7 +355,7 @@ router.post('/create_user', async (req, res) => {
 });
 
 // Update user information
-router.put('/users/:userId', async (req, res) => {
+router.put('/users/:userId', authenticateToken, requireAdmin, async (req, res) => {
   const { userId } = req.params;
   const { username, email, first_name, last_name, phone } = req.body;
 
@@ -423,7 +424,7 @@ router.put('/users/:userId', async (req, res) => {
 });
 
 // Update user (for user management)
-router.put('/update_user/:userId', async (req, res) => {
+router.put('/update_user/:userId', authenticateToken, requireAdmin, async (req, res) => {
   const { userId } = req.params;
   const { username, email, password, first_name, last_name, role } = req.body;
 
@@ -531,7 +532,7 @@ router.put('/update_user/:userId', async (req, res) => {
 });
 
 // Delete user
-router.delete('/delete_user/:userId', async (req, res) => {
+router.delete('/delete_user/:userId', authenticateToken, requireAdmin, async (req, res) => {
   const { userId } = req.params;
 
   try {
@@ -584,7 +585,7 @@ router.delete('/delete_user/:userId', async (req, res) => {
 });
 
 // Get system information
-router.get('/system_info', async (req, res) => {
+router.get('/system_info', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const query = `
       SELECT 
@@ -615,7 +616,7 @@ router.get('/system_info', async (req, res) => {
 });
 
 // Refresh data
-router.post('/refresh_data', async (req, res) => {
+router.post('/refresh_data', authenticateToken, requireAdmin, async (req, res) => {
   try {
     // This endpoint can be used to refresh cached data or perform maintenance
     // For now, just return the dashboard data

@@ -3,8 +3,9 @@ const express = require('express');
 const pool = require('../connection.js');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
+const { authenticateToken } = require('../middleware/auth.middleware');
 
-router.get('/get_all_locations', async (req, res) => {
+router.get('/get_all_locations', authenticateToken, async (req, res) => {
   try {
     const query = "SELECT id, name FROM locations";
     const [results] = await pool.query(query);
@@ -15,17 +16,16 @@ router.get('/get_all_locations', async (req, res) => {
   }
 });
 
-router.post('/get_user_data', async (req, res) => {
-  const email = req.body.email
+router.post('/get_user_data', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
   try {
     const query = `SELECT u.username, u.email, uf.first_name, uf.last_name, uf.phone 
                     FROM users u
                     LEFT JOIN user_features uf ON u.id = uf.user_id
-                    WHERE u.email = ?
+                    WHERE u.id = ?
 `;
 
-    const [results] = await pool.query(query, [email]);
-    console.log("get_user_data results", results);
+    const [results] = await pool.query(query, [userId]);
     res.status(200).json(results);
   } catch (error) {
     console.error('Error:', error.message);
@@ -33,12 +33,13 @@ router.post('/get_user_data', async (req, res) => {
   }
 });
 
-router.post('/game_sign_up', async (req, res) => {
-  const { user_id, selected_game } = req.body;
+router.post('/game_sign_up', authenticateToken, async (req, res) => {
+  const { selected_game } = req.body;
+  const user_id = req.user.userId;
   
-  if (!user_id || !selected_game) {
+  if (!selected_game) {
     return res.status(400).json({ 
-      error: 'User ID and selected game are required' 
+      error: 'Selected game is required' 
     });
   }
 
@@ -104,7 +105,7 @@ router.post('/game_sign_up', async (req, res) => {
   }
 });
 
-router.get('/get_game_details/:gameId', async (req, res) => {
+router.get('/get_game_details/:gameId', authenticateToken, async (req, res) => {
   const { gameId } = req.params;
   
   if (!gameId) {
@@ -136,7 +137,7 @@ router.get('/get_game_details/:gameId', async (req, res) => {
   }
 });
 
-router.get('/get_player_signups/:gameId', async (req, res) => {
+router.get('/get_player_signups/:gameId', authenticateToken, async (req, res) => {
   const { gameId } = req.params;
   
   if (!gameId) {
@@ -165,7 +166,7 @@ router.get('/get_player_signups/:gameId', async (req, res) => {
 });
 
 // Get user's current game signup
-router.get('/get_user_current_game/:userId', async (req, res) => {
+router.get('/get_user_current_game/:userId', authenticateToken, async (req, res) => {
   const { userId } = req.params;
   
   try {
@@ -202,7 +203,7 @@ router.get('/get_user_current_game/:userId', async (req, res) => {
 });
 
 // Delete game signup
-router.delete('/delete_game_signup', async (req, res) => {
+router.delete('/delete_game_signup', authenticateToken, async (req, res) => {
   const { user_id, game_id } = req.body;
   
   if (!user_id || !game_id) {
@@ -246,7 +247,7 @@ router.delete('/delete_game_signup', async (req, res) => {
 });
 
 // Get all locations with their games for a specific day
-router.get('/get_locations_with_games/:day', async (req, res) => {
+router.get('/get_locations_with_games/:day', authenticateToken, async (req, res) => {
   const { day } = req.params;
   
   try {
@@ -292,7 +293,7 @@ router.get('/get_locations_with_games/:day', async (req, res) => {
 });
 
 // Get all player signups from all games
-router.get('/get_all_player_signups', async (req, res) => {
+router.get('/get_all_player_signups', authenticateToken, async (req, res) => {
   try {
     const query = `
       SELECT ugs.user_id, u.username, uf.first_name, uf.last_name, ugs.signup_time,
@@ -317,14 +318,9 @@ router.get('/get_all_player_signups', async (req, res) => {
 });
 
 // Update user profile
-router.put('/update_profile', async (req, res) => {
-  const { user_id, email, screenName, firstName, lastName, phone } = req.body;
-  
-  if (!user_id) {
-    return res.status(400).json({ 
-      error: 'User ID is required' 
-    });
-  }
+router.put('/update_profile', authenticateToken, async (req, res) => {
+  const { email, screenName, firstName, lastName, phone } = req.body;
+  const user_id = req.user.userId;
 
   try {
     // Check if email is being changed and if it already exists
@@ -431,7 +427,7 @@ router.put('/update_profile', async (req, res) => {
 });
 
 // Get user role
-router.get('/get_user_role/:userId', async (req, res) => {
+router.get('/get_user_role/:userId', authenticateToken, async (req, res) => {
   const { userId } = req.params;
   
   if (!userId) {
@@ -465,7 +461,7 @@ router.get('/get_user_role/:userId', async (req, res) => {
 });
 
 // Get all available roles
-router.get('/get_all_roles', async (req, res) => {
+router.get('/get_all_roles', authenticateToken, async (req, res) => {
   try {
     const roles = [
       { id: 'player', name: 'player' },
@@ -483,7 +479,7 @@ router.get('/get_all_roles', async (req, res) => {
 });
 
 // Update user role
-router.put('/update_user_role', async (req, res) => {
+router.put('/update_user_role', authenticateToken, async (req, res) => {
   const { user_id, role } = req.body;
   
   if (!user_id || !role) {

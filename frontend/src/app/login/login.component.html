@@ -4,66 +4,43 @@
       <h1>Welcome Back</h1>
       <p>Sign in to your account to continue</p>
     </div>
-    
+
     <form [formGroup]="login_form" (ngSubmit)="onSubmit()" class="login-form">
       <div class="form-group">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Email Address</mat-label>
-          <input matInput 
-                 formControlName="email" 
-                 type="email" 
-                 required 
-                 placeholder="Enter your email" />
+          <input matInput formControlName="email" type="email" required placeholder="Enter your email" />
         </mat-form-field>
       </div>
-      
+
       <div class="form-group">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Password</mat-label>
-          <input matInput 
-                 formControlName="password" 
-                 [type]="hide_password ? 'password' : 'text'"
-                 required 
-                 placeholder="Enter your password" />
-          <button mat-icon-button 
-                  matSuffix 
-                  type="button"
-                  (click)="hide_password = !hide_password" 
-                  [attr.aria-label]="'Hide password'"
-                  [attr.aria-pressed]="hide_password">
+          <input matInput formControlName="password" [type]="hide_password ? 'password' : 'text'" required
+            placeholder="Enter your password" />
+          <button mat-icon-button matSuffix type="button" (click)="hide_password = !hide_password"
+            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide_password">
             <mat-icon>{{hide_password ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
         </mat-form-field>
       </div>
-      
+
       <div class="form-actions">
-        <button mat-raised-button 
-                color="primary" 
-                type="submit" 
-                class="login-button"
-                [disabled]="login_form.invalid">
+        <button mat-raised-button color="primary" type="submit" class="login-button" [disabled]="login_form.invalid">
           <mat-icon>login</mat-icon>
           Sign In
         </button>
-        
-        <button mat-button 
-                type="button" 
-                class="help-button"
-                (click)="onForgotPassword()">
-          <mat-icon>lock_reset</mat-icon>
-          Forgot Password?
-        </button>
+        <div class="forgot-password-link">
+          <a routerLink="/forgot-password" class="link">Forgot Password?</a>
+        </div>
       </div>
-      
+
       <div class="register-section">
         <div class="divider">
           <span>Don't have an account?</span>
         </div>
-        
-        <button mat-stroked-button 
-                type="button" 
-                class="register-button"
-                (click)="goToRegister()">
+
+        <button mat-stroked-button type="button" class="register-button" (click)="goToRegister()">
           <mat-icon>person_add</mat-icon>
           Create Account
         </button>

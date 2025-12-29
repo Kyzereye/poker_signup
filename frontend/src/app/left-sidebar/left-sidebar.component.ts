@@ -138,6 +138,6 @@ export class LeftSidebarComponent implements OnInit, OnDestroy {
   }
   onLogout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    // Navigation already handled in AuthService.logout()
   }
 }

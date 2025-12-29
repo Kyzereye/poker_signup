@@ -9,6 +9,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';
 import { ResendVerificationComponent } from './pages/resend-verification/resend-verification.component';
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { VenueGameManagementComponent } from './pages/admin/venue-game-management/venue-game-management.component';
@@ -36,7 +37,11 @@ export const routes: Routes = [
     component: ResendVerificationComponent
   },
   {
-    path: 'reset-password',
+    path: 'forgot-password',
+    component: ForgotPasswordComponent
+  },
+  {
+    path: 'reset-password/:token',
     component: ResetPasswordComponent
   },
   // Authenticated routes

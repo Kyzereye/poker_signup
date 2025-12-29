@@ -10,6 +10,7 @@ import { LoginService } from '../services/login.service';
 import { UserService } from '../services/user.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SimpleDialogComponent } from '../components/simple-dialog/simple-dialog.component';
@@ -19,7 +20,7 @@ import { PasswordResetDialogComponent } from '../components/password-reset-dialo
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatCardModule, MatIconModule],
+  imports: [ReactiveFormsModule, CommonModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatCardModule, MatIconModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -42,52 +43,52 @@ export class LoginComponent {
   ngOnInit(): void {
     this.login_form = this.fb.group({
       email: ['kyzereye@gmail.com', Validators.required],
-      password: ['1qazZAQ!']
+      password: ['1qazxsw2!QAZ']
     });
   }
 
-onSubmit() {
+  onSubmit() {
     let form_data = this.login_form.value;
     const data = {
       email: form_data.email,
       password: form_data.password
     }
-  
+
     this.loginService.login(data).subscribe((response: any) => {
       if (response.success === true) {
+        // Token storage and auth state already handled in LoginService
         this.userService.setCurrentUser(response.user_data);
-        this.authService.login(response.user_data);
         this.router.navigate(['/signup']);
       }
     }, (error) => {
       console.error("Login error:", error);
       this.handleLoginError(error, form_data.email);
     });
-}
-
-private handleLoginError(error: any, email: string): void {
-  // Check if the error is due to unverified email
-  if (error.status === 403 && error.error?.requires_verification) {
-    this.showVerificationRequiredDialog(email);
-  } else {
-    this.showLoginError();
   }
-}
 
-private showLoginError(): void {
-  // Generic error message for security - don't reveal if email exists or password is wrong
-  const errorMessage = 'Login credentials are incorrect. Please check your email and password and try again.';
-
-  this.dialog.open(SimpleDialogComponent, {
-    width: '400px',
-    data: {
-      title: 'Login Failed',
-      message: errorMessage,
-      confirmText: 'OK',
-      cancelText: null
+  private handleLoginError(error: any, email: string): void {
+    // Check if the error is due to unverified email
+    if (error.status === 403 && error.error?.requires_verification) {
+      this.showVerificationRequiredDialog(email);
+    } else {
+      this.showLoginError();
     }
-  });
-}
+  }
+
+  private showLoginError(): void {
+    // Generic error message for security - don't reveal if email exists or password is wrong
+    const errorMessage = 'Login credentials are incorrect. Please check your email and password and try again.';
+
+    this.dialog.open(SimpleDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Login Failed',
+        message: errorMessage,
+        confirmText: 'OK',
+        cancelText: null
+      }
+    });
+  }
 
 private showVerificationRequiredDialog(email: string): void {
   this.dialog.open(SimpleDialogComponent, {
